@@ -1,0 +1,101 @@
+server:
+  port: 8089
+
+spring:
+  application:
+    name: notifications-service
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/notifications_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notifications-service
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:notifications@digitalbanking.com}
+    password: ${MAIL_PASSWORD:your-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+        transport:
+          protocol: smtp
+
+app:
+  notifications:
+    push:
+      enabled: true
+      firebase:
+        server-key: ${FIREBASE_SERVER_KEY:your-firebase-server-key}
+        project-id: ${FIREBASE_PROJECT_ID:digital-banking}
+      apns:
+        enabled: false
+        key-id: ${APNS_KEY_ID:}
+        team-id: ${APNS_TEAM_ID:}
+        bundle-id: ${APNS_BUNDLE_ID:}
+        key-file: ${APNS_KEY_FILE:}
+    
+    email:
+      enabled: true
+      from: ${MAIL_FROM:notifications@digitalbanking.com}
+      templates:
+        path: classpath:/templates/email/
+    
+    sms:
+      enabled: false
+      provider: twilio
+      twilio:
+        account-sid: ${TWILIO_ACCOUNT_SID:}
+        auth-token: ${TWILIO_AUTH_TOKEN:}
+        from-number: ${TWILIO_FROM_NUMBER:}
+    
+    websocket:
+      enabled: true
+      allowed-origins: "*"
+    
+    templates:
+      transaction-alert: "Transaction Alert: ${amount} ${type} on ${date}"
+      security-alert: "Security Alert: ${message}"
+      account-update: "Account Update: ${message}"
+      payment-reminder: "Payment Reminder: ${amount} due on ${date}"
+      general-notification: "Notification: ${message}"
+
+logging:
+  level:
+    com.yourorg.banking.notifications: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.kafka: INFO
+

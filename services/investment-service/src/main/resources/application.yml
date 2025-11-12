@@ -1,0 +1,79 @@
+server:
+  port: 8087
+
+spring:
+  application:
+    name: investment-service
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/investment_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000 # 10 minutes
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+app:
+  investment:
+    default-account-type: "INDIVIDUAL"
+    min-initial-deposit: 1000
+    max-account-balance: 10000000
+    trading-hours:
+      start: "09:30"
+      end: "16:00"
+      timezone: "America/New_York"
+    fees:
+      trading-commission: 0.0 # Commission-free trading
+      account-maintenance: 0.0 # No account maintenance fees
+      wire-transfer: 25.0
+    risk-limits:
+      max-position-size: 0.1 # 10% of portfolio
+      max-daily-loss: 0.05 # 5% of portfolio
+      max-leverage: 1.0 # No margin trading initially
+  
+  market-data:
+    provider: "MOCK" # MOCK, ALPHA_VANTAGE, YAHOO_FINANCE
+    refresh-interval: 30000 # 30 seconds
+    cache-ttl: 300 # 5 minutes
+    api-key: "demo-key"
+    base-url: "https://api.example.com"
+  
+  portfolio:
+    rebalance-threshold: 0.05 # 5% deviation triggers rebalance
+    performance-calculation: "TOTAL_RETURN"
+    benchmark: "SPY" # S&P 500 ETF
+
+logging:
+  level:
+    com.yourorg.banking.investment: DEBUG
+    org.springframework.security: DEBUG
+

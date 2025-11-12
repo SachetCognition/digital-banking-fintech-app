@@ -1,0 +1,224 @@
+server:
+  port: 8095
+
+spring:
+  application:
+    name: devops-service
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/devops_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: devops-service
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+app:
+  devops:
+    ci-cd:
+      enabled: true
+      jenkins:
+        url: ${JENKINS_URL:http://localhost:8080}
+        username: ${JENKINS_USERNAME:admin}
+        password: ${JENKINS_PASSWORD:admin}
+        token: ${JENKINS_TOKEN:}
+      
+      github:
+        url: ${GITHUB_URL:https://api.github.com}
+        token: ${GITHUB_TOKEN:}
+        repository: ${GITHUB_REPOSITORY:digital-banking-fintech-app}
+        branch: ${GITHUB_BRANCH:main}
+      
+      docker:
+        registry: ${DOCKER_REGISTRY:docker.io}
+        namespace: ${DOCKER_NAMESPACE:digital-banking}
+        username: ${DOCKER_USERNAME:}
+        password: ${DOCKER_PASSWORD:}
+    
+    kubernetes:
+      enabled: true
+      config-path: ${KUBECONFIG:/home/user/.kube/config}
+      namespace: ${K8S_NAMESPACE:digital-banking}
+      context: ${K8S_CONTEXT:minikube}
+      
+      resources:
+        cpu:
+          requests: 100m
+          limits: 500m
+        memory:
+          requests: 128Mi
+          limits: 512Mi
+      
+      replicas:
+        min: 1
+        max: 10
+        target: 3
+    
+    monitoring:
+      enabled: true
+      prometheus:
+        url: ${PROMETHEUS_URL:http://localhost:9090}
+        scrape-interval: 30s
+      
+      grafana:
+        url: ${GRAFANA_URL:http://localhost:3000}
+        username: ${GRAFANA_USERNAME:admin}
+        password: ${GRAFANA_PASSWORD:admin}
+      
+      alertmanager:
+        url: ${ALERTMANAGER_URL:http://localhost:9093}
+        webhook-url: ${ALERTMANAGER_WEBHOOK:http://localhost:8095/api/v1/devops/alerts}
+    
+    logging:
+      enabled: true
+      elasticsearch:
+        url: ${ELASTICSEARCH_URL:http://localhost:9200}
+        username: ${ELASTICSEARCH_USERNAME:}
+        password: ${ELASTICSEARCH_PASSWORD:}
+        index-prefix: digital-banking
+      
+      kibana:
+        url: ${KIBANA_URL:http://localhost:5601}
+        username: ${KIBANA_USERNAME:}
+        password: ${KIBANA_PASSWORD:}
+      
+      logstash:
+        url: ${LOGSTASH_URL:http://localhost:5044}
+        enabled: true
+    
+    infrastructure:
+      enabled: true
+      terraform:
+        state-backend: ${TERRAFORM_STATE_BACKEND:s3}
+        state-bucket: ${TERRAFORM_STATE_BUCKET:digital-banking-terraform-state}
+        state-key: ${TERRAFORM_STATE_KEY:infrastructure/terraform.tfstate}
+        state-region: ${TERRAFORM_STATE_REGION:us-east-1}
+        
+        aws:
+          region: ${AWS_REGION:us-east-1}
+          access-key: ${AWS_ACCESS_KEY_ID:}
+          secret-key: ${AWS_SECRET_ACCESS_KEY:}
+        
+        azure:
+          subscription-id: ${AZURE_SUBSCRIPTION_ID:}
+          tenant-id: ${AZURE_TENANT_ID:}
+          client-id: ${AZURE_CLIENT_ID:}
+          client-secret: ${AZURE_CLIENT_SECRET:}
+        
+        gcp:
+          project-id: ${GCP_PROJECT_ID:}
+          service-account-key: ${GCP_SERVICE_ACCOUNT_KEY:}
+      
+      cloudformation:
+        enabled: false
+        region: ${AWS_REGION:us-east-1}
+        stack-name: ${CLOUDFORMATION_STACK_NAME:digital-banking-stack}
+    
+    deployment:
+      enabled: true
+      strategies:
+        rolling-update:
+          max-unavailable: 1
+          max-surge: 1
+        blue-green:
+          enabled: true
+          traffic-split: 10
+        canary:
+          enabled: true
+          traffic-split: 5
+          duration: 30m
+      
+      health-checks:
+        readiness:
+          path: /actuator/health/readiness
+          initial-delay: 30s
+          period: 10s
+          timeout: 5s
+          failure-threshold: 3
+        liveness:
+          path: /actuator/health/liveness
+          initial-delay: 60s
+          period: 30s
+          timeout: 10s
+          failure-threshold: 3
+      
+      rollback:
+        enabled: true
+        max-revisions: 10
+        timeout: 300s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,configprops,beans,mappings,loggers,auditevents,httptrace,threaddump,heapdump
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  tracing:
+    sampling:
+      probability: 0.1
+
+logging:
+  level:
+    com.yourorg.banking.devops: DEBUG
+    io.kubernetes: INFO
+    com.github.dockerjava: INFO
+    io.micrometer: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/devops-service.log
+

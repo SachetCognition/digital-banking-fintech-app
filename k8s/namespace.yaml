@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: digital-banking
+  labels:
+    name: digital-banking
+    environment: production
+

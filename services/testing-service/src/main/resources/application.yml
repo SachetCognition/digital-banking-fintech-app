@@ -1,0 +1,129 @@
+server:
+  port: 8094
+
+spring:
+  application:
+    name: testing-service
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/testing_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: testing-service
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+app:
+  testing:
+    unit-tests:
+      enabled: true
+      coverage-threshold: 80
+      parallel-execution: true
+      test-timeout: 30000
+    
+    integration-tests:
+      enabled: true
+      test-containers: true
+      wiremock: true
+      test-data-setup: true
+    
+    performance-tests:
+      enabled: true
+      gatling:
+        simulations-dir: src/test/scala
+        results-dir: target/gatling-results
+        reports-dir: target/gatling-reports
+      load-test:
+        users: 100
+        duration: 300
+        ramp-up: 60
+    
+    security-tests:
+      enabled: true
+      owasp-dependency-check: true
+      vulnerability-scanning: true
+      penetration-testing: true
+      security-headers-testing: true
+    
+    chaos-engineering:
+      enabled: true
+      chaos-monkey: true
+      fault-injection: true
+      resilience-testing: true
+      chaos-experiments:
+        - "network-latency"
+        - "service-failure"
+        - "database-failure"
+        - "memory-leak"
+        - "cpu-spike"
+    
+    test-automation:
+      enabled: true
+      ci-cd-integration: true
+      test-reporting: true
+      test-notifications: true
+      test-scheduling: true
+    
+    quality-gates:
+      enabled: true
+      sonar-quality-gate: true
+      code-coverage-threshold: 80
+      code-duplication-threshold: 3
+      maintainability-rating: A
+      reliability-rating: A
+      security-rating: A
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,configprops,beans,mappings,loggers,auditevents,httptrace,threaddump,heapdump
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+logging:
+  level:
+    com.yourorg.banking.testing: DEBUG
+    org.springframework.test: DEBUG
+    org.testcontainers: INFO
+    io.gatling: INFO
+    org.owasp: INFO
+

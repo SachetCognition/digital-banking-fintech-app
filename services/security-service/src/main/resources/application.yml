@@ -1,0 +1,189 @@
+server:
+  port: 8092
+
+spring:
+  application:
+    name: security-service
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/security_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: security-service
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 300000 # 5 minutes
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:security@digitalbanking.com}
+    password: ${MAIL_PASSWORD:your-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  jasypt:
+    encryptor:
+      algorithm: PBEWithMD5AndDES
+      password: ${JASYPT_PASSWORD:default-password-change-in-production}
+      key-obtention-iterations: 1000
+      pool-size: 1
+      provider-name: SunJCE
+      salt-generator-classname: org.jasypt.salt.RandomSaltGenerator
+      iv-generator-classname: org.jasypt.iv.RandomIvGenerator
+      string-output-type: base64
+
+app:
+  security:
+    encryption:
+      algorithm: AES-256-GCM
+      key: ${ENCRYPTION_KEY:default-key-change-in-production}
+      key-derivation:
+        algorithm: PBKDF2WithHmacSHA256
+        iterations: 100000
+        salt-length: 32
+    
+    rate-limiting:
+      enabled: true
+      default-limit: 1000
+      default-window: 3600
+      limits:
+        login: 5
+        password-reset: 3
+        api-calls: 1000
+        sensitive-operations: 10
+    
+    ddos-protection:
+      enabled: true
+      max-requests-per-minute: 100
+      max-requests-per-hour: 1000
+      block-duration-minutes: 60
+      whitelist-ips: []
+    
+    security-headers:
+      enabled: true
+      content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https:; connect-src 'self' https:; frame-ancestors 'none';"
+      x-frame-options: DENY
+      x-content-type-options: nosniff
+      x-xss-protection: "1; mode=block"
+      strict-transport-security: "max-age=31536000; includeSubDomains"
+      referrer-policy: strict-origin-when-cross-origin
+      permissions-policy: "geolocation=(), microphone=(), camera=()"
+    
+    audit:
+      enabled: true
+      log-level: INFO
+      sensitive-fields: ["password", "ssn", "creditCard", "bankAccount", "pin", "cvv"]
+      retention-days: 2555 # 7 years
+    
+    compliance:
+      pci-dss:
+        enabled: true
+        level: 1
+        requirements:
+          - "3.4" # Render PAN unreadable
+          - "3.5" # Protect encryption keys
+          - "3.6" # Key management procedures
+          - "4.1" # Encrypt transmission
+          - "6.5" # Secure coding practices
+          - "8.1" # Unique user identification
+          - "8.2" # Strong authentication
+          - "10.1" # Audit trail
+          - "11.1" # Network security testing
+          - "12.1" # Security policy
+      soc2:
+        enabled: true
+        type: "SOC 2 Type II"
+        controls:
+          - "CC6.1" # Logical access security
+          - "CC6.2" # Authentication and authorization
+          - "CC6.3" # System access controls
+          - "CC6.4" # Data transmission controls
+          - "CC6.5" # Data processing integrity
+          - "CC6.6" # Data backup and recovery
+          - "CC6.7" # System monitoring
+          - "CC6.8" # Incident response
+    
+    penetration-testing:
+      enabled: true
+      automated-scanning: true
+      vulnerability-scanning: true
+      security-testing:
+        - "SQL Injection"
+        - "Cross-Site Scripting (XSS)"
+        - "Cross-Site Request Forgery (CSRF)"
+        - "Insecure Direct Object References"
+        - "Security Misconfiguration"
+        - "Sensitive Data Exposure"
+        - "Missing Function Level Access Control"
+        - "Using Components with Known Vulnerabilities"
+        - "Insufficient Logging and Monitoring"
+    
+    monitoring:
+      security-events: true
+      threat-detection: true
+      anomaly-detection: true
+      real-time-alerts: true
+      incident-response: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,configprops,beans,mappings,loggers,auditevents,httptrace,threaddump,heapdump
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+logging:
+  level:
+    com.yourorg.banking.security: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.kafka: INFO
+    org.jasypt: INFO
+

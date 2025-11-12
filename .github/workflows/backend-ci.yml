@@ -1,0 +1,42 @@
+name: Backend CI
+
+on:
+  push:
+    paths:
+      - 'services/**'
+      - '!services/**/target/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    paths:
+      - 'services/**'
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - customer-service
+          - account-service
+          - ledger-service
+          - api-gateway
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Cache Maven repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build ${{ matrix.service }}
+        working-directory: services/${{ matrix.service }}
+        run: mvn -B -DskipTests package
+      - name: Test ${{ matrix.service }}
+        working-directory: services/${{ matrix.service }}
+        run: mvn -B test

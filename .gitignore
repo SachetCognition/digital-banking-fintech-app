@@ -1,0 +1,26 @@
+# General
+.DS_Store
+*.log
+*.tmp
+*.swp
+
+# Node
+node_modules/
+dist/
+.build/
+.env
+.env.*
+
+# Java/Maven
+**/target/
+**/.idea/
+**/.project
+**/.classpath
+**/.settings/
+**/.mvn/wrapper/maven-wrapper.jar
+
+# VSCode
+.vscode/
+
+# Docker
+**/.docker/

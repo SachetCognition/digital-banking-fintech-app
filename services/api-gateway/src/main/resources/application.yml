@@ -1,0 +1,93 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9080/realms/dbf
+  cloud:
+    gateway:
+      default-filters:
+        - RemoveHopByHopHeaders=transfer-encoding,connection,keep-alive,te,trailers,proxy-authorization,proxy-authenticate,upgrade
+      routes:
+        - id: auth-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/auth/**
+        - id: customer-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/customers/**,/api/v1/kyc/**
+        - id: account-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/v1/accounts/**
+        - id: ledger-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/api/v1/ledger/**
+        - id: payments-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/api/v1/transfers/**,/api/v1/beneficiaries/**,/api/v1/bill-pay/**,/api/v1/external-transfers/**,/api/v1/international-transfers/**,/api/v1/recurring-payments/**,/api/v1/payment-templates/**,/api/v1/bulk-payments/**,/api/v1/payment-limits/**
+        - id: card-service
+          uri: http://localhost:8085
+          predicates:
+            - Path=/api/v1/cards/**
+        - id: loan-service
+          uri: http://localhost:8086
+          predicates:
+            - Path=/api/v1/loan-applications/**,/api/v1/loans/**,/api/v1/credit-lines/**,/api/v1/credit-scores/**
+        - id: investment-service
+          uri: http://localhost:8087
+          predicates:
+            - Path=/api/v1/investment-accounts/**,/api/v1/trading/**,/api/v1/portfolio/**,/api/v1/market-data/**
+        - id: compliance-service
+          uri: http://localhost:8088
+          predicates:
+            - Path=/api/v1/aml/**,/api/v1/transaction-monitoring/**,/api/v1/fraud-detection/**,/api/v1/audit/**,/api/v1/reports/**
+        - id: notifications-service
+          uri: http://localhost:8089
+          predicates:
+            - Path=/api/v1/notifications/**,/api/v1/chat/**,/api/v1/help/**,/api/v1/feedback/**
+        - id: admin-service
+          uri: http://localhost:8090
+          predicates:
+            - Path=/api/v1/admin/**
+        - id: open-banking-service
+          uri: http://localhost:8091
+          predicates:
+            - Path=/open-banking/**,/api/v1/open-banking/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - http://localhost:5173
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  level:
+    root: INFO

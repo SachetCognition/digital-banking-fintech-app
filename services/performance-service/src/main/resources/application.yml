@@ -1,0 +1,246 @@
+server:
+  port: 8093
+
+spring:
+  application:
+    name: performance-service
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/performance_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 25
+        order_inserts: true
+        order_updates: true
+        batch_versioned_data: true
+        connection:
+          provider_disables_autocommit: true
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+    open-in-view: false
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 300000 # 5 minutes
+      cache-null-values: false
+      enable-statistics: true
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=300s,recordStats
+    hazelcast:
+      config: classpath:hazelcast.xml
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+        shutdown-timeout: 100ms
+    elasticsearch:
+      uris: http://localhost:9200
+      connection-timeout: 1s
+      socket-timeout: 30s
+    mongodb:
+      uri: mongodb://localhost:27017/performance_metrics
+    r2dbc:
+      url: r2dbc:postgresql://localhost:5432/performance_db
+      username: postgres
+      password: postgres
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: performance-service
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      max-poll-records: 500
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      batch-size: 16384
+      linger-ms: 5
+      compression-type: gzip
+
+  webflux:
+    base-path: /api/v1/performance
+
+app:
+  performance:
+    caching:
+      enabled: true
+      default-ttl: 300 # 5 minutes
+      max-entries: 10000
+      strategies:
+        user-data: 600 # 10 minutes
+        account-data: 300 # 5 minutes
+        transaction-data: 60 # 1 minute
+        market-data: 30 # 30 seconds
+        static-data: 3600 # 1 hour
+    
+    database:
+      optimization:
+        enabled: true
+        query-timeout: 30
+        connection-pool-size: 20
+        batch-size: 25
+        fetch-size: 100
+        enable-query-cache: true
+        enable-second-level-cache: true
+      
+      monitoring:
+        enabled: true
+        slow-query-threshold: 1000 # 1 second
+        connection-pool-monitoring: true
+        query-execution-monitoring: true
+    
+    load-balancing:
+      enabled: true
+      strategy: round-robin
+      health-check-interval: 30
+      circuit-breaker:
+        enabled: true
+        failure-threshold: 5
+        timeout: 3000
+        retry-attempts: 3
+    
+    cdn:
+      enabled: true
+      provider: cloudflare
+      base-url: https://cdn.digitalbanking.com
+      cache-control: max-age=31536000
+      compression: true
+      image-optimization: true
+    
+    monitoring:
+      apm:
+        enabled: true
+        provider: elastic-apm
+        service-name: digital-banking-performance
+        environment: production
+        server-url: http://localhost:8200
+        secret-token: ${APM_SECRET_TOKEN:}
+      
+      metrics:
+        enabled: true
+        export-interval: 30s
+        include-system-metrics: true
+        include-jvm-metrics: true
+        include-database-metrics: true
+        include-cache-metrics: true
+        include-kafka-metrics: true
+      
+      tracing:
+        enabled: true
+        sampling-rate: 0.1
+        zipkin:
+          endpoint: http://localhost:9411/api/v2/spans
+        jaeger:
+          endpoint: http://localhost:14268/api/traces
+      
+      alerting:
+        enabled: true
+        thresholds:
+          response-time: 2000 # 2 seconds
+          error-rate: 0.05 # 5%
+          cpu-usage: 0.8 # 80%
+          memory-usage: 0.8 # 80%
+          disk-usage: 0.9 # 90%
+          database-connections: 0.8 # 80%
+    
+    optimization:
+      query-optimization:
+        enabled: true
+        auto-index-creation: true
+        query-rewriting: true
+        join-optimization: true
+        subquery-optimization: true
+      
+      connection-pooling:
+        enabled: true
+        max-connections: 20
+        min-connections: 5
+        connection-validation: true
+        leak-detection: true
+      
+      async-processing:
+        enabled: true
+        thread-pool-size: 10
+        queue-capacity: 1000
+        core-pool-size: 5
+        max-pool-size: 20
+        keep-alive-time: 60s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,configprops,beans,mappings,loggers,auditevents,httptrace,threaddump,heapdump,caches,conditions
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      percentiles:
+        http.server.requests: 0.5, 0.95, 0.99
+      slo:
+        http.server.requests: 50ms, 100ms, 200ms, 500ms, 1s, 2s, 5s
+  tracing:
+    sampling:
+      probability: 0.1
+  cache:
+    cache-names: user-cache,account-cache,transaction-cache,market-cache,static-cache
+
+logging:
+  level:
+    com.yourorg.banking.performance: DEBUG
+    org.springframework.cache: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.data.redis: DEBUG
+    org.springframework.kafka: INFO
+    io.micrometer: INFO
+

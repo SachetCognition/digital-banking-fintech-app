@@ -1,0 +1,172 @@
+server:
+  port: 8096
+
+spring:
+  application:
+    name: business-service
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/business_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: business-service
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: BusinessServiceScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            tablePrefix: QRTZ_
+            useProperties: false
+            misfireThreshold: 60000
+            clusterCheckinInterval: 5000
+            isClustered: true
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+
+app:
+  business:
+    fees:
+      enabled: true
+      transaction-fee-rate: 0.0025  # 0.25%
+      minimum-fee: 0.50
+      maximum-fee: 25.00
+      atm-fee: 2.50
+      overdraft-fee: 35.00
+      monthly-maintenance-fee: 12.00
+      wire-transfer-fee: 25.00
+      international-transfer-fee: 45.00
+    
+    interest:
+      enabled: true
+      calculation-frequency: daily  # daily, monthly, quarterly, annually
+      compounding-frequency: daily  # daily, monthly, quarterly, annually
+      savings-account-rate: 0.02    # 2% APY
+      checking-account-rate: 0.01   # 1% APY
+      cd-3-month-rate: 0.025       # 2.5% APY
+      cd-6-month-rate: 0.03        # 3% APY
+      cd-12-month-rate: 0.035      # 3.5% APY
+      cd-24-month-rate: 0.04       # 4% APY
+      cd-36-month-rate: 0.045      # 4.5% APY
+      cd-60-month-rate: 0.05       # 5% APY
+    
+    tax:
+      enabled: true
+      tax-year: 2024
+      forms:
+        - 1099-INT  # Interest income
+        - 1099-DIV  # Dividend income
+        - 1099-B    # Broker transactions
+        - 1099-MISC # Miscellaneous income
+      generation-schedule: "0 0 1 1 *"  # January 1st annually
+    
+    loyalty:
+      enabled: true
+      points-per-dollar: 1.0
+      points-per-transaction: 10
+      bonus-multiplier: 2.0
+      redemption-rate: 0.01  # 1 point = $0.01
+      minimum-redemption: 1000
+      maximum-redemption: 50000
+      expiration-months: 24
+    
+    referral:
+      enabled: true
+      referral-bonus: 25.00
+      referee-bonus: 15.00
+      minimum-deposit: 100.00
+      maximum-referrals: 10
+      bonus-payment-delay: 30  # days
+    
+    notifications:
+      enabled: true
+      email:
+        fee-notifications: true
+        interest-notifications: true
+        tax-document-notifications: true
+        loyalty-notifications: true
+        referral-notifications: true
+      sms:
+        fee-notifications: false
+        interest-notifications: false
+        tax-document-notifications: true
+        loyalty-notifications: false
+        referral-notifications: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,configprops,beans,mappings,loggers,auditevents,httptrace,threaddump,heapdump
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+logging:
+  level:
+    com.yourorg.banking.business: DEBUG
+    org.springframework.quartz: INFO
+    org.springframework.mail: INFO
+

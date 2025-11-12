@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: payments-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/payments_db
+    username: dbadmin
+    password: dbadmin
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9080/realms/dbf
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: payments-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+server:
+  port: 8084
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.yourorg.banking.payments: DEBUG
+
+# External service URLs
+external:
+  account-service:
+    base-url: http://localhost:8082
+  ledger-service:
+    base-url: http://localhost:8083
+  notification-service:
+    base-url: http://localhost:8085
+
+# Transfer limits
+transfer:
+  limits:
+    daily-limit: 10000.00
+    per-transaction-limit: 5000.00
+    min-amount: 0.01
+

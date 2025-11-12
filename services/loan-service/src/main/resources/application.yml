@@ -1,0 +1,63 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: loan-service
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/loan_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+
+app:
+  loan:
+    default-interest-rate: 5.5
+    max-loan-amount: 100000
+    min-loan-amount: 1000
+    max-term-months: 60
+    min-term-months: 6
+    grace-period-days: 15
+    late-fee-rate: 0.05
+    default-credit-limit: 10000
+    max-credit-limit: 100000
+  
+  credit:
+    scoring:
+      min-score: 300
+      max-score: 850
+      good-score-threshold: 700
+      excellent-score-threshold: 750
+      risk-factors:
+        - payment-history
+        - credit-utilization
+        - credit-history-length
+        - credit-mix
+        - new-credit
+
+logging:
+  level:
+    com.yourorg.banking.loan: DEBUG
+    org.springframework.security: DEBUG
+

@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    enabled: false
+  kafka:
+    bootstrap-servers: localhost:9092
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+external:
+  account-service:
+    base-url: http://localhost:8082
+  ledger-service:
+    base-url: http://localhost:8083
+  notification-service:
+    base-url: http://localhost:8085
+
+transfer:
+  limits:
+    daily-limit: 10000.00
+    per-transaction-limit: 5000.00
+    min-amount: 0.01
+

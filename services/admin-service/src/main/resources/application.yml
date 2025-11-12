@@ -1,0 +1,149 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: admin-service
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/admin_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 300000 # 5 minutes
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: admin-service
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:admin@digitalbanking.com}
+    password: ${MAIL_PASSWORD:your-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: AdminScheduler
+            instanceId: AUTO
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            useProperties: false
+            tablePrefix: QRTZ_
+            isClustered: true
+            clusterCheckinInterval: 20000
+          threadPool:
+            class: org.quartz.simpl.SimpleThreadPool
+            threadCount: 10
+            threadPriority: 5
+            threadsInheritContextClassLoaderOfInitializingThread: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,configprops,beans,mappings,loggers,auditevents,httptrace,threaddump,heapdump
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      percentiles:
+        http.server.requests: 0.5, 0.95, 0.99
+
+app:
+  admin:
+    dashboard:
+      refresh-interval: 30000 # 30 seconds
+      cache-ttl: 300000 # 5 minutes
+    
+    monitoring:
+      health-check-interval: 60000 # 1 minute
+      metrics-retention-days: 30
+      alert-thresholds:
+        cpu-usage: 80
+        memory-usage: 85
+        disk-usage: 90
+        response-time: 5000
+    
+    backup:
+      enabled: true
+      schedule: "0 2 * * *" # Daily at 2 AM
+      retention-days: 30
+      storage:
+        type: local # local, s3, azure
+        path: /backups
+        s3:
+          bucket: digital-banking-backups
+          region: us-east-1
+          access-key: ${S3_ACCESS_KEY:}
+          secret-key: ${S3_SECRET_KEY:}
+    
+    configuration:
+      refresh-interval: 60000 # 1 minute
+      hot-reload: true
+      encryption:
+        enabled: true
+        algorithm: AES-256-GCM
+        key: ${CONFIG_ENCRYPTION_KEY:default-key-change-in-production}
+
+logging:
+  level:
+    com.yourorg.banking.admin: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.kafka: INFO
+    org.quartz: INFO
+

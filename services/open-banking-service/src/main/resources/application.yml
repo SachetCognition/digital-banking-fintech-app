@@ -1,0 +1,147 @@
+server:
+  port: 8091
+
+spring:
+  application:
+    name: open-banking-service
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/open_banking_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: open-banking-service
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 300000 # 5 minutes
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:openbanking@digitalbanking.com}
+    password: ${MAIL_PASSWORD:your-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+app:
+  open-banking:
+    api:
+      version: "v3.1.10"
+      base-url: "https://api.digitalbanking.com/open-banking"
+      supported-versions: ["v3.1.10", "v3.1.9", "v3.1.8"]
+    
+    webhooks:
+      enabled: true
+      signature-verification: true
+      retry-attempts: 3
+      retry-delay: 5000
+      timeout: 30000
+    
+    rate-limiting:
+      enabled: true
+      default-limit: 1000
+      default-window: 3600 # 1 hour
+      limits:
+        accounts: 100
+        transactions: 200
+        payments: 50
+        balances: 1000
+    
+    third-party:
+      plaid:
+        enabled: false
+        client-id: ${PLAID_CLIENT_ID:}
+        secret: ${PLAID_SECRET:}
+        environment: sandbox
+      yodlee:
+        enabled: false
+        client-id: ${YODLEE_CLIENT_ID:}
+        secret: ${YODLEE_SECRET:}
+        base-url: ${YODLEE_BASE_URL:}
+      finicity:
+        enabled: false
+        partner-id: ${FINICITY_PARTNER_ID:}
+        app-key: ${FINICITY_APP_KEY:}
+        base-url: ${FINICITY_BASE_URL:}
+    
+    security:
+      jwt:
+        issuer: "digital-banking"
+        audience: "open-banking-api"
+        expiration: 3600 # 1 hour
+      encryption:
+        algorithm: "AES-256-GCM"
+        key: ${ENCRYPTION_KEY:default-key-change-in-production}
+      tls:
+        required: true
+        min-version: "TLSv1.2"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,env,configprops,beans,mappings,loggers,auditevents,httptrace,threaddump,heapdump
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+    tryItOutEnabled: true
+  show-actuator: true
+
+logging:
+  level:
+    com.yourorg.banking.openbanking: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.kafka: INFO
+

@@ -1,0 +1,46 @@
+{
+  "realm": "dbf",
+  "enabled": true,
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "sslRequired": "none",
+  "clients": [
+    {
+      "clientId": "dbf-web",
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "redirectUris": ["http://localhost:5173/*"],
+      "webOrigins": ["http://localhost:5173"],
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "attributes": {
+        "post.logout.redirect.uris": "http://localhost:5173/*"
+      }
+    }
+  ],
+  "roles": {
+    "realm": [
+      {"name": "USER"},
+      {"name": "ADMIN"}
+    ]
+  },
+  "users": [
+    {
+      "username": "alice",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "alice@example.com",
+      "credentials": [{"type": "password", "value": "Password1!", "temporary": false}],
+      "realmRoles": ["USER"]
+    },
+    {
+      "username": "bob",
+      "enabled": true,
+      "emailVerified": true,
+      "email": "bob@example.com",
+      "credentials": [{"type": "password", "value": "Password1!", "temporary": false}],
+      "realmRoles": ["ADMIN"]
+    }
+  ]
+}

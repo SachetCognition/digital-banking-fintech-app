@@ -1,0 +1,2 @@
+ALTER TABLE account_balances ADD COLUMN IF NOT EXISTS overdraft_enabled BOOLEAN DEFAULT FALSE;
+ALTER TABLE account_balances ADD COLUMN IF NOT EXISTS overdraft_limit DECIMAL(15, 2) DEFAULT 0;

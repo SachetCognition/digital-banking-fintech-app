@@ -32,7 +32,7 @@ import PerformanceDashboard from './pages/PerformanceDashboard'
 import TestingDashboard from './pages/TestingDashboard'
 import DevOpsDashboard from './pages/DevOpsDashboard'
 import BusinessDashboard from './pages/BusinessDashboard'
-import AdminDashboard from './pages/AdminDashboard'
+import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
@@ -175,7 +175,7 @@ function AppContent() {
           <Route path="/testing-dashboard" element={<TestingDashboard />} />
           <Route path="/devops-dashboard" element={<DevOpsDashboard />} />
           <Route path="/business-dashboard" element={<BusinessDashboard />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </Protected>
     </div>

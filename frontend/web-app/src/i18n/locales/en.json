@@ -1,32 +1,73 @@
 {
-  "app.title": "Digital Banking Fintech",
-  "nav.home": "Home",
-  "nav.transfer": "P2P Transfer",
-  "nav.kyc": "KYC",
-  "nav.cards": "Cards",
-  "nav.loans": "Loans",
-  "nav.investments": "Investments",
-  "nav.profile": "Profile",
-  "auth.login": "Login",
-  "auth.register": "Register",
-  "auth.logout": "Logout",
-  "auth.email": "Email",
-  "auth.password": "Password",
-  "auth.forgotPassword": "Forgot Password?",
-  "home.welcome": "Welcome to Digital Banking",
-  "home.quickActions": "Quick Actions",
-  "transfer.title": "Transfer Funds",
-  "transfer.from": "From Account",
-  "transfer.to": "To Account",
-  "transfer.amount": "Amount",
-  "transfer.submit": "Send Transfer",
-  "kyc.title": "KYC Verification",
-  "kyc.submit": "Submit KYC",
-  "kyc.status": "Status",
-  "common.loading": "Loading...",
-  "common.error": "An error occurred",
-  "common.save": "Save",
-  "common.cancel": "Cancel",
-  "common.edit": "Edit",
-  "common.delete": "Delete"
+  "app": {
+    "name": "Emirates Digital Bank",
+    "tagline": "Your Gateway to Islamic Finance"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "transfers": "Transfers",
+    "billPay": "Bill Pay",
+    "cards": "Cards",
+    "loans": "Loans",
+    "investments": "Investments",
+    "kyc": "KYC Verification",
+    "help": "Help Center",
+    "feedback": "Feedback"
+  },
+  "login": {
+    "welcome": "Ahlan wa Sahlan",
+    "subtitle": "Sign in to your Emirates Digital account",
+    "email": "Email / Emirates ID",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign In",
+    "demoAccount": "Continue with Demo Account",
+    "noAccount": "New to Emirates Digital?",
+    "createAccount": "Open an Account"
+  },
+  "register": {
+    "title": "Open an Account",
+    "subtitle": "Complete the form below to get started",
+    "fullName": "Full Name (as per Emirates ID)",
+    "emiratesId": "Emirates ID Number",
+    "mobile": "Mobile Number",
+    "nationality": "Nationality",
+    "openAccount": "Open Account",
+    "hasAccount": "Already have an account?",
+    "signIn": "Sign In"
+  },
+  "dashboard": {
+    "greeting": "Marhaba",
+    "totalBalance": "Total Balance",
+    "sendMoney": "Send Money",
+    "payBills": "Pay Bills",
+    "yourAccounts": "Your Accounts",
+    "recentActivity": "Recent Activity",
+    "exchangeRates": "Exchange Rates (AED)"
+  },
+  "transfer": {
+    "title": "Transfer Funds",
+    "fromAccount": "From Account",
+    "toAccount": "To Account / IBAN",
+    "amount": "Amount (AED)",
+    "description": "Description",
+    "submit": "Send Transfer"
+  },
+  "profile": {
+    "title": "My Profile",
+    "personalInfo": "Personal Information",
+    "address": "Registered Address",
+    "security": "Security Settings",
+    "preferences": "Account Preferences"
+  },
+  "currency": {
+    "code": "AED",
+    "name": "UAE Dirham",
+    "symbol": "AED"
+  },
+  "footer": {
+    "regulated": "Regulated by the Central Bank of the UAE",
+    "shariah": "Shariah-compliant banking"
+  }
 }

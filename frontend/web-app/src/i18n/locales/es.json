@@ -1,32 +1,73 @@
 {
-  "app.title": "Banca Digital Fintech",
-  "nav.home": "Inicio",
-  "nav.transfer": "Transferencia P2P",
-  "nav.kyc": "KYC",
-  "nav.cards": "Tarjetas",
-  "nav.loans": "Pr\u00e9stamos",
-  "nav.investments": "Inversiones",
-  "nav.profile": "Perfil",
-  "auth.login": "Iniciar Sesi\u00f3n",
-  "auth.register": "Registrarse",
-  "auth.logout": "Cerrar Sesi\u00f3n",
-  "auth.email": "Correo Electr\u00f3nico",
-  "auth.password": "Contrase\u00f1a",
-  "auth.forgotPassword": "\u00bfOlvid\u00f3 su contrase\u00f1a?",
-  "home.welcome": "Bienvenido a la Banca Digital",
-  "home.quickActions": "Acciones R\u00e1pidas",
-  "transfer.title": "Transferir Fondos",
-  "transfer.from": "Desde Cuenta",
-  "transfer.to": "Hacia Cuenta",
-  "transfer.amount": "Monto",
-  "transfer.submit": "Enviar Transferencia",
-  "kyc.title": "Verificaci\u00f3n KYC",
-  "kyc.submit": "Enviar KYC",
-  "kyc.status": "Estado",
-  "common.loading": "Cargando...",
-  "common.error": "Ocurri\u00f3 un error",
-  "common.save": "Guardar",
-  "common.cancel": "Cancelar",
-  "common.edit": "Editar",
-  "common.delete": "Eliminar"
+  "app": {
+    "name": "بنك الإمارات الرقمي",
+    "tagline": "بوابتك إلى التمويل الإسلامي"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "profile": "الملف الشخصي",
+    "transfers": "التحويلات",
+    "billPay": "دفع الفواتير",
+    "cards": "البطاقات",
+    "loans": "القروض",
+    "investments": "الاستثمارات",
+    "kyc": "التحقق من الهوية",
+    "help": "مركز المساعدة",
+    "feedback": "الملاحظات"
+  },
+  "login": {
+    "welcome": "أهلاً وسهلاً",
+    "subtitle": "سجل الدخول إلى حسابك في بنك الإمارات الرقمي",
+    "email": "البريد الإلكتروني / رقم الهوية الإماراتية",
+    "password": "كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "signIn": "تسجيل الدخول",
+    "demoAccount": "الدخول بحساب تجريبي",
+    "noAccount": "جديد في بنك الإمارات الرقمي؟",
+    "createAccount": "افتح حساب"
+  },
+  "register": {
+    "title": "افتح حساب",
+    "subtitle": "أكمل النموذج أدناه للبدء",
+    "fullName": "الاسم الكامل (كما في الهوية الإماراتية)",
+    "emiratesId": "رقم الهوية الإماراتية",
+    "mobile": "رقم الجوال",
+    "nationality": "الجنسية",
+    "openAccount": "افتح حساب",
+    "hasAccount": "لديك حساب بالفعل؟",
+    "signIn": "تسجيل الدخول"
+  },
+  "dashboard": {
+    "greeting": "مرحباً",
+    "totalBalance": "إجمالي الرصيد",
+    "sendMoney": "إرسال أموال",
+    "payBills": "دفع الفواتير",
+    "yourAccounts": "حساباتك",
+    "recentActivity": "النشاط الأخير",
+    "exchangeRates": "أسعار الصرف (درهم)"
+  },
+  "transfer": {
+    "title": "تحويل الأموال",
+    "fromAccount": "من الحساب",
+    "toAccount": "إلى الحساب / IBAN",
+    "amount": "المبلغ (درهم)",
+    "description": "الوصف",
+    "submit": "إرسال التحويل"
+  },
+  "profile": {
+    "title": "ملفي الشخصي",
+    "personalInfo": "المعلومات الشخصية",
+    "address": "العنوان المسجل",
+    "security": "إعدادات الأمان",
+    "preferences": "تفضيلات الحساب"
+  },
+  "currency": {
+    "code": "AED",
+    "name": "درهم إماراتي",
+    "symbol": "د.إ"
+  },
+  "footer": {
+    "regulated": "مرخص من المصرف المركزي لدولة الإمارات",
+    "shariah": "خدمات مصرفية متوافقة مع الشريعة الإسلامية"
+  }
 }

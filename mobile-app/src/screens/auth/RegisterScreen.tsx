@@ -62,37 +62,41 @@ export const RegisterScreen: React.FC = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text variant="headlineMedium" style={styles.title}>Create Account</Text>
-      <TextInput label="Full Name" value={fullName} onChangeText={setFullName} mode="outlined" style={styles.input} error={!!errors.fullName} />
+      <Text variant="headlineMedium" style={styles.title}>Open an Account</Text>
+      <Text style={styles.subtitle}>Emirates Digital Bank - Shariah Compliant</Text>
+      <TextInput label="Full Name (as per Emirates ID)" value={fullName} onChangeText={setFullName} mode="outlined" style={styles.input} placeholder="Ahmed Mohammed Al-Rashid" error={!!errors.fullName} />
       {errors.fullName && <HelperText type="error">{errors.fullName}</HelperText>}
-      <TextInput label="Email" value={email} onChangeText={setEmail} mode="outlined" style={styles.input} keyboardType="email-address" autoCapitalize="none" error={!!errors.email} />
+      <TextInput label="Email" value={email} onChangeText={setEmail} mode="outlined" style={styles.input} keyboardType="email-address" autoCapitalize="none" placeholder="ahmed@company.ae" error={!!errors.email} />
       {errors.email && <HelperText type="error">{errors.email}</HelperText>}
-      <TextInput label="Phone" value={phone} onChangeText={setPhone} mode="outlined" style={styles.input} keyboardType="phone-pad" error={!!errors.phone} />
+      <TextInput label="Mobile Number" value={phone} onChangeText={setPhone} mode="outlined" style={styles.input} keyboardType="phone-pad" placeholder="+971 50 123 4567" error={!!errors.phone} />
       {errors.phone && <HelperText type="error">{errors.phone}</HelperText>}
       <TextInput label="Date of Birth (YYYY-MM-DD)" value={dateOfBirth} onChangeText={setDateOfBirth} mode="outlined" style={styles.input} error={!!errors.dateOfBirth} />
       {errors.dateOfBirth && <HelperText type="error">{errors.dateOfBirth}</HelperText>}
-      <TextInput label="Country" value={country} onChangeText={setCountry} mode="outlined" style={styles.input} error={!!errors.country} />
+      <TextInput label="Nationality" value={country} onChangeText={setCountry} mode="outlined" style={styles.input} placeholder="United Arab Emirates" error={!!errors.country} />
       {errors.country && <HelperText type="error">{errors.country}</HelperText>}
       <TextInput label="Password" value={password} onChangeText={setPassword} mode="outlined" style={styles.input} secureTextEntry error={!!errors.password} />
       {errors.password && <HelperText type="error">{errors.password}</HelperText>}
       <TextInput label="Confirm Password" value={confirmPassword} onChangeText={setConfirmPassword} mode="outlined" style={styles.input} secureTextEntry error={!!errors.confirmPassword} />
       {errors.confirmPassword && <HelperText type="error">{errors.confirmPassword}</HelperText>}
-      <Button mode="contained" onPress={handleRegister} loading={loading} disabled={loading} style={styles.button}>
-        Register
+      <Button mode="contained" onPress={handleRegister} loading={loading} disabled={loading} style={styles.button} buttonColor="#0d2847">
+        Open Account
       </Button>
-      <Button mode="text" onPress={() => navigation.navigate('Login' as never)} style={styles.linkButton}>
-        Already have an account? Log in
+      <Button mode="text" onPress={() => navigation.navigate('Login' as never)} style={styles.linkButton} textColor="#d4af37">
+        Already have an account? Sign In
       </Button>
+      <Text style={styles.footer}>Regulated by the Central Bank of the UAE</Text>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, backgroundColor: '#fff' },
-  title: { textAlign: 'center', marginVertical: 24 },
-  input: { marginBottom: 8 },
-  button: { marginTop: 16, paddingVertical: 4 },
+  title: { textAlign: 'center', marginTop: 24, marginBottom: 4, color: '#0a1628' },
+  subtitle: { textAlign: 'center', marginBottom: 20, color: '#d4af37', fontSize: 13 },
+  input: { marginBottom: 8, backgroundColor: '#fff' },
+  button: { marginTop: 16, paddingVertical: 4, borderRadius: 12 },
   linkButton: { marginTop: 8 },
+  footer: { textAlign: 'center', color: '#94a3b8', fontSize: 11, marginTop: 16, marginBottom: 24 },
 });
 
 export default RegisterScreen;

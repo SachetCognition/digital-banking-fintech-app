@@ -18,7 +18,7 @@ export default function Transfer() {
     payerAccountId: '',
     payeeAccountId: '',
     amount: 0,
-    currency: 'USD',
+    currency: 'AED',
     description: '',
     idempotencyKey: ''
   })
@@ -163,7 +163,11 @@ export default function Transfer() {
             onChange={(e) => setTransfer(prev => ({ ...prev, currency: e.target.value }))}
             style={{ width: '100%', padding: 8, border: '1px solid #ccc', borderRadius: 4 }}
           >
-            <option value="USD">USD</option>
+            <option value="AED">AED - UAE Dirham</option>
+                  <option value="USD">USD - US Dollar</option>
+                  <option value="EUR">EUR - Euro</option>
+                  <option value="GBP">GBP - British Pound</option>
+                  <option value="SAR">SAR - Saudi Riyal</option>
             <option value="EUR">EUR</option>
             <option value="GBP">GBP</option>
           </select>

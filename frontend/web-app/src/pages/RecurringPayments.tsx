@@ -55,7 +55,7 @@ const RecurringPayments: React.FC = () => {
     toBankName: '',
     toAccountName: '',
     amount: 0,
-    currency: 'USD',
+    currency: 'AED',
     description: '',
     frequency: 'MONTHLY',
     dayOfMonth: 1,
@@ -102,7 +102,7 @@ const RecurringPayments: React.FC = () => {
         toBankName: '',
         toAccountName: '',
         amount: 0,
-        currency: 'USD',
+        currency: 'AED',
         description: '',
         frequency: 'MONTHLY',
         dayOfMonth: 1,
@@ -245,7 +245,11 @@ const RecurringPayments: React.FC = () => {
                   onChange={handleInputChange}
                   className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="USD">USD</option>
+                  <option value="AED">AED - UAE Dirham</option>
+                  <option value="USD">USD - US Dollar</option>
+                  <option value="EUR">EUR - Euro</option>
+                  <option value="GBP">GBP - British Pound</option>
+                  <option value="SAR">SAR - Saudi Riyal</option>
                   <option value="EUR">EUR</option>
                   <option value="GBP">GBP</option>
                 </select>

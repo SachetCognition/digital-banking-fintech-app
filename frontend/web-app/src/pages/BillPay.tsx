@@ -28,7 +28,7 @@ export default function BillPay() {
     payerAccountId: '',
     beneficiaryId: '',
     amount: 0,
-    currency: 'USD',
+    currency: 'AED',
     description: '',
     idempotencyKey: ''
   })

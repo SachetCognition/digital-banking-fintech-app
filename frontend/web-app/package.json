@@ -11,13 +11,14 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.3.0",
     "axios": "^1.7.7",
     "i18next": "^23.15.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-i18next": "^15.0.0",
-    "react-router-dom": "^6.28.0",
-    "react-oidc-context": "^3.2.0"
+    "react-oidc-context": "^3.2.0",
+    "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.5.0",
@@ -25,7 +26,10 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.5.0",
     "jsdom": "^24.1.0",
+    "postcss": "^8.5.14",
+    "tailwindcss": "^4.3.0",
     "typescript": "^5.5.4",
     "vite": "^5.4.6",
     "vitest": "^2.0.5"

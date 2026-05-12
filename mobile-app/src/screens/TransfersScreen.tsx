@@ -69,7 +69,7 @@ export const TransfersScreen: React.FC = () => {
         payerAccountId: fromAccountId,
         payeeAccountId: toAccountId,
         amount: numericAmount,
-        currency: 'USD',
+        currency: 'AED',
         description,
       });
       Alert.alert('Success', 'Transfer initiated successfully');

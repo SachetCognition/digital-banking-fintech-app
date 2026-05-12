@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useAuth } from 'react-oidc-context'
-import { api, attachAuth } from '../api/http'
+import { api } from '../api/http'
 import AccountSelect from '../components/AccountSelect'
 
 interface TransferRequest {
@@ -13,7 +12,7 @@ interface TransferRequest {
 }
 
 export default function Transfer() {
-  const auth = useAuth()
+  const isAuthenticated = !!localStorage.getItem('accessToken')
   const [transfer, setTransfer] = useState<TransferRequest>({
     payerAccountId: '',
     payeeAccountId: '',
@@ -28,14 +27,10 @@ export default function Transfer() {
   const [usage, setUsage] = useState<{ dailyLimit?: number; used?: number; remaining?: number } | null>(null)
   const [friendlyError, setFriendlyError] = useState<string | null>(null)
 
-  useEffect(() => {
-    attachAuth(auth.user)
-  }, [auth.user])
-
   // Fetch limits and today's usage when payerAccountId changes and user is authenticated
   useEffect(() => {
     const fetchData = async () => {
-      if (!transfer.payerAccountId || !auth.isAuthenticated) return
+      if (!transfer.payerAccountId || !isAuthenticated) return
       try {
         // Account limits (per-account overrides)
         const limRes = await api.get(`/api/v1/accounts/${transfer.payerAccountId}/limits`)
@@ -62,7 +57,7 @@ export default function Transfer() {
       }
     }
     fetchData()
-  }, [transfer.payerAccountId, auth.isAuthenticated])
+  }, [transfer.payerAccountId, isAuthenticated])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

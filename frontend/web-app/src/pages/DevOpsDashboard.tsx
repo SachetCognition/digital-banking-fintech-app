@@ -465,10 +465,10 @@ const DevOpsDashboard: React.FC = () => {
                               {item.status}
                             </span>
                             <span className="text-sm font-medium text-gray-900">
-                              {item.pipelineName || item.serviceName || item.alertName}
+                              {('pipelineName' in item && item.pipelineName) || ('serviceName' in item && item.serviceName) || ('alertName' in item && item.alertName)}
                             </span>
                             <span className="text-sm text-gray-500">
-                              {item.triggerType || item.namespace || item.severity}
+                              {('triggerType' in item && item.triggerType) || ('namespace' in item && item.namespace) || ('severity' in item && item.severity)}
                             </span>
                           </div>
                           <p className="text-sm text-gray-600 mt-1">

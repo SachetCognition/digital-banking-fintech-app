@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useAuth } from 'react-oidc-context'
-import { api, attachAuth } from '../api/http'
+import { api } from '../api/http'
 
 interface Beneficiary {
   id: string
@@ -28,7 +27,6 @@ interface CreateBeneficiaryRequest {
 }
 
 export default function Beneficiaries() {
-  const auth = useAuth()
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([])
   const [loading, setLoading] = useState(false)
   const [showForm, setShowForm] = useState(false)
@@ -45,9 +43,8 @@ export default function Beneficiaries() {
   })
 
   React.useEffect(() => {
-    attachAuth(auth.user)
     loadBeneficiaries()
-  }, [auth.user])
+  }, [])
 
   const loadBeneficiaries = async () => {
     setLoading(true)

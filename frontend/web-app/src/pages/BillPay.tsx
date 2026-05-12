@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useAuth } from 'react-oidc-context'
-import { api, attachAuth } from '../api/http'
+import { api } from '../api/http'
 
 interface Beneficiary {
   id: string
@@ -21,7 +20,6 @@ interface BillPayRequest {
 }
 
 export default function BillPay() {
-  const auth = useAuth()
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([])
   const [selectedBeneficiary, setSelectedBeneficiary] = useState<Beneficiary | null>(null)
   const [billPay, setBillPay] = useState<BillPayRequest>({
@@ -36,9 +34,8 @@ export default function BillPay() {
   const [loading, setLoading] = useState(false)
 
   React.useEffect(() => {
-    attachAuth(auth.user)
     loadBeneficiaries()
-  }, [auth.user])
+  }, [])
 
   const loadBeneficiaries = async () => {
     try {

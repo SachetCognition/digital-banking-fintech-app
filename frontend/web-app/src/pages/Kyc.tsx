@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useAuth } from 'react-oidc-context'
-import { api, attachAuth } from '../api/http'
+import { api } from '../api/http'
 
 interface KycResponse {
   kycCaseId: string
@@ -42,7 +41,6 @@ interface DocumentSubmission {
 }
 
 export default function Kyc() {
-  const auth = useAuth()
   const [kycHistory, setKycHistory] = useState<KycResponse[]>([])
   const [currentKyc, setCurrentKyc] = useState<KycResponse | null>(null)
   const [loading, setLoading] = useState(false)
@@ -52,9 +50,8 @@ export default function Kyc() {
   const [polling, setPolling] = useState(false)
 
   React.useEffect(() => {
-    attachAuth(auth.user)
     loadKycHistory()
-  }, [auth.user])
+  }, [])
 
   const loadKycHistory = async () => {
     setLoading(true)
@@ -111,7 +108,8 @@ export default function Kyc() {
         })
       }
 
-      const customerId = auth.user?.profile?.sub || 'test-customer-id'
+      const user = JSON.parse(localStorage.getItem('user') || '{}')
+      const customerId = user.id || 'test-customer-id'
       
       const response = await api.post('/api/v1/kyc/submit', {
         customerId: customerId,

@@ -13,3 +13,9 @@ spring:
           issuer-uri: http://localhost:9080/realms/dbf
   kafka:
     bootstrap-servers: localhost:9092
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

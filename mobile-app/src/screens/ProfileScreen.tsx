@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, ScrollView, StyleSheet, Alert } from 'react-native';
 import { TextInput, Button, Text, Divider, Switch, Avatar, Card } from 'react-native-paper';
-import { AuthContext } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { api } from '../services/api';
 
 interface UserProfile {
@@ -14,7 +14,7 @@ interface UserProfile {
 }
 
 export const ProfileScreen: React.FC = () => {
-  const { logout } = useContext(AuthContext);
+  const { logout } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [phone, setPhone] = useState('');
   const [editing, setEditing] = useState(false);

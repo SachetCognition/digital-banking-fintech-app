@@ -1,8 +1,14 @@
-import axios from 'axios'
+import axios, { AxiosInstance } from 'axios'
 
 export const http = axios.create({
   baseURL: 'http://localhost:8080', // via API Gateway
 })
+
+export const api = http
+
+export function attachAuth(instance: AxiosInstance, token: string) {
+  instance.defaults.headers.common['Authorization'] = `Bearer ${token}`
+}
 
 // Add request interceptor to attach auth token
 http.interceptors.request.use((config) => {

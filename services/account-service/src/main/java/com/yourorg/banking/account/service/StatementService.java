@@ -62,12 +62,14 @@ public class StatementService {
         BigDecimal totalCredits = calculateTotalCredits(transactions);
 
         // Generate statement ID
-        String statementId = generateStatementId(account.getAccountNumber(), toDate);
+        String statementId = generateStatementId(account.accountNumber(), toDate);
 
         // Create statement
         AccountStatement statement = new AccountStatement(
                 UUID.randomUUID(),
                 accountId,
+                account.accountNumber(),
+                account.accountName(),
                 statementId,
                 toDate,
                 fromDate,
@@ -77,9 +79,13 @@ public class StatementService {
                 totalDebits,
                 totalCredits,
                 transactions,
-                account.getCurrency(),
+                account.currency(),
                 java.time.Instant.now(),
-                statementId
+                null, // generatedBy
+                null, // filePath
+                false, // emailSent
+                null, // emailSentAt
+                java.time.Instant.now() // createdAt
         );
 
         // Save statement
@@ -98,7 +104,7 @@ public class StatementService {
         return generateStatement(accountId, fromDate, toDate);
     }
 
-    public void emailStatement(UUID statementId, String emailAddress) {
+    public void emailStatement(String statementId, String emailAddress) {
         AccountStatement statement = statementRepository.findByStatementId(statementId)
                 .orElseThrow(() -> new IllegalArgumentException("Statement not found"));
 
@@ -112,12 +118,14 @@ public class StatementService {
             }
 
             // Send email
-            emailService.sendStatementEmail(emailAddress, account.getAccountName(), statement);
+            emailService.sendStatementEmail(emailAddress, account.accountName(), statement);
 
             // Update statement
             AccountStatement updatedStatement = new AccountStatement(
                     statement.id(),
                     statement.accountId(),
+                    statement.accountNumber(),
+                    statement.accountName(),
                     statement.statementId(),
                     statement.statementDate(),
                     statement.periodStart(),
@@ -153,7 +161,7 @@ public class StatementService {
                 .orElseThrow(() -> new IllegalArgumentException("Statement not found"));
     }
 
-    public byte[] downloadStatementPdf(UUID statementId) {
+    public byte[] downloadStatementPdf(String statementId) {
         AccountStatement statement = statementRepository.findByStatementId(statementId)
                 .orElseThrow(() -> new IllegalArgumentException("Statement not found"));
 
@@ -245,6 +253,8 @@ public class StatementService {
             AccountStatement updatedStatement = new AccountStatement(
                     statement.id(),
                     statement.accountId(),
+                    statement.accountNumber(),
+                    statement.accountName(),
                     statement.statementId(),
                     statement.statementDate(),
                     statement.periodStart(),

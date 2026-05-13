@@ -58,7 +58,7 @@ public class LoanController {
     public ResponseEntity<List<Object>> getLoanPayments(@PathVariable UUID loanId) {
         log.info("Getting payments for loan: {}", loanId);
         
-        List<Object> payments = (List<Object>) loanManagementService.getLoanPayments(loanId);
+        List<Object> payments = new java.util.ArrayList<>(loanManagementService.getLoanPayments(loanId));
         
         return ResponseEntity.ok(payments);
     }

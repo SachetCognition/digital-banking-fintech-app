@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Requirement Specification — Emirates Digital Bank: Middle East Region Compliance</title>
+<style>
+  @page { margin: 2cm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1a1a2e; line-height: 1.6; background: #f8f9fa; }
+  .container { max-width: 1100px; margin: 0 auto; background: #fff; padding: 48px 56px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  h1 { font-size: 28px; color: #0d4a2e; border-bottom: 3px solid #c5a13d; padding-bottom: 12px; margin-bottom: 8px; }
+  h2 { font-size: 22px; color: #0d4a2e; margin-top: 36px; margin-bottom: 12px; border-left: 4px solid #c5a13d; padding-left: 14px; }
+  h3 { font-size: 17px; color: #1a3c5e; margin-top: 24px; margin-bottom: 8px; }
+  p, li { font-size: 14px; }
+  p { margin-bottom: 10px; }
+  ul, ol { margin-left: 24px; margin-bottom: 12px; }
+  li { margin-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 13px; }
+  th, td { border: 1px solid #d0d5dd; padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: #0d4a2e; color: #fff; font-weight: 600; }
+  tr:nth-child(even) { background: #f4f6f8; }
+  .priority-critical { color: #b91c1c; font-weight: 700; }
+  .priority-high { color: #b45309; font-weight: 700; }
+  .doc-meta { display: grid; grid-template-columns: 160px 1fr; gap: 4px 16px; margin-bottom: 24px; font-size: 14px; }
+  .doc-meta dt { font-weight: 600; color: #555; }
+  .doc-meta dd { color: #1a1a2e; }
+  .header-bar { background: linear-gradient(135deg, #0d4a2e 0%, #1a6b42 100%); color: #fff; padding: 32px 56px; margin: -48px -56px 32px; }
+  .header-bar h1 { color: #fff; border-bottom-color: #c5a13d; }
+  .header-bar .subtitle { color: #c5a13d; font-size: 16px; margin-top: 4px; }
+  .toc { background: #f0f4f1; border: 1px solid #d0d5dd; border-radius: 6px; padding: 20px 28px; margin: 20px 0 32px; }
+  .toc h3 { margin-top: 0; }
+  .toc ol { margin-bottom: 0; }
+  .toc a { text-decoration: none; color: #0d4a2e; }
+  .toc a:hover { text-decoration: underline; }
+  .req-id { font-family: 'Courier New', monospace; font-weight: 700; color: #0d4a2e; background: #e8f0eb; padding: 1px 6px; border-radius: 3px; }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 3px; font-weight: 600; text-transform: uppercase; }
+  .badge-critical { background: #fde8e8; color: #b91c1c; }
+  .badge-high { background: #fef3cd; color: #b45309; }
+  footer { text-align: center; font-size: 12px; color: #888; margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; }
+  @media print {
+    body { background: #fff; }
+    .container { box-shadow: none; padding: 0; }
+    .header-bar { margin: 0 0 24px; padding: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header-bar">
+  <h1>User Requirement Specification</h1>
+  <div class="subtitle">Emirates Digital Bank — Middle East Region Compliance</div>
+</div>
+
+<dl class="doc-meta">
+  <dt>Document Title:</dt>
+  <dd>User Requirement Specification — Emirates Digital Bank: Middle East Region Compliance</dd>
+  <dt>Version:</dt>
+  <dd>1.0</dd>
+  <dt>Date:</dt>
+  <dd>2026-05-13</dd>
+  <dt>Project:</dt>
+  <dd>Emirates Digital Bank — Middle East Banking Compliance</dd>
+  <dt>Author:</dt>
+  <dd>Digital Banking Engineering Team</dd>
+  <dt>Status:</dt>
+  <dd>Draft for Review</dd>
+  <dt>Classification:</dt>
+  <dd>Internal — Confidential</dd>
+</dl>
+
+<div class="toc">
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#sec-exec">Executive Summary</a></li>
+    <li><a href="#sec-ws1">WS1 — Islamic Finance Products</a></li>
+    <li><a href="#sec-ws2">WS2 — Middle East Regulatory Compliance</a></li>
+    <li><a href="#sec-ws3">WS3 — KYC / Identity Verification</a></li>
+    <li><a href="#sec-ws4">WS4 — Regional Payment Networks</a></li>
+    <li><a href="#sec-ws5">WS5 — Multi-Currency &amp; Remittance</a></li>
+    <li><a href="#sec-ws6">WS6 — Arabic Language &amp; RTL Support</a></li>
+    <li><a href="#sec-dep">Dependency Matrix</a></li>
+    <li><a href="#sec-accept">Acceptance Criteria</a></li>
+    <li><a href="#sec-trace">Traceability Matrix</a></li>
+  </ol>
+</div>
+
+<!-- ============================== EXECUTIVE SUMMARY ============================== -->
+<h2 id="sec-exec">1. Executive Summary</h2>
+<p>The Emirates Digital Bank application currently operates on a conventional Western banking backend. Despite its UAE branding and Arabic-language user interface, the underlying platform lacks the Islamic finance product structures, Middle East regulatory reporting capabilities, regional payment network integrations, and KYC processes mandated by the Central Bank of the UAE (CBUAE), the Saudi Arabian Monetary Authority (SAMA), and the wider GCC regulatory framework.</p>
+<p>This User Requirement Specification defines the full set of requirements to make the Emirates Digital Bank fully operational in the Middle East — primarily the UAE and KSA, with extensibility to the broader GCC region. Requirements are organized into six workstreams (WS1–WS6) spanning Islamic finance products, regulatory compliance, KYC/identity verification, regional payment networks, multi-currency and remittance, and Arabic/RTL front-end support.</p>
+<p>Implementation is phased to manage dependencies:</p>
+<ul>
+  <li><strong>Phase 1 (Independent):</strong> WS3 (KYC), WS5 (Multi-Currency), WS6 (Arabic/RTL)</li>
+  <li><strong>Phase 2 (Depends on Phase 1):</strong> WS1 (Islamic Finance), WS4 (Payment Networks)</li>
+  <li><strong>Phase 3 (Depends on Phase 1 + 2):</strong> WS2 (Regulatory Compliance)</li>
+</ul>
+
+<!-- ============================== WS1 ============================== -->
+<h2 id="sec-ws1">2. WS1 — Islamic Finance Products <span class="badge badge-critical">Critical</span></h2>
+<p>This workstream introduces Shariah-compliant financial products to replace or augment the existing conventional loan and investment instruments. All products must comply with AAOIFI standards and receive Shariah Supervisory Board (SSB) approval before customer availability.</p>
+
+<table>
+  <thead>
+    <tr><th style="width:120px">Req ID</th><th>Requirement</th><th style="width:80px">Priority</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-IF-001</span></td><td>System shall support <strong>Murabaha (cost-plus) financing</strong> with configurable markup rates. The bank purchases an asset and resells it to the customer at a disclosed profit margin; payment may be deferred or in installments.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-IF-002</span></td><td>System shall support <strong>Ijara (leasing)</strong> with rental schedule generation. The bank purchases and leases an asset to the customer; ownership may transfer at the end of the lease (Ijara wa Iqtina).</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-IF-003</span></td><td>System shall support <strong>Diminishing Musharaka</strong> for home financing with equity split tracking. The bank and customer co-own the property; the customer gradually buys out the bank's share.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-IF-004</span></td><td>System shall support <strong>Mudarabah profit-sharing investment accounts</strong> with configurable profit ratios between the bank (Mudarib) and the customer (Rabb-ul-Maal).</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-IF-005</span></td><td>System shall <strong>replace interest-rate calculations with profit-rate calculations</strong> for all Islamic products. No reference to "interest" shall appear in Islamic product workflows.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-IF-006</span></td><td>System shall support <strong>Shariah Supervisory Board (SSB) approval workflow</strong> for new products — including submission, review, approval/rejection, and audit trail.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-IF-007</span></td><td>System shall support <strong>Wadiah (safekeeping) current accounts</strong>. Funds are held in trust; the bank may use them with implicit permission but guarantees return on demand.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-IF-008</span></td><td>System shall support <strong>Wakala (agency) investment contracts</strong>. The customer appoints the bank as agent (Wakeel) to invest funds for an agreed fee.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-IF-009</span></td><td>System shall support <strong>Sukuk (Islamic bonds)</strong> in the investment service. Sukuk represent ownership in tangible assets or services; the system must track underlying assets and profit distribution.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-IF-010</span></td><td>System shall support <strong>Takaful (Islamic insurance)</strong> product references. While underwriting is external, the system must store policy references, premium schedules, and claim statuses.</td><td class="priority-critical">Critical</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== WS2 ============================== -->
+<h2 id="sec-ws2">3. WS2 — Middle East Regulatory Compliance <span class="badge badge-critical">Critical</span></h2>
+<p>This workstream adds regulatory reporting and tax compliance capabilities specific to the UAE, KSA, and GCC jurisdictions. The existing BSA/SAR/CTR reporting framework must be extended — not replaced — to support parallel Middle East reporting.</p>
+
+<table>
+  <thead>
+    <tr><th style="width:120px">Req ID</th><th>Requirement</th><th style="width:80px">Priority</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-RC-001</span></td><td>System shall generate <strong>goAML suspicious transaction reports</strong> per CBUAE format. Reports must conform to the goAML XML schema and be submittable to the CBUAE Financial Intelligence Unit.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-RC-002</span></td><td>System shall generate <strong>CBUAE prudential returns</strong> including capital adequacy, liquidity ratios, and large exposure reports.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-RC-003</span></td><td>System shall support <strong>MENAFATF compliance frameworks</strong> including risk-based approach assessments aligned with FATF and MENAFATF mutual evaluation criteria.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-RC-004</span></td><td>System shall implement <strong>UAE Federal Decree-Law No. 20/2018 AML/CFT reporting</strong> including suspicious transaction reports, threshold-based reports, and cross-border wire transfer reports.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-RC-005</span></td><td>System shall calculate <strong>Zakat at 2.5%</strong> on eligible assets with nisab threshold check. Non-zakatable assets (personal use items, primary residence) must be excluded from calculation.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-RC-006</span></td><td>System shall handle <strong>5% GCC VAT</strong> on applicable banking fees. VAT-exempt transactions (e.g., Islamic finance profit margins treated as financial supplies) must be correctly identified.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-RC-007</span></td><td>System shall support <strong>SAMA reporting for KSA operations</strong> including prudential returns and AML reporting in the Saudi format.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-RC-008</span></td><td>System shall use <strong>AED 35,000 CTR threshold</strong> (not USD 10,000) for UAE currency transaction reporting. The threshold must be configurable per jurisdiction.</td><td class="priority-critical">Critical</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== WS3 ============================== -->
+<h2 id="sec-ws3">4. WS3 — KYC / Identity Verification <span class="badge badge-critical">Critical</span></h2>
+<p>This workstream adds UAE and KSA-specific identity documents, eKYC channels, and beneficial ownership verification to the existing KYC framework.</p>
+
+<table>
+  <thead>
+    <tr><th style="width:120px">Req ID</th><th>Requirement</th><th style="width:80px">Priority</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-KY-001</span></td><td>System shall validate <strong>Emirates ID format</strong> (784-YYYY-NNNNNNN-C) and integrate with ICP (UAE Identity Authority) for real-time verification. Checksum validation and expiry date enforcement are mandatory.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-KY-002</span></td><td>System shall support <strong>eKYC via UAE Pass</strong> (OAuth-based digital identity). UAE Pass provides Level 2 identity assurance; the system must handle token exchange, identity assertion parsing, and session binding.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-KY-003</span></td><td>System shall support <strong>Iqama (residency permit)</strong> for expat customers. The Iqama number and expiry must be validated and stored as a primary identity document for non-citizen residents.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-KY-004</span></td><td>System shall verify <strong>Trade License</strong> for business account onboarding. Trade license number, issuing authority (DED, ADGM, DIFC), and expiry date must be captured and validated.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-KY-005</span></td><td>System shall integrate with <strong>UBO (Beneficial Ownership) registry</strong> per CBUAE requirements. Ultimate beneficial owners with 25%+ ownership must be identified and screened.</td><td class="priority-critical">Critical</td></tr>
+    <tr><td><span class="req-id">REQ-KY-006</span></td><td>System shall support <strong>Saudi Absher National ID integration</strong> for KSA customer onboarding and identity verification.</td><td class="priority-critical">Critical</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== WS4 ============================== -->
+<h2 id="sec-ws4">5. WS4 — Regional Payment Networks <span class="badge badge-high">High</span></h2>
+<p>This workstream integrates the platform with UAE and GCC domestic and cross-border payment clearing systems.</p>
+
+<table>
+  <thead>
+    <tr><th style="width:120px">Req ID</th><th>Requirement</th><th style="width:80px">Priority</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-PN-001</span></td><td>System shall integrate with <strong>UAEFTS (UAE Funds Transfer System)</strong> for RTGS (Real-Time Gross Settlement) transfers. Messages must conform to CBUAE ISO 20022 format.</td><td class="priority-high">High</td></tr>
+    <tr><td><span class="req-id">REQ-PN-002</span></td><td>System shall integrate with <strong>UAEIPS</strong> for real-time instant payments. Transfers must settle within 10 seconds and support IBAN-based addressing.</td><td class="priority-high">High</td></tr>
+    <tr><td><span class="req-id">REQ-PN-003</span></td><td>System shall support <strong>WPS (Wage Protection System)</strong> with SIF file generation per Ministry of Labour (MoL) format. Batch salary processing, validation, and submission tracking are required.</td><td class="priority-high">High</td></tr>
+    <tr><td><span class="req-id">REQ-PN-004</span></td><td>System shall integrate with <strong>SADAD</strong> for Saudi bill payment. Bill presentment, payment, and reconciliation must be supported.</td><td class="priority-high">High</td></tr>
+    <tr><td><span class="req-id">REQ-PN-005</span></td><td>System shall integrate with <strong>SARIE</strong> for Saudi real-time payments, supporting instant domestic transfers within KSA.</td><td class="priority-high">High</td></tr>
+    <tr><td><span class="req-id">REQ-PN-006</span></td><td>System shall support <strong>GCC-RTGS and AFAQ</strong> cross-border payment systems for inter-GCC settlements.</td><td class="priority-high">High</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== WS5 ============================== -->
+<h2 id="sec-ws5">6. WS5 — Multi-Currency &amp; Remittance <span class="badge badge-high">High</span></h2>
+<p>This workstream introduces multi-currency wallet capabilities and dedicated remittance corridors for the large expatriate population in the GCC.</p>
+
+<table>
+  <thead>
+    <tr><th style="width:120px">Req ID</th><th>Requirement</th><th style="width:80px">Priority</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-MC-001</span></td><td>System shall support <strong>multi-currency wallets</strong> for AED, SAR, QAR, BHD, OMR, and KWD. Each wallet is a sub-account under the customer's primary account with independent balance tracking.</td><td class="priority-high">High</td></tr>
+    <tr><td><span class="req-id">REQ-MC-002</span></td><td>System shall integrate with <strong>CBUAE reference rates</strong> for real-time foreign exchange. Rates must be refreshed at configurable intervals (default: 15 minutes).</td><td class="priority-high">High</td></tr>
+    <tr><td><span class="req-id">REQ-MC-003</span></td><td>System shall support dedicated <strong>remittance corridors</strong> for India, Pakistan, Philippines, and Bangladesh — the four largest remittance destinations from the UAE.</td><td class="priority-high">High</td></tr>
+    <tr><td><span class="req-id">REQ-MC-004</span></td><td>System shall calculate <strong>corridor-specific fees</strong> and apply AML limits per corridor. Each corridor has distinct fee structures, exchange rate spreads, and regulatory limits.</td><td class="priority-high">High</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== WS6 ============================== -->
+<h2 id="sec-ws6">7. WS6 — Arabic Language &amp; RTL Support <span class="badge badge-high">High</span></h2>
+<p>This workstream completes the Arabic localization and RTL rendering for the web and mobile front-ends.</p>
+
+<table>
+  <thead>
+    <tr><th style="width:120px">Req ID</th><th>Requirement</th><th style="width:80px">Priority</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-AR-001</span></td><td>System shall support <strong>full RTL (right-to-left) layout</strong> for Arabic UI. All components must mirror correctly — navigation, forms, tables, modals, and charts.</td><td class="priority-high">High</td></tr>
+    <tr><td><span class="req-id">REQ-AR-002</span></td><td>System shall provide <strong>complete Arabic translations</strong>. The existing es.json (mislabeled — contains Arabic content) must be renamed to ar.json and validated for completeness against en.json.</td><td class="priority-high">High</td></tr>
+    <tr><td><span class="req-id">REQ-AR-003</span></td><td>System shall support <strong>Hijri calendar display</strong> alongside Gregorian. Date fields must show both calendars when the Arabic locale is active.</td><td class="priority-high">High</td></tr>
+    <tr><td><span class="req-id">REQ-AR-004</span></td><td>System shall format numbers using <strong>Arabic-Indic numerals</strong> (٠١٢٣٤٥٦٧٨٩) when the Arabic locale is active, using <code>Intl.NumberFormat('ar-AE')</code>.</td><td class="priority-high">High</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== DEPENDENCY MATRIX ============================== -->
+<h2 id="sec-dep">8. Dependency Matrix</h2>
+<p>The following matrix shows implementation dependencies between workstreams. Workstreams are grouped into implementation phases based on these dependencies.</p>
+
+<table>
+  <thead>
+    <tr><th>Workstream</th><th>Phase</th><th>Depends On</th><th>Rationale</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>WS3</strong> — KYC / Identity</td><td>Phase 1</td><td>None</td><td>KYC is foundational; customer identity flows are independent of product or payment logic.</td></tr>
+    <tr><td><strong>WS5</strong> — Multi-Currency &amp; Remittance</td><td>Phase 1</td><td>None</td><td>Currency models and FX rates are independent of Islamic finance or payment networks.</td></tr>
+    <tr><td><strong>WS6</strong> — Arabic / RTL</td><td>Phase 1</td><td>None</td><td>Front-end localization has no backend dependencies.</td></tr>
+    <tr><td><strong>WS1</strong> — Islamic Finance</td><td>Phase 2</td><td>WS3, WS5</td><td>Islamic products require KYC-verified customers and multi-currency account structures.</td></tr>
+    <tr><td><strong>WS4</strong> — Payment Networks</td><td>Phase 2</td><td>WS3, WS5</td><td>Payment networks require verified identities (IBAN validation) and multi-currency support.</td></tr>
+    <tr><td><strong>WS2</strong> — Regulatory Compliance</td><td>Phase 3</td><td>WS1, WS3, WS4, WS5</td><td>Regulatory reporting depends on transaction data from all other workstreams — Islamic products, payment flows, and customer data.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== ACCEPTANCE CRITERIA ============================== -->
+<h2 id="sec-accept">9. Acceptance Criteria</h2>
+
+<h3>WS1 — Islamic Finance Products</h3>
+<table>
+  <thead><tr><th style="width:120px">Req ID</th><th>Acceptance Criteria</th></tr></thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-IF-001</span></td><td>Given a Murabaha financing request with asset cost X and markup rate R%, the system calculates total price = X * (1 + R/100) and generates an installment schedule. The profit amount is disclosed to the customer before contract signing.</td></tr>
+    <tr><td><span class="req-id">REQ-IF-002</span></td><td>Given an Ijara lease request, the system generates a rental schedule with monthly payments for the lease term. The asset remains on the bank's balance sheet until ownership transfer (if Ijara wa Iqtina).</td></tr>
+    <tr><td><span class="req-id">REQ-IF-003</span></td><td>Given a Diminishing Musharaka contract with initial equity split (e.g., 80/20 bank/customer), the system tracks equity reduction per payment period and recalculates rental payments on the bank's diminishing share.</td></tr>
+    <tr><td><span class="req-id">REQ-IF-004</span></td><td>Given a Mudarabah investment with a profit-sharing ratio (e.g., 60/40), the system distributes realized profits according to the agreed ratio. Losses are borne entirely by the capital provider (customer).</td></tr>
+    <tr><td><span class="req-id">REQ-IF-005</span></td><td>When an Islamic product is processed, no interest-rate field or interest-based calculation is invoked. Attempting to apply interest to an Islamic product throws a ShariahViolationException.</td></tr>
+    <tr><td><span class="req-id">REQ-IF-006</span></td><td>A new Islamic product cannot be offered to customers until an SSB member approves it through the workflow. The audit trail records submitter, reviewer, decision, and timestamp.</td></tr>
+    <tr><td><span class="req-id">REQ-IF-007</span></td><td>A Wadiah current account can be opened, deposits and withdrawals function on demand, and no profit/interest is credited to the account holder (hibah/gift is optional and at bank's discretion).</td></tr>
+    <tr><td><span class="req-id">REQ-IF-008</span></td><td>A Wakala investment contract is created with an agreed management fee. The bank invests funds as agent and returns profits (minus fee) to the customer.</td></tr>
+    <tr><td><span class="req-id">REQ-IF-009</span></td><td>Sukuk instruments can be listed, purchased, and tracked in the investment portfolio. Profit distributions are calculated based on the underlying asset performance.</td></tr>
+    <tr><td><span class="req-id">REQ-IF-010</span></td><td>Takaful policy references can be stored with policy number, provider, premium schedule, and claim status. Integration hooks allow external Takaful providers to update claim statuses.</td></tr>
+  </tbody>
+</table>
+
+<h3>WS2 — Middle East Regulatory Compliance</h3>
+<table>
+  <thead><tr><th style="width:120px">Req ID</th><th>Acceptance Criteria</th></tr></thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-RC-001</span></td><td>The system generates a goAML XML report that passes CBUAE schema validation. The report includes all mandatory fields: reporting entity, subject, transaction details, and suspicion indicators.</td></tr>
+    <tr><td><span class="req-id">REQ-RC-002</span></td><td>CBUAE prudential return reports are generated with correct capital adequacy ratios, liquidity coverage ratios, and large exposure details in the required format.</td></tr>
+    <tr><td><span class="req-id">REQ-RC-003</span></td><td>The system's AML risk assessment methodology aligns with MENAFATF recommendations. Risk categories, scoring, and mitigation actions are documented and auditable.</td></tr>
+    <tr><td><span class="req-id">REQ-RC-004</span></td><td>All reports mandated under UAE Federal Decree-Law No. 20/2018 can be generated, including STRs (Suspicious Transaction Reports), threshold reports, and cross-border wire reports.</td></tr>
+    <tr><td><span class="req-id">REQ-RC-005</span></td><td>Given eligible assets of value V and nisab threshold N: if V >= N, Zakat = V * 0.025; if V < N, Zakat = 0. Non-zakatable assets are excluded from V.</td></tr>
+    <tr><td><span class="req-id">REQ-RC-006</span></td><td>Banking fees are subjected to 5% VAT. VAT-exempt transactions (e.g., certain Islamic finance margins) are correctly excluded. VAT invoices are generated per UAE FTA requirements.</td></tr>
+    <tr><td><span class="req-id">REQ-RC-007</span></td><td>SAMA-format reports can be generated for KSA operations, including capital adequacy, AML, and compliance reports.</td></tr>
+    <tr><td><span class="req-id">REQ-RC-008</span></td><td>Currency Transaction Reports are triggered at AED 35,000 (not USD 10,000) for UAE operations. The threshold is configurable per jurisdiction.</td></tr>
+  </tbody>
+</table>
+
+<h3>WS3 — KYC / Identity Verification</h3>
+<table>
+  <thead><tr><th style="width:120px">Req ID</th><th>Acceptance Criteria</th></tr></thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-KY-001</span></td><td>Emirates ID in format 784-YYYY-NNNNNNN-C passes validation. Invalid formats, expired IDs, and failed checksums are rejected with specific error codes.</td></tr>
+    <tr><td><span class="req-id">REQ-KY-002</span></td><td>A customer can authenticate via UAE Pass OAuth flow. The system exchanges the authorization code for identity assertions and binds the verified identity to the customer profile.</td></tr>
+    <tr><td><span class="req-id">REQ-KY-003</span></td><td>Iqama documents are accepted in the KYC workflow for expat customers. The Iqama number, expiry date, and sponsor details are validated and stored.</td></tr>
+    <tr><td><span class="req-id">REQ-KY-004</span></td><td>Business account onboarding requires a valid Trade License. The system verifies the license number, issuing authority, activity codes, and expiry date.</td></tr>
+    <tr><td><span class="req-id">REQ-KY-005</span></td><td>For corporate accounts, UBOs with 25%+ ownership are identified, screened against sanctions lists, and recorded per CBUAE requirements.</td></tr>
+    <tr><td><span class="req-id">REQ-KY-006</span></td><td>Saudi customers can verify their identity through Absher National ID integration. The system validates the National ID and retrieves verified identity data.</td></tr>
+  </tbody>
+</table>
+
+<h3>WS4 — Regional Payment Networks</h3>
+<table>
+  <thead><tr><th style="width:120px">Req ID</th><th>Acceptance Criteria</th></tr></thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-PN-001</span></td><td>UAEFTS RTGS transfers are submitted in ISO 20022 format. The system handles acknowledgements, rejections, and settlement confirmations from CBUAE.</td></tr>
+    <tr><td><span class="req-id">REQ-PN-002</span></td><td>UAEIPS instant payments settle within the 10-second SLA. IBAN validation is performed before submission. Real-time status updates are provided to the customer.</td></tr>
+    <tr><td><span class="req-id">REQ-PN-003</span></td><td>WPS SIF files are generated per MoL format specification. The file includes employer details, employee records, salary amounts, and bank routing. Batch validation ensures all salaries can be funded before submission.</td></tr>
+    <tr><td><span class="req-id">REQ-PN-004</span></td><td>SADAD bill presentment retrieves outstanding bills for a customer. Payments are processed through SADAD and reconciliation records are maintained.</td></tr>
+    <tr><td><span class="req-id">REQ-PN-005</span></td><td>SARIE instant payments within KSA are processed in real-time with proper format compliance and status tracking.</td></tr>
+    <tr><td><span class="req-id">REQ-PN-006</span></td><td>GCC-RTGS and AFAQ cross-border transfers are processed with proper message formatting, correspondent bank routing, and settlement tracking.</td></tr>
+  </tbody>
+</table>
+
+<h3>WS5 — Multi-Currency &amp; Remittance</h3>
+<table>
+  <thead><tr><th style="width:120px">Req ID</th><th>Acceptance Criteria</th></tr></thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-MC-001</span></td><td>A customer can hold balances in AED, SAR, QAR, BHD, OMR, and KWD simultaneously. Each currency wallet has independent balance, transaction history, and statement generation.</td></tr>
+    <tr><td><span class="req-id">REQ-MC-002</span></td><td>FX rates are sourced from CBUAE reference rates, refreshed every 15 minutes (configurable). Conversion uses mid-rate plus configurable spread per currency pair.</td></tr>
+    <tr><td><span class="req-id">REQ-MC-003</span></td><td>Remittance to India, Pakistan, Philippines, and Bangladesh corridors is supported with corridor-specific processing, compliance checks, and beneficiary bank validation.</td></tr>
+    <tr><td><span class="req-id">REQ-MC-004</span></td><td>Each corridor has defined fee structures and AML limits. Transfers exceeding corridor limits are flagged for enhanced due diligence. Fee transparency is provided before transaction confirmation.</td></tr>
+  </tbody>
+</table>
+
+<h3>WS6 — Arabic Language &amp; RTL Support</h3>
+<table>
+  <thead><tr><th style="width:120px">Req ID</th><th>Acceptance Criteria</th></tr></thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-AR-001</span></td><td>When the Arabic locale is active, the entire UI renders in RTL mode. Navigation, forms, tables, and modals mirror correctly. No LTR artifacts remain.</td></tr>
+    <tr><td><span class="req-id">REQ-AR-002</span></td><td>ar.json contains translations for 100% of the keys in en.json. No untranslated keys fall back to English when the Arabic locale is selected.</td></tr>
+    <tr><td><span class="req-id">REQ-AR-003</span></td><td>Date fields display Hijri dates alongside Gregorian when the Arabic locale is active. The conversion is accurate to within one day (due to lunar observation variance).</td></tr>
+    <tr><td><span class="req-id">REQ-AR-004</span></td><td>Numeric values display using Arabic-Indic numerals (e.g., ١٢٣٤٥) when the Arabic locale is active. Currency amounts, account numbers, and dates all use the correct numeral system.</td></tr>
+  </tbody>
+</table>
+
+<!-- ============================== TRACEABILITY MATRIX ============================== -->
+<h2 id="sec-trace">10. Traceability Matrix</h2>
+<p>The following matrix maps each requirement to the service(s) it primarily affects.</p>
+
+<table>
+  <thead>
+    <tr><th style="width:120px">Req ID</th><th>Requirement</th><th>Affected Service(s)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-IF-001</span></td><td>Murabaha financing</td><td>loan-service</td></tr>
+    <tr><td><span class="req-id">REQ-IF-002</span></td><td>Ijara leasing</td><td>loan-service</td></tr>
+    <tr><td><span class="req-id">REQ-IF-003</span></td><td>Diminishing Musharaka</td><td>loan-service</td></tr>
+    <tr><td><span class="req-id">REQ-IF-004</span></td><td>Mudarabah investment accounts</td><td>loan-service, account-service</td></tr>
+    <tr><td><span class="req-id">REQ-IF-005</span></td><td>Profit-rate calculations</td><td>loan-service</td></tr>
+    <tr><td><span class="req-id">REQ-IF-006</span></td><td>SSB approval workflow</td><td>loan-service</td></tr>
+    <tr><td><span class="req-id">REQ-IF-007</span></td><td>Wadiah current accounts</td><td>account-service</td></tr>
+    <tr><td><span class="req-id">REQ-IF-008</span></td><td>Wakala investment contracts</td><td>account-service, investment-service</td></tr>
+    <tr><td><span class="req-id">REQ-IF-009</span></td><td>Sukuk</td><td>investment-service</td></tr>
+    <tr><td><span class="req-id">REQ-IF-010</span></td><td>Takaful references</td><td>account-service</td></tr>
+    <tr><td><span class="req-id">REQ-RC-001</span></td><td>goAML reports</td><td>compliance-service</td></tr>
+    <tr><td><span class="req-id">REQ-RC-002</span></td><td>CBUAE prudential returns</td><td>compliance-service</td></tr>
+    <tr><td><span class="req-id">REQ-RC-003</span></td><td>MENAFATF compliance</td><td>compliance-service</td></tr>
+    <tr><td><span class="req-id">REQ-RC-004</span></td><td>UAE AML/CFT reporting</td><td>compliance-service</td></tr>
+    <tr><td><span class="req-id">REQ-RC-005</span></td><td>Zakat calculation</td><td>business-service</td></tr>
+    <tr><td><span class="req-id">REQ-RC-006</span></td><td>GCC VAT</td><td>business-service</td></tr>
+    <tr><td><span class="req-id">REQ-RC-007</span></td><td>SAMA reporting</td><td>compliance-service</td></tr>
+    <tr><td><span class="req-id">REQ-RC-008</span></td><td>AED CTR threshold</td><td>compliance-service</td></tr>
+    <tr><td><span class="req-id">REQ-KY-001</span></td><td>Emirates ID validation</td><td>customer-service</td></tr>
+    <tr><td><span class="req-id">REQ-KY-002</span></td><td>UAE Pass eKYC</td><td>customer-service</td></tr>
+    <tr><td><span class="req-id">REQ-KY-003</span></td><td>Iqama support</td><td>customer-service</td></tr>
+    <tr><td><span class="req-id">REQ-KY-004</span></td><td>Trade License verification</td><td>customer-service</td></tr>
+    <tr><td><span class="req-id">REQ-KY-005</span></td><td>UBO registry</td><td>customer-service</td></tr>
+    <tr><td><span class="req-id">REQ-KY-006</span></td><td>Saudi Absher integration</td><td>customer-service</td></tr>
+    <tr><td><span class="req-id">REQ-PN-001</span></td><td>UAEFTS integration</td><td>payments-service</td></tr>
+    <tr><td><span class="req-id">REQ-PN-002</span></td><td>UAEIPS integration</td><td>payments-service</td></tr>
+    <tr><td><span class="req-id">REQ-PN-003</span></td><td>WPS support</td><td>payments-service</td></tr>
+    <tr><td><span class="req-id">REQ-PN-004</span></td><td>SADAD integration</td><td>payments-service</td></tr>
+    <tr><td><span class="req-id">REQ-PN-005</span></td><td>SARIE integration</td><td>payments-service</td></tr>
+    <tr><td><span class="req-id">REQ-PN-006</span></td><td>GCC-RTGS / AFAQ</td><td>payments-service</td></tr>
+    <tr><td><span class="req-id">REQ-MC-001</span></td><td>Multi-currency wallets</td><td>account-service</td></tr>
+    <tr><td><span class="req-id">REQ-MC-002</span></td><td>CBUAE FX rates</td><td>account-service</td></tr>
+    <tr><td><span class="req-id">REQ-MC-003</span></td><td>Remittance corridors</td><td>payments-service</td></tr>
+    <tr><td><span class="req-id">REQ-MC-004</span></td><td>Corridor fees &amp; AML</td><td>payments-service</td></tr>
+    <tr><td><span class="req-id">REQ-AR-001</span></td><td>RTL layout</td><td>frontend/web-app</td></tr>
+    <tr><td><span class="req-id">REQ-AR-002</span></td><td>Arabic translations</td><td>frontend/web-app</td></tr>
+    <tr><td><span class="req-id">REQ-AR-003</span></td><td>Hijri calendar</td><td>frontend/web-app</td></tr>
+    <tr><td><span class="req-id">REQ-AR-004</span></td><td>Arabic-Indic numerals</td><td>frontend/web-app</td></tr>
+  </tbody>
+</table>
+
+<footer>
+  <p>Emirates Digital Bank — User Requirement Specification v1.0 | 2026-05-13 | Digital Banking Engineering Team</p>
+  <p>Classification: Internal — Confidential</p>
+</footer>
+
+</div>
+</body>
+</html>

@@ -8,7 +8,11 @@ public enum ReportType {
     KYC("KYC", "Know Your Customer Report"),
     RISK_ASSESSMENT("Risk Assessment", "Risk Assessment Report"),
     COMPLIANCE_AUDIT("Compliance Audit", "Compliance Audit Report"),
-    REGULATORY_FILING("Regulatory Filing", "General Regulatory Filing");
+    REGULATORY_FILING("Regulatory Filing", "General Regulatory Filing"),
+    GOAML("goAML", "CBUAE Suspicious Transaction Report"),
+    CBUAE_RETURN("CBUAE Return", "CBUAE Prudential Return"),
+    MENAFATF("MENAFATF", "Middle East FATF Report"),
+    SAMA_REPORT("SAMA Report", "Saudi Central Bank Report");
     
     private final String code;
     private final String displayName;

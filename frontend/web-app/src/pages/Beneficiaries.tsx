@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useAuth } from 'react-oidc-context'
-import { api, attachAuth } from '../api/http'
+import { api } from '../api/http'
 
 interface Beneficiary {
   id: string
@@ -28,7 +27,6 @@ interface CreateBeneficiaryRequest {
 }
 
 export default function Beneficiaries() {
-  const auth = useAuth()
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([])
   const [loading, setLoading] = useState(false)
   const [showForm, setShowForm] = useState(false)
@@ -39,15 +37,14 @@ export default function Beneficiaries() {
     accountNumber: '',
     bankCode: '',
     bankName: '',
-    currency: 'USD',
+    currency: 'AED',
     type: 'INTERNAL',
     description: ''
   })
 
   React.useEffect(() => {
-    attachAuth(auth.user)
     loadBeneficiaries()
-  }, [auth.user])
+  }, [])
 
   const loadBeneficiaries = async () => {
     setLoading(true)
@@ -76,7 +73,7 @@ export default function Beneficiaries() {
         accountNumber: '',
         bankCode: '',
         bankName: '',
-        currency: 'USD',
+        currency: 'AED',
         type: 'INTERNAL',
         description: ''
       })
@@ -211,7 +208,11 @@ export default function Beneficiaries() {
                 onChange={(e) => setFormData(prev => ({ ...prev, currency: e.target.value }))}
                 style={{ width: '100%', padding: 8, border: '1px solid #ccc', borderRadius: 4 }}
               >
-                <option value="USD">USD</option>
+                <option value="AED">AED - UAE Dirham</option>
+                  <option value="USD">USD - US Dollar</option>
+                  <option value="EUR">EUR - Euro</option>
+                  <option value="GBP">GBP - British Pound</option>
+                  <option value="SAR">SAR - Saudi Riyal</option>
                 <option value="EUR">EUR</option>
                 <option value="GBP">GBP</option>
               </select>

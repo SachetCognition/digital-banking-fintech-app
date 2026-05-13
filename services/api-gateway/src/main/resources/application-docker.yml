@@ -1,0 +1,61 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/dbf
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: http://customer-service:8081
+          predicates:
+            - Path=/api/v1/auth/**
+        - id: customer-service
+          uri: http://customer-service:8081
+          predicates:
+            - Path=/api/v1/customers/**,/api/v1/kyc/**
+        - id: account-service
+          uri: http://account-service:8082
+          predicates:
+            - Path=/api/v1/accounts/**
+        - id: ledger-service
+          uri: http://ledger-service:8083
+          predicates:
+            - Path=/api/v1/ledger/**
+        - id: payments-service
+          uri: http://payments-service:8084
+          predicates:
+            - Path=/api/v1/transfers/**,/api/v1/beneficiaries/**,/api/v1/bill-pay/**,/api/v1/external-transfers/**,/api/v1/international-transfers/**,/api/v1/recurring-payments/**,/api/v1/payment-templates/**,/api/v1/bulk-payments/**,/api/v1/payment-limits/**
+        - id: card-service
+          uri: http://card-service:8085
+          predicates:
+            - Path=/api/v1/cards/**
+        - id: loan-service
+          uri: http://loan-service:8086
+          predicates:
+            - Path=/api/v1/loan-applications/**,/api/v1/loans/**,/api/v1/credit-lines/**,/api/v1/credit-scores/**
+        - id: investment-service
+          uri: http://investment-service:8087
+          predicates:
+            - Path=/api/v1/investment-accounts/**,/api/v1/trading/**,/api/v1/portfolio/**,/api/v1/market-data/**
+        - id: compliance-service
+          uri: http://compliance-service:8088
+          predicates:
+            - Path=/api/v1/aml/**,/api/v1/transaction-monitoring/**,/api/v1/fraud-detection/**,/api/v1/audit/**,/api/v1/reports/**
+        - id: notifications-service
+          uri: http://notifications-service:8089
+          predicates:
+            - Path=/api/v1/notifications/**,/api/v1/chat/**,/api/v1/help/**,/api/v1/feedback/**
+        - id: admin-service
+          uri: http://admin-service:8090
+          predicates:
+            - Path=/api/v1/admin/**
+        - id: open-banking-service
+          uri: http://open-banking-service:8091
+          predicates:
+            - Path=/open-banking/**,/api/v1/open-banking/**
+        - id: file-service
+          uri: http://file-service:8097
+          predicates:
+            - Path=/api/v1/files/**

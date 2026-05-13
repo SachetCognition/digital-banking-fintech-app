@@ -1,9 +1,9 @@
-package com.digitalbank.fintech.customer;
+package com.yourorg.banking.customer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = {"com.yourorg.banking.customer", "com.digitalbank.fintech.customer"})
+@SpringBootApplication
 public class CustomerServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(CustomerServiceApplication.class, args);

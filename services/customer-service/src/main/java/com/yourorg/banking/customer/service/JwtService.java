@@ -3,7 +3,6 @@ package com.yourorg.banking.customer.service;
 import com.yourorg.banking.customer.model.Customer;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ public class JwtService {
     private final int accessTokenExpirationMinutes;
     private final int refreshTokenExpirationDays;
 
-    public JwtService(@Value("${app.jwt.secret:mySecretKey}") String secret,
+    public JwtService(@Value("${app.jwt.secret:mySecretKeyThatIsAtLeast256BitsLongForHS256Algorithm}") String secret,
                      @Value("${app.jwt.access-token-expiration-minutes:60}") int accessTokenExpirationMinutes,
                      @Value("${app.jwt.refresh-token-expiration-days:7}") int refreshTokenExpirationDays) {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
@@ -34,14 +33,14 @@ public class JwtService {
         Instant expiration = now.plus(accessTokenExpirationMinutes, ChronoUnit.MINUTES);
 
         return Jwts.builder()
-                .setSubject(customer.id().toString())
-                .setIssuedAt(Date.from(now))
-                .setExpiration(Date.from(expiration))
+                .subject(customer.id().toString())
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(expiration))
                 .claim("email", customer.email())
                 .claim("fullName", customer.fullName())
                 .claim("userNo", customer.userNo())
-                .claim("roles", List.of("CUSTOMER")) // This would be fetched from RBAC service
-                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .claim("roles", List.of("CUSTOMER"))
+                .signWith(secretKey)
                 .compact();
     }
 
@@ -50,20 +49,20 @@ public class JwtService {
         Instant expiration = now.plus(refreshTokenExpirationDays, ChronoUnit.DAYS);
 
         return Jwts.builder()
-                .setSubject(customer.id().toString())
-                .setIssuedAt(Date.from(now))
-                .setExpiration(Date.from(expiration))
+                .subject(customer.id().toString())
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(expiration))
                 .claim("type", "refresh")
-                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .signWith(secretKey)
                 .compact();
     }
 
     public Claims parseToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(secretKey)
+        return Jwts.parser()
+                .verifyWith(secretKey)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     public boolean isTokenValid(String token) {
@@ -79,4 +78,3 @@ public class JwtService {
         return parseToken(token).getSubject();
     }
 }
-

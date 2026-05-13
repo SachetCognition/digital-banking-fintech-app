@@ -9,20 +9,29 @@
       "clientId": "dbf-web",
       "publicClient": true,
       "protocol": "openid-connect",
-      "redirectUris": ["http://localhost:5173/*"],
-      "webOrigins": ["http://localhost:5173"],
+      "redirectUris": [
+        "http://localhost:5173/*"
+      ],
+      "webOrigins": [
+        "http://localhost:5173"
+      ],
       "standardFlowEnabled": true,
       "implicitFlowEnabled": false,
-      "directAccessGrantsEnabled": false,
+      "directAccessGrantsEnabled": true,
       "attributes": {
         "post.logout.redirect.uris": "http://localhost:5173/*"
-      }
+      },
+      "serviceAccountsEnabled": true
     }
   ],
   "roles": {
     "realm": [
-      {"name": "USER"},
-      {"name": "ADMIN"}
+      {
+        "name": "USER"
+      },
+      {
+        "name": "ADMIN"
+      }
     ]
   },
   "users": [
@@ -31,16 +40,47 @@
       "enabled": true,
       "emailVerified": true,
       "email": "alice@example.com",
-      "credentials": [{"type": "password", "value": "Password1!", "temporary": false}],
-      "realmRoles": ["USER"]
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Password1!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "USER"
+      ]
     },
     {
       "username": "bob",
       "enabled": true,
       "emailVerified": true,
       "email": "bob@example.com",
-      "credentials": [{"type": "password", "value": "Password1!", "temporary": false}],
-      "realmRoles": ["ADMIN"]
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Password1!",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "username": "loadtest",
+      "email": "loadtest@emiratesdigital.ae",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Load",
+      "lastName": "Test",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Test1234!",
+          "temporary": false
+        }
+      ]
     }
   ]
 }

@@ -8,7 +8,12 @@ public enum InterestCalculationMethod {
     RULE_78("Rule of 78", "Rule of 78 interest calculation"),
     ACTUARIAL("Actuarial", "Actuarial interest calculation"),
     PRIME_RATE("Prime Rate", "Prime rate based calculation"),
-    FIXED_RATE("Fixed Rate", "Fixed interest rate calculation");
+    FIXED_RATE("Fixed Rate", "Fixed interest rate calculation"),
+
+    // Islamic Finance Methods
+    PROFIT_RATE("Profit Rate", "Islamic profit rate calculation"),
+    COST_PLUS("Cost Plus", "Murabaha cost-plus markup"),
+    DIMINISHING_EQUITY("Diminishing Equity", "Diminishing Musharaka equity split");
     
     private final String displayName;
     private final String description;

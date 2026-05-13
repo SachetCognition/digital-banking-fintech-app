@@ -1,6 +1,7 @@
 package com.yourorg.banking.account.repo;
 
 import com.yourorg.banking.account.model.AccountOpeningCase;
+import com.yourorg.banking.account.model.AccountOpeningStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -80,7 +81,7 @@ public class AccountOpeningCaseRepository {
         return jdbcTemplate.query(sql, params, new AccountOpeningCaseRowMapper());
     }
 
-    public List<AccountOpeningCase> findByStatus(AccountOpeningCase.AccountOpeningStatus status) {
+    public List<AccountOpeningCase> findByStatus(AccountOpeningStatus status) {
         String sql = "SELECT * FROM account_opening_cases WHERE status = :status ORDER BY created_at DESC";
         MapSqlParameterSource params = new MapSqlParameterSource("status", status.name());
         
@@ -95,7 +96,7 @@ public class AccountOpeningCaseRepository {
                     UUID.fromString(rs.getString("account_id")),
                     UUID.fromString(rs.getString("customer_id")),
                     AccountOpeningCase.AccountOpeningCaseType.valueOf(rs.getString("case_type")),
-                    AccountOpeningCase.AccountOpeningStatus.valueOf(rs.getString("status")),
+                    AccountOpeningStatus.valueOf(rs.getString("status")),
                     AccountOpeningCase.AccountOpeningPriority.valueOf(rs.getString("priority")),
                     rs.getString("assigned_to") != null ? UUID.fromString(rs.getString("assigned_to")) : null,
                     rs.getString("kyc_case_id") != null ? UUID.fromString(rs.getString("kyc_case_id")) : null,

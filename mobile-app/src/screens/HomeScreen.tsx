@@ -84,10 +84,10 @@ const HomeScreen: React.FC = () => {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(amount);
+    return `AED ${new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount)}`;
   };
 
   const formatDate = (dateString: string) => {
@@ -133,8 +133,8 @@ const HomeScreen: React.FC = () => {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>Good morning,</Text>
-            <Text style={styles.userName}>{user?.firstName || 'User'}</Text>
+            <Text style={styles.greeting}>Marhaba,</Text>
+            <Text style={styles.userName}>{user?.firstName || 'Ahmed'}</Text>
           </View>
           <TouchableOpacity
             style={styles.notificationButton}

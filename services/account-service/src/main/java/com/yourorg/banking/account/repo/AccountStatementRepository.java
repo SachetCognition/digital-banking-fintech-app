@@ -111,6 +111,8 @@ public class AccountStatementRepository {
             return new AccountStatement(
                     UUID.fromString(rs.getString("id")),
                     UUID.fromString(rs.getString("account_id")),
+                    null, // accountNumber - not stored in this table
+                    null, // accountName - not stored in this table
                     rs.getString("statement_id"),
                     rs.getDate("statement_date").toLocalDate(),
                     rs.getDate("period_start").toLocalDate(),
@@ -122,7 +124,7 @@ public class AccountStatementRepository {
                     List.of(), // transactions - would need separate query
                     rs.getString("currency"),
                     rs.getTimestamp("generated_at").toInstant(),
-                    rs.getString("generated_by") != null ? UUID.fromString(rs.getString("generated_by")) : null,
+                    rs.getString("generated_by"),
                     rs.getString("file_path"),
                     rs.getBoolean("email_sent"),
                     rs.getTimestamp("email_sent_at") != null ? rs.getTimestamp("email_sent_at").toInstant() : null,

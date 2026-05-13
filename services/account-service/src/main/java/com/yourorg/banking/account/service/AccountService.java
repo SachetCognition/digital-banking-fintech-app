@@ -5,6 +5,8 @@ import com.yourorg.banking.account.repo.AccountRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,47 +23,65 @@ public class AccountService {
     }
     
     @Transactional
-    public AccountResponse createAccount(CreateAccountRequest request) {
-        // Check if customer has reached maximum accounts limit
+    public Account createAccount(CreateAccountRequest request) {
         long currentCount = accountRepository.countByCustomerIdAndStatus(request.customerId(), AccountStatus.ACTIVE);
         if (currentCount >= MAX_ACCOUNTS_PER_CUSTOMER) {
             throw new IllegalArgumentException("Maximum number of accounts reached (" + MAX_ACCOUNTS_PER_CUSTOMER + ")");
         }
         
-        // Generate unique account number
         String accountNumber = generateAccountNumber();
         
-        // Create account
         Account account = new Account(
             UUID.randomUUID(),
             request.customerId(),
             accountNumber,
             request.accountName(),
             request.type(),
+            AccountStatus.ACTIVE,
             request.currency(),
-            request.dailyTransferLimit(),
-            request.perTransactionLimit()
+            BigDecimal.ZERO, // balance
+            BigDecimal.ZERO, // availableBalance
+            BigDecimal.valueOf(request.type().getInterestRate()),
+            BigDecimal.valueOf(request.type().getFeeRate()),
+            request.dailyTransferLimit() != null ? request.dailyTransferLimit() : BigDecimal.ZERO,
+            request.perTransactionLimit() != null ? request.perTransactionLimit() : BigDecimal.ZERO,
+            null, // lastTransactionAt
+            null, // description
+            false, // paperlessStatements
+            false, // emailNotifications
+            "en", // preferredLanguage
+            false, // kycRequired
+            null, // kycLevel
+            KycStatus.NOT_REQUIRED,
+            AccountOpeningStatus.COMPLETED,
+            null, // openingReason
+            null, // closureReason
+            null, // closureRequestedAt
+            null, // closureApprovedAt
+            null, // closureApprovedBy
+            BigDecimal.ZERO, // minimumBalance
+            null, // maximumBalance
+            BigDecimal.ZERO, // monthlyFee
+            BigDecimal.ZERO, // overdraftLimit
+            null, // lastInterestCalculation
+            null, // nextInterestCalculation
+            Instant.now(),
+            Instant.now()
         );
         
-        accountRepository.save(account);
-        return createAccountResponse(account);
+        return accountRepository.save(account);
     }
     
-    public List<AccountResponse> getAccountsByCustomer(UUID customerId) {
-        List<Account> accounts = accountRepository.findByCustomerIdAndStatus(customerId, AccountStatus.ACTIVE);
-        return accounts.stream()
-                .map(this::createAccountResponse)
-                .collect(Collectors.toList());
+    public List<Account> getAccountsByCustomer(UUID customerId) {
+        return accountRepository.findByCustomerIdAndStatus(customerId, AccountStatus.ACTIVE);
     }
     
-    public Optional<AccountResponse> getAccountById(UUID accountId) {
-        return accountRepository.findById(accountId)
-                .map(this::createAccountResponse);
+    public Optional<Account> getAccountById(UUID accountId) {
+        return accountRepository.findById(accountId);
     }
     
-    public Optional<AccountResponse> getAccountByNumber(String accountNumber) {
-        return accountRepository.findByAccountNumber(accountNumber)
-                .map(this::createAccountResponse);
+    public Optional<Account> getAccountByNumber(String accountNumber) {
+        return accountRepository.findByAccountNumber(accountNumber);
     }
     
     @Transactional
@@ -69,8 +89,8 @@ public class AccountService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("Account not found"));
         
-        account.updateBalance(newBalance);
-        accountRepository.save(account);
+        Account updated = account.updateBalance(newBalance);
+        accountRepository.save(updated);
     }
     
     @Transactional
@@ -82,8 +102,8 @@ public class AccountService {
             throw new IllegalArgumentException("Insufficient available balance");
         }
         
-        account.reserveAmount(amount);
-        accountRepository.save(account);
+        Account updated = account.reserveAmount(amount);
+        accountRepository.save(updated);
     }
     
     @Transactional
@@ -91,8 +111,8 @@ public class AccountService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("Account not found"));
         
-        account.releaseReservation(amount);
-        accountRepository.save(account);
+        Account updated = account.releaseReservation(amount);
+        accountRepository.save(updated);
     }
     
     @Transactional
@@ -100,34 +120,14 @@ public class AccountService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("Account not found"));
         
-        account.deactivate();
-        accountRepository.save(account);
+        Account updated = account.deactivate();
+        accountRepository.save(updated);
     }
     
     private String generateAccountNumber() {
         String prefix = "ACC";
         String timestamp = String.valueOf(System.currentTimeMillis()).substring(8);
-        String random = String.valueOf((int) (Math.random() * 1000)).padStart(3, '0');
+        String random = String.format("%03d", (int) (Math.random() * 1000));
         return prefix + timestamp + random;
     }
-    
-    private AccountResponse createAccountResponse(Account account) {
-        return new AccountResponse(
-            account.getId(),
-            account.getCustomerId(),
-            account.getAccountNumber(),
-            account.getAccountName(),
-            account.getType(),
-            account.getStatus(),
-            account.getCurrency(),
-            account.getBalance(),
-            account.getAvailableBalance(),
-            account.getDailyTransferLimit(),
-            account.getPerTransactionLimit(),
-            account.getLastTransactionAt(),
-            account.getCreatedAt(),
-            account.getUpdatedAt()
-        );
-    }
 }
-

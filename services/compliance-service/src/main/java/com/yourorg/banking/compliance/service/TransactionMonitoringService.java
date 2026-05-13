@@ -17,6 +17,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class TransactionMonitoringService {
+
+    private static final BigDecimal US_THRESHOLD = new BigDecimal("10000");
+    private static final BigDecimal UAE_THRESHOLD_AED = new BigDecimal("35000");
     
     private final TransactionMonitoringRepository transactionMonitoringRepository;
     private final AuditLoggingService auditLoggingService;
@@ -119,6 +122,51 @@ public class TransactionMonitoringService {
         );
     }
     
+    public BigDecimal getThresholdForJurisdiction(String jurisdiction) {
+        if ("UAE".equalsIgnoreCase(jurisdiction) || "AE".equalsIgnoreCase(jurisdiction)) {
+            return UAE_THRESHOLD_AED;
+        }
+        return US_THRESHOLD;
+    }
+
+    public int calculateRiskScore(TransactionEvent event) {
+        int score = 0;
+        BigDecimal amount = event.amount();
+
+        if (amount.compareTo(new BigDecimal("10000")) > 0) {
+            score += 40;
+        } else if (amount.compareTo(new BigDecimal("5000")) > 0) {
+            score += 20;
+        } else if (amount.compareTo(new BigDecimal("1000")) > 0) {
+            score += 10;
+        }
+
+        switch (event.transactionType().toUpperCase()) {
+            case "WIRE_TRANSFER", "INTERNATIONAL_WIRE":
+                score += 35;
+                break;
+            case "CASH_DEPOSIT":
+                score += 25;
+                break;
+            case "INTERNATIONAL_TRANSFER":
+                score += 35;
+                break;
+            case "TRANSFER":
+                score += 15;
+                break;
+            default:
+                score += 5;
+        }
+
+        String country = event.country();
+        if (country != null && !country.equalsIgnoreCase("US") && !country.equalsIgnoreCase("GB")
+                && !country.equalsIgnoreCase("AE") && !country.equalsIgnoreCase("CA")) {
+            score += 20;
+        }
+
+        return Math.min(100, score);
+    }
+
     private Integer calculateRiskScore(BigDecimal amount, String transactionType, LocalDateTime transactionDate) {
         int score = 0;
         

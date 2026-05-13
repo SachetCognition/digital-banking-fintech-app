@@ -3,6 +3,7 @@ package com.yourorg.banking.customer.service;
 import com.yourorg.banking.customer.model.DocumentStatus;
 import com.yourorg.banking.customer.model.KycCallbackRequest;
 import com.yourorg.banking.customer.model.KycStatus;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class KycCallbackService {
     private final KycService kycService;
     private final Random random = new Random();
     
-    public KycCallbackService(KycService kycService) {
+    public KycCallbackService(@Lazy KycService kycService) {
         this.kycService = kycService;
     }
     

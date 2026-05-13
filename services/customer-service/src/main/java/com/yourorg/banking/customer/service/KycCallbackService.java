@@ -1,6 +1,7 @@
 package com.yourorg.banking.customer.service;
 
 import com.yourorg.banking.customer.model.DocumentStatus;
+import com.yourorg.banking.customer.model.KycCallbackRequest;
 import com.yourorg.banking.customer.model.KycStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;

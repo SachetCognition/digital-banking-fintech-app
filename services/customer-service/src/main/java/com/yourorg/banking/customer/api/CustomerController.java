@@ -1,8 +1,9 @@
-package com.digitalbank.fintech.customer.api;
+package com.yourorg.banking.customer.api;
 
-import com.digitalbank.fintech.customer.model.Customer;
-import com.digitalbank.fintech.customer.model.SignupRequest;
-import com.digitalbank.fintech.customer.repo.CustomerRepository;
+import com.yourorg.banking.customer.model.Customer;
+import com.yourorg.banking.customer.model.CustomerStatus;
+import com.yourorg.banking.customer.model.SignupRequest;
+import com.yourorg.banking.customer.repo.CustomerRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,9 +46,18 @@ public class CustomerController {
                 req.fullName(),
                 req.dob(),
                 req.country(),
-                "ACTIVE"
+                CustomerStatus.ACTIVE,
+                null,
+                false,
+                false,
+                false,
+                null,
+                0,
+                null,
+                Instant.now(),
+                Instant.now()
         );
-        repository.create(c);
+        repository.save(c);
         return ResponseEntity.created(URI.create("/api/v1/customers/" + id))
                 .body(Map.of(
                         "id", id.toString(),

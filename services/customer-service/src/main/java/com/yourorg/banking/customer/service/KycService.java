@@ -1,5 +1,8 @@
 package com.yourorg.banking.customer.service;
 
+import com.yourorg.banking.customer.kyc.EmiratesIdValidationService;
+import com.yourorg.banking.customer.kyc.UaePassIdentity;
+import com.yourorg.banking.customer.kyc.UaePassIntegrationService;
 import com.yourorg.banking.customer.model.*;
 import com.yourorg.banking.customer.repo.KycCaseRepository;
 import com.yourorg.banking.customer.repo.KycDocumentRepository;
@@ -9,26 +12,41 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class KycService {
     
+    private static final Map<KycLevel, Set<DocumentType>> ME_DOCUMENT_REQUIREMENTS = Map.of(
+        KycLevel.BASIC, Set.of(DocumentType.EMIRATES_ID),
+        KycLevel.STANDARD, Set.of(DocumentType.EMIRATES_ID, DocumentType.PROOF_OF_ADDRESS),
+        KycLevel.ENHANCED, Set.of(DocumentType.EMIRATES_ID, DocumentType.UAE_PASS_VERIFIED),
+        KycLevel.PREMIUM, Set.of(DocumentType.EMIRATES_ID, DocumentType.TRADE_LICENSE)
+    );
+    
     private final KycCaseRepository kycCaseRepository;
     private final KycDocumentRepository kycDocumentRepository;
     private final KycValidationService validationService;
     private final KycCallbackService callbackService;
+    private final EmiratesIdValidationService emiratesIdValidationService;
+    private final UaePassIntegrationService uaePassIntegrationService;
     
     public KycService(KycCaseRepository kycCaseRepository,
                      KycDocumentRepository kycDocumentRepository,
                      KycValidationService validationService,
-                     KycCallbackService callbackService) {
+                     KycCallbackService callbackService,
+                     EmiratesIdValidationService emiratesIdValidationService,
+                     UaePassIntegrationService uaePassIntegrationService) {
         this.kycCaseRepository = kycCaseRepository;
         this.kycDocumentRepository = kycDocumentRepository;
         this.validationService = validationService;
         this.callbackService = callbackService;
+        this.emiratesIdValidationService = emiratesIdValidationService;
+        this.uaePassIntegrationService = uaePassIntegrationService;
     }
     
     @Transactional
@@ -134,6 +152,41 @@ public class KycService {
             kycCase.expire();
             kycCaseRepository.save(kycCase);
         }
+    }
+    
+    public Set<DocumentType> getMiddleEastDocumentRequirements(KycLevel level) {
+        return ME_DOCUMENT_REQUIREMENTS.getOrDefault(level, Set.of());
+    }
+    
+    public boolean meetsMiddleEastEnhancedRequirements(Set<DocumentType> providedDocuments) {
+        return providedDocuments.contains(DocumentType.EMIRATES_ID)
+                || providedDocuments.contains(DocumentType.UAE_PASS_VERIFIED);
+    }
+    
+    @Transactional
+    public KycResponse elevateKycWithUaePass(UUID customerId, String authorizationCode) {
+        String accessToken = uaePassIntegrationService.exchangeToken(authorizationCode);
+        UaePassIdentity identity = uaePassIntegrationService.getIdentityAssertions(accessToken);
+        
+        if (identity.emiratesId() != null) {
+            emiratesIdValidationService.validate(identity.emiratesId());
+        }
+        
+        KycCase kycCase = new KycCase(UUID.randomUUID(), customerId, KycLevel.ENHANCED);
+        kycCaseRepository.save(kycCase);
+        
+        KycDocument uaePassDoc = new KycDocument(
+                UUID.randomUUID(), kycCase.getId(), customerId,
+                DocumentType.UAE_PASS_VERIFIED, "uae-pass-verification.json",
+                "application/json", 0L, "uaepass-verified",
+                "uae-pass-" + identity.emiratesId());
+        kycDocumentRepository.save(uaePassDoc);
+        
+        kycCase.submit("UAE_PASS", "UAEPASS-" + identity.emiratesId());
+        kycCase.approve(100);
+        kycCaseRepository.save(kycCase);
+        
+        return createKycResponse(kycCase, List.of(uaePassDoc));
     }
     
     private KycResponse createKycResponse(KycCase kycCase, List<KycDocument> documents) {

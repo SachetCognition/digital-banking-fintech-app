@@ -147,6 +147,13 @@ app:
         schedule: "0 2 * * *" # Daily at 2 AM
         batch-size: 1000
 
+cbuae:
+  reporting:
+    goaml-endpoint: https://goaml.cbuae.gov.ae/api/submit
+    prudential-endpoint: https://reporting.cbuae.gov.ae/api/prudential
+    entity-id: EMIRATES-DIGITAL-BANK
+    threshold-aed: 35000
+
 logging:
   level:
     com.yourorg.banking.compliance: DEBUG

@@ -1,6 +1,7 @@
 package com.yourorg.banking.compliance.service;
 
 import com.yourorg.banking.compliance.model.*;
+import com.yourorg.banking.compliance.repository.FraudAlertRepository;
 import com.yourorg.banking.compliance.repository.FraudDetectionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +19,36 @@ import java.util.UUID;
 public class FraudDetectionService {
     
     private final FraudDetectionRepository fraudDetectionRepository;
+    private final FraudAlertRepository fraudAlertRepository;
     private final AuditLoggingService auditLoggingService;
     
+    public FraudAnalysisResult analyzeTransaction(TransactionEvent event) {
+        log.info("Analyzing transaction event {} for fraud", event.transactionId());
+
+        BigDecimal fraudScore = calculateFraudScore(event.amount(), event.transactionType(), event.customerId());
+        int score = fraudScore.intValue();
+        boolean detected = score > 70;
+
+        if (detected) {
+            FraudDetection alert = FraudDetection.builder()
+                .transactionId(event.transactionId())
+                .customerId(event.customerId())
+                .fraudType(determineFraudType(event.amount(), event.transactionType(), fraudScore))
+                .fraudScore(fraudScore)
+                .detectionMethod(DetectionMethod.RULE_BASED)
+                .investigationStatus(InvestigationStatus.PENDING)
+                .isConfirmed(false)
+                .isFalsePositive(false)
+                .build();
+            fraudAlertRepository.save(alert);
+        }
+
+        return FraudAnalysisResult.builder()
+            .fraudScore(score)
+            .fraudDetected(detected)
+            .build();
+    }
+
     @Transactional
     public void analyzeTransaction(UUID transactionId, UUID customerId, 
                                  BigDecimal amount, String transactionType) {
@@ -161,7 +190,7 @@ public class FraudDetectionService {
         double score = 0.0;
         
         // Amount-based scoring
-        if (amount.compareTo(new BigDecimal("50000")) > 0) {
+        if (amount.compareTo(new BigDecimal("50000")) >= 0) {
             score += 40.0;
         } else if (amount.compareTo(new BigDecimal("10000")) > 0) {
             score += 25.0;
@@ -178,15 +207,13 @@ public class FraudDetectionService {
                 score += 25.0;
                 break;
             case "INTERNATIONAL_TRANSFER":
+            case "INTERNATIONAL_WIRE":
                 score += 35.0;
                 break;
             case "CARD_NOT_PRESENT":
                 score += 20.0;
                 break;
         }
-        
-        // Add some randomness to simulate ML model
-        score += Math.random() * 10.0;
         
         return BigDecimal.valueOf(Math.min(100.0, score));
     }

@@ -8,7 +8,13 @@ public enum LoanType {
     EDUCATION("Education Loan", "Loan for educational expenses"),
     CREDIT_LINE("Credit Line", "Revolving credit facility"),
     MORTGAGE("Mortgage", "Long-term loan secured by real estate"),
-    CONSOLIDATION("Debt Consolidation", "Loan to consolidate multiple debts");
+    CONSOLIDATION("Debt Consolidation", "Loan to consolidate multiple debts"),
+
+    // Islamic Finance Products
+    MURABAHA("Murabaha", "Cost-plus financing"),
+    IJARA("Ijara", "Lease financing"),
+    MUSHARAKA("Diminishing Musharaka", "Partnership home financing"),
+    MUDARABAH("Mudarabah", "Profit-sharing financing");
     
     private final String displayName;
     private final String description;

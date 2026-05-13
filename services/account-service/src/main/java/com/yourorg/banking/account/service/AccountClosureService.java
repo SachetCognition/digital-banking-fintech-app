@@ -46,16 +46,16 @@ public class AccountClosureService {
                 .orElseThrow(() -> new IllegalArgumentException("Account not found"));
 
         // Validate account belongs to customer
-        if (!account.getCustomerId().equals(customerId)) {
+        if (!account.customerId().equals(customerId)) {
             throw new IllegalArgumentException("Account does not belong to customer");
         }
 
         // Check if account is already closed or pending closure
-        if (account.getStatus() == AccountStatus.CLOSED) {
+        if (account.status() == AccountStatus.CLOSED) {
             throw new IllegalStateException("Account is already closed");
         }
 
-        if (account.getClosureRequestedAt() != null) {
+        if (account.closureRequestedAt() != null) {
             throw new IllegalStateException("Account closure is already pending");
         }
 
@@ -64,7 +64,7 @@ public class AccountClosureService {
             Account transferAccount = accountRepository.findById(request.transferAccountId())
                     .orElseThrow(() -> new IllegalArgumentException("Transfer account not found"));
             
-            if (!transferAccount.getCustomerId().equals(customerId)) {
+            if (!transferAccount.customerId().equals(customerId)) {
                 throw new IllegalArgumentException("Transfer account does not belong to customer");
             }
         }
@@ -94,40 +94,40 @@ public class AccountClosureService {
 
         // Update account status
         Account updatedAccount = new Account(
-                account.getId(),
-                account.getCustomerId(),
-                account.getAccountNumber(),
-                account.getAccountName(),
-                account.getType(),
-                account.getStatus(),
-                account.getCurrency(),
-                account.getBalance(),
-                account.getAvailableBalance(),
-                account.getInterestRate(),
-                account.getFeeRate(),
-                account.getDailyTransferLimit(),
-                account.getPerTransactionLimit(),
-                account.getLastTransactionAt(),
-                account.getDescription(),
-                account.isPaperlessStatements(),
-                account.isEmailNotifications(),
-                account.getPreferredLanguage(),
-                account.isKycRequired(),
-                account.getKycLevel(),
-                account.getKycStatus(),
-                account.getOpeningStatus(),
-                account.getOpeningReason(),
+                account.id(),
+                account.customerId(),
+                account.accountNumber(),
+                account.accountName(),
+                account.type(),
+                account.status(),
+                account.currency(),
+                account.balance(),
+                account.availableBalance(),
+                account.interestRate(),
+                account.feeRate(),
+                account.dailyTransferLimit(),
+                account.perTransactionLimit(),
+                account.lastTransactionAt(),
+                account.description(),
+                account.paperlessStatements(),
+                account.emailNotifications(),
+                account.preferredLanguage(),
+                account.kycRequired(),
+                account.kycLevel(),
+                account.kycStatus(),
+                account.openingStatus(),
+                account.openingReason(),
                 request.closureReason(),
                 Instant.now(), // closure_requested_at
                 null, // closure_approved_at
                 null, // closure_approved_by
-                account.getMinimumBalance(),
-                account.getMaximumBalance(),
-                account.getMonthlyFee(),
-                account.getOverdraftLimit(),
-                account.getLastInterestCalculation(),
-                account.getNextInterestCalculation(),
-                account.getCreatedAt(),
+                account.minimumBalance(),
+                account.maximumBalance(),
+                account.monthlyFee(),
+                account.overdraftLimit(),
+                account.lastInterestCalculation(),
+                account.nextInterestCalculation(),
+                account.createdAt(),
                 Instant.now()
         );
 
@@ -151,7 +151,7 @@ public class AccountClosureService {
                 .orElseThrow(() -> new IllegalArgumentException("Account not found"));
 
         // Get final balance
-        BigDecimal finalBalance = account.getBalance();
+        BigDecimal finalBalance = account.balance();
 
         // Process transfer if specified
         BigDecimal transferAmount = BigDecimal.ZERO;
@@ -160,13 +160,13 @@ public class AccountClosureService {
         }
 
         // Generate final statement if requested
-        if (closureRequest.generateFinalStatement()) {
+        if (closureRequest.finalStatementGenerated()) {
             try {
-                statementService.generateStatement(account.getId(), 
-                        account.getCreatedAt().atZone(java.time.ZoneId.systemDefault()).toLocalDate(),
+                statementService.generateStatement(account.id(), 
+                        account.createdAt().atZone(java.time.ZoneId.systemDefault()).toLocalDate(),
                         java.time.LocalDate.now());
             } catch (Exception e) {
-                logger.warn("Failed to generate final statement for account: {}", account.getId(), e);
+                logger.warn("Failed to generate final statement for account: {}", account.id(), e);
             }
         }
 
@@ -184,7 +184,7 @@ public class AccountClosureService {
                 null, // rejection_reason
                 finalBalance,
                 transferAmount,
-                closureRequest.generateFinalStatement(),
+                closureRequest.finalStatementGenerated(),
                 false, // final_statement_sent
                 closureRequest.createdAt(),
                 Instant.now(),
@@ -237,40 +237,40 @@ public class AccountClosureService {
                 .orElseThrow(() -> new IllegalArgumentException("Account not found"));
 
         Account updatedAccount = new Account(
-                account.getId(),
-                account.getCustomerId(),
-                account.getAccountNumber(),
-                account.getAccountName(),
-                account.getType(),
-                account.getStatus(),
-                account.getCurrency(),
-                account.getBalance(),
-                account.getAvailableBalance(),
-                account.getInterestRate(),
-                account.getFeeRate(),
-                account.getDailyTransferLimit(),
-                account.getPerTransactionLimit(),
-                account.getLastTransactionAt(),
-                account.getDescription(),
-                account.isPaperlessStatements(),
-                account.isEmailNotifications(),
-                account.getPreferredLanguage(),
-                account.isKycRequired(),
-                account.getKycLevel(),
-                account.getKycStatus(),
-                account.getOpeningStatus(),
-                account.getOpeningReason(),
+                account.id(),
+                account.customerId(),
+                account.accountNumber(),
+                account.accountName(),
+                account.type(),
+                account.status(),
+                account.currency(),
+                account.balance(),
+                account.availableBalance(),
+                account.interestRate(),
+                account.feeRate(),
+                account.dailyTransferLimit(),
+                account.perTransactionLimit(),
+                account.lastTransactionAt(),
+                account.description(),
+                account.paperlessStatements(),
+                account.emailNotifications(),
+                account.preferredLanguage(),
+                account.kycRequired(),
+                account.kycLevel(),
+                account.kycStatus(),
+                account.openingStatus(),
+                account.openingReason(),
                 null, // closure_reason
                 null, // closure_requested_at
                 null, // closure_approved_at
                 null, // closure_approved_by
-                account.getMinimumBalance(),
-                account.getMaximumBalance(),
-                account.getMonthlyFee(),
-                account.getOverdraftLimit(),
-                account.getLastInterestCalculation(),
-                account.getNextInterestCalculation(),
-                account.getCreatedAt(),
+                account.minimumBalance(),
+                account.maximumBalance(),
+                account.monthlyFee(),
+                account.overdraftLimit(),
+                account.lastInterestCalculation(),
+                account.nextInterestCalculation(),
+                account.createdAt(),
                 Instant.now()
         );
 
@@ -291,46 +291,46 @@ public class AccountClosureService {
         // This would integrate with the ledger service to process the transfer
         // For now, just return the amount
         logger.info("Processing balance transfer of {} from account {} to account {}", 
-                amount, fromAccount.getId(), toAccountId);
+                amount, fromAccount.id(), toAccountId);
         return amount;
     }
 
     private void closeAccount(Account account, BigDecimal finalBalance, BigDecimal transferAmount) {
         Account closedAccount = new Account(
-                account.getId(),
-                account.getCustomerId(),
-                account.getAccountNumber(),
-                account.getAccountName(),
-                account.getType(),
+                account.id(),
+                account.customerId(),
+                account.accountNumber(),
+                account.accountName(),
+                account.type(),
                 AccountStatus.CLOSED,
-                account.getCurrency(),
+                account.currency(),
                 finalBalance,
                 BigDecimal.ZERO, // available_balance
-                account.getInterestRate(),
-                account.getFeeRate(),
-                account.getDailyTransferLimit(),
-                account.getPerTransactionLimit(),
-                account.getLastTransactionAt(),
-                account.getDescription(),
-                account.isPaperlessStatements(),
-                account.isEmailNotifications(),
-                account.getPreferredLanguage(),
-                account.isKycRequired(),
-                account.getKycLevel(),
-                account.getKycStatus(),
-                account.getOpeningStatus(),
-                account.getOpeningReason(),
-                account.getClosureReason(),
-                account.getClosureRequestedAt(),
+                account.interestRate(),
+                account.feeRate(),
+                account.dailyTransferLimit(),
+                account.perTransactionLimit(),
+                account.lastTransactionAt(),
+                account.description(),
+                account.paperlessStatements(),
+                account.emailNotifications(),
+                account.preferredLanguage(),
+                account.kycRequired(),
+                account.kycLevel(),
+                account.kycStatus(),
+                account.openingStatus(),
+                account.openingReason(),
+                account.closureReason(),
+                account.closureRequestedAt(),
                 Instant.now(), // closure_approved_at
-                account.getClosureApprovedBy(),
-                account.getMinimumBalance(),
-                account.getMaximumBalance(),
-                account.getMonthlyFee(),
-                account.getOverdraftLimit(),
-                account.getLastInterestCalculation(),
-                account.getNextInterestCalculation(),
-                account.getCreatedAt(),
+                account.closureApprovedBy(),
+                account.minimumBalance(),
+                account.maximumBalance(),
+                account.monthlyFee(),
+                account.overdraftLimit(),
+                account.lastInterestCalculation(),
+                account.nextInterestCalculation(),
+                account.createdAt(),
                 Instant.now()
         );
 
@@ -340,11 +340,11 @@ public class AccountClosureService {
         try {
             emailService.sendAccountClosureNotification(
                     "customer@example.com", // This would come from customer service
-                    account.getAccountName(),
-                    account.getAccountNumber()
+                    account.accountName(),
+                    account.accountNumber()
             );
         } catch (Exception e) {
-            logger.warn("Failed to send closure notification for account: {}", account.getId(), e);
+            logger.warn("Failed to send closure notification for account: {}", account.id(), e);
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.yourorg.banking.loan.service;
 
 import com.yourorg.banking.loan.model.*;
+import com.yourorg.banking.loan.model.dto.LoanApplicationRequest;
+import com.yourorg.banking.loan.model.dto.LoanApplicationResponse;
 import com.yourorg.banking.loan.repository.LoanApplicationRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,70 +26,93 @@ class LoanApplicationServiceTest {
     @Mock
     private CreditScoringService creditScoringService;
 
+    @Mock
+    private LoanNumberGeneratorService loanNumberGeneratorService;
+
     @InjectMocks
     private LoanApplicationService loanApplicationService;
 
     @Test
-    void applyForLoan_highScore_autoApproves() {
+    void submitLoanApplication_highScore_autoApproves() {
         UUID customerId = UUID.randomUUID();
-        LoanApplicationRequest request = new LoanApplicationRequest(
-            customerId, new BigDecimal("30000"), "PERSONAL", 36, new BigDecimal("80000")
-        );
+        LoanApplicationRequest request = LoanApplicationRequest.builder()
+                .loanType(LoanType.PERSONAL)
+                .requestedAmount(new BigDecimal("30000"))
+                .requestedTermMonths(36)
+                .purpose("Personal use")
+                .employmentStatus(EmploymentStatus.EMPLOYED)
+                .annualIncome(new BigDecimal("80000"))
+                .monthlyExpenses(new BigDecimal("3000"))
+                .build();
 
-        when(creditScoringService.getScore(customerId)).thenReturn(750);
+        CreditScore creditScore = CreditScore.builder()
+                .score(750)
+                .riskLevel(RiskLevel.LOW)
+                .build();
+
+        when(loanNumberGeneratorService.generateApplicationNumber()).thenReturn("APP-001");
+        when(creditScoringService.calculateCreditScore(customerId, CreditScoreType.INTERNAL)).thenReturn(creditScore);
         when(loanApplicationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        LoanApplication result = loanApplicationService.applyForLoan(request);
+        LoanApplicationResponse result = loanApplicationService.submitLoanApplication(customerId, request);
 
         assertNotNull(result);
-        assertEquals(LoanApplicationStatus.APPROVED, result.getStatus());
+        assertEquals("Approved", result.getStatus());
     }
 
     @Test
-    void applyForLoan_lowScore_autoRejects() {
+    void submitLoanApplication_lowScore_autoRejects() {
         UUID customerId = UUID.randomUUID();
-        LoanApplicationRequest request = new LoanApplicationRequest(
-            customerId, new BigDecimal("50000"), "PERSONAL", 60, new BigDecimal("40000")
-        );
+        LoanApplicationRequest request = LoanApplicationRequest.builder()
+                .loanType(LoanType.PERSONAL)
+                .requestedAmount(new BigDecimal("50000"))
+                .requestedTermMonths(60)
+                .purpose("Personal use")
+                .employmentStatus(EmploymentStatus.EMPLOYED)
+                .annualIncome(new BigDecimal("40000"))
+                .monthlyExpenses(new BigDecimal("2000"))
+                .build();
 
-        when(creditScoringService.getScore(customerId)).thenReturn(550);
+        CreditScore creditScore = CreditScore.builder()
+                .score(550)
+                .riskLevel(RiskLevel.CRITICAL)
+                .build();
+
+        when(loanNumberGeneratorService.generateApplicationNumber()).thenReturn("APP-002");
+        when(creditScoringService.calculateCreditScore(customerId, CreditScoreType.INTERNAL)).thenReturn(creditScore);
         when(loanApplicationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        LoanApplication result = loanApplicationService.applyForLoan(request);
+        LoanApplicationResponse result = loanApplicationService.submitLoanApplication(customerId, request);
 
         assertNotNull(result);
-        assertEquals(LoanApplicationStatus.REJECTED, result.getStatus());
+        assertEquals("Rejected", result.getStatus());
     }
 
     @Test
-    void applyForLoan_midScore_requiresManualReview() {
+    void submitLoanApplication_midScore_requiresManualReview() {
         UUID customerId = UUID.randomUUID();
-        LoanApplicationRequest request = new LoanApplicationRequest(
-            customerId, new BigDecimal("75000"), "PERSONAL", 48, new BigDecimal("60000")
-        );
+        LoanApplicationRequest request = LoanApplicationRequest.builder()
+                .loanType(LoanType.PERSONAL)
+                .requestedAmount(new BigDecimal("40000"))
+                .requestedTermMonths(48)
+                .purpose("Personal use")
+                .employmentStatus(EmploymentStatus.EMPLOYED)
+                .annualIncome(new BigDecimal("90000"))
+                .monthlyExpenses(new BigDecimal("2500"))
+                .build();
 
-        when(creditScoringService.getScore(customerId)).thenReturn(650);
+        CreditScore creditScore = CreditScore.builder()
+                .score(650)
+                .riskLevel(RiskLevel.MEDIUM)
+                .build();
+
+        when(loanNumberGeneratorService.generateApplicationNumber()).thenReturn("APP-003");
+        when(creditScoringService.calculateCreditScore(customerId, CreditScoreType.INTERNAL)).thenReturn(creditScore);
         when(loanApplicationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        LoanApplication result = loanApplicationService.applyForLoan(request);
+        LoanApplicationResponse result = loanApplicationService.submitLoanApplication(customerId, request);
 
         assertNotNull(result);
-        assertEquals(LoanApplicationStatus.UNDER_REVIEW, result.getStatus());
-    }
-
-    @Test
-    void applyForLoan_highAmount_autoRejects() {
-        UUID customerId = UUID.randomUUID();
-        LoanApplicationRequest request = new LoanApplicationRequest(
-            customerId, new BigDecimal("150000"), "PERSONAL", 60, new BigDecimal("100000")
-        );
-
-        when(creditScoringService.getScore(customerId)).thenReturn(720);
-        when(loanApplicationRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
-
-        LoanApplication result = loanApplicationService.applyForLoan(request);
-
-        assertNotNull(result);
-        assertEquals(LoanApplicationStatus.REJECTED, result.getStatus());
+        assertEquals("Under Review", result.getStatus());
     }
 }

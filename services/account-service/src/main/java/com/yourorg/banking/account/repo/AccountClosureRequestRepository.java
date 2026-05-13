@@ -1,6 +1,7 @@
 package com.yourorg.banking.account.repo;
 
 import com.yourorg.banking.account.model.AccountClosureRequest;
+import com.yourorg.banking.account.model.AccountClosureStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -82,7 +83,7 @@ public class AccountClosureRequestRepository {
         return jdbcTemplate.query(sql, params, new AccountClosureRequestRowMapper());
     }
 
-    public List<AccountClosureRequest> findByStatus(AccountClosureRequest.AccountClosureStatus status) {
+    public List<AccountClosureRequest> findByStatus(AccountClosureStatus status) {
         String sql = "SELECT * FROM account_closure_requests WHERE status = :status ORDER BY created_at DESC";
         MapSqlParameterSource params = new MapSqlParameterSource("status", status.name());
         
@@ -106,7 +107,7 @@ public class AccountClosureRequestRepository {
                     rs.getString("closure_reason"),
                     rs.getString("transfer_account_id") != null ? UUID.fromString(rs.getString("transfer_account_id")) : null,
                     rs.getString("comments"),
-                    AccountClosureRequest.AccountClosureStatus.valueOf(rs.getString("status")),
+                    AccountClosureStatus.valueOf(rs.getString("status")),
                     rs.getString("approved_by") != null ? UUID.fromString(rs.getString("approved_by")) : null,
                     rs.getTimestamp("approved_at") != null ? rs.getTimestamp("approved_at").toInstant() : null,
                     rs.getString("rejection_reason"),

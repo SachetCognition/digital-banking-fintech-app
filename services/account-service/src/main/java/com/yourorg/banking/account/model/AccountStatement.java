@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.UUID;
 
 public record AccountStatement(
+    UUID id,
     UUID accountId,
     String accountNumber,
     String accountName,
+    String statementId,
     LocalDate statementDate,
     LocalDate periodStart,
     LocalDate periodEnd,
@@ -20,18 +22,9 @@ public record AccountStatement(
     List<StatementTransaction> transactions,
     String currency,
     Instant generatedAt,
-    String statementId
+    String generatedBy,
+    String filePath,
+    boolean emailSent,
+    Instant emailSentAt,
+    Instant createdAt
 ) {}
-
-public record StatementTransaction(
-    UUID transactionId,
-    LocalDate transactionDate,
-    String description,
-    String reference,
-    BigDecimal debitAmount,
-    BigDecimal creditAmount,
-    BigDecimal balance,
-    String transactionType,
-    String status
-) {}
-

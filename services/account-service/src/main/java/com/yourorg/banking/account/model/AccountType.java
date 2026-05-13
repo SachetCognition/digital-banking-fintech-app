@@ -29,7 +29,13 @@ public enum AccountType {
     SENIOR("Senior Account", "Account for seniors with special benefits", 0.01, 0.00, true),
     JOINT("Joint Account", "Account shared by multiple customers", 0.00, 0.00, true),
     TRUST("Trust Account", "Account held in trust", 0.00, 0.00, false),
-    ESCROW("Escrow Account", "Account for holding funds in escrow", 0.00, 0.00, false);
+    ESCROW("Escrow Account", "Account for holding funds in escrow", 0.00, 0.00, false),
+
+    // Islamic Accounts
+    WADIAH_CURRENT("Wadiah Current", "Safekeeping current account", 0.00, 0.00, true),
+    MUDARABAH_SAVINGS("Mudarabah Savings", "Profit-sharing savings", 0.00, 0.00, true),
+    WAKALA_INVESTMENT("Wakala Investment", "Agency-based investment", 0.00, 0.00, true),
+    COMMODITY_MURABAHA_DEPOSIT("Commodity Murabaha Deposit", "Islamic fixed deposit", 0.00, 0.00, false);
 
     private final String displayName;
     private final String description;
@@ -86,6 +92,11 @@ public enum AccountType {
 
     public boolean isJointAccount() {
         return this == JOINT;
+    }
+
+    public boolean isIslamicAccount() {
+        return this == WADIAH_CURRENT || this == MUDARABAH_SAVINGS ||
+               this == WAKALA_INVESTMENT || this == COMMODITY_MURABAHA_DEPOSIT;
     }
 
     public boolean requiresKyc() {

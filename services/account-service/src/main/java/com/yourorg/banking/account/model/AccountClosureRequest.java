@@ -22,11 +22,4 @@ public record AccountClosureRequest(
     Instant createdAt,
     Instant updatedAt,
     Instant completedAt
-) {
-    public enum AccountClosureStatus {
-        PENDING,
-        APPROVED,
-        REJECTED,
-        COMPLETED
-    }
-}
+) {}

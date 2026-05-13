@@ -53,7 +53,7 @@ public class AccountController {
             @AuthenticationPrincipal Jwt jwt) {
         
         try {
-            AccountResponse response = accountService.createAccount(request);
+            Account response = accountService.createAccount(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
@@ -70,7 +70,7 @@ public class AccountController {
             @AuthenticationPrincipal Jwt jwt) {
         
         try {
-            List<AccountResponse> accounts = accountService.getAccountsByCustomer(customerId);
+            List<Account> accounts = accountService.getAccountsByCustomer(customerId);
             return ResponseEntity.ok(accounts);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -75,12 +75,12 @@ public class AccountOpeningService {
                 accountNumber,
                 request.accountName(),
                 request.accountType(),
-                AccountStatus.PENDING,
+                AccountStatus.PENDING_APPROVAL,
                 request.currency(),
                 request.initialDeposit(),
                 request.initialDeposit(),
-                request.accountType().getInterestRate(),
-                request.accountType().getFeeRate(),
+                BigDecimal.valueOf(request.accountType().getInterestRate()),
+                BigDecimal.valueOf(request.accountType().getFeeRate()),
                 BigDecimal.ZERO, // daily_transfer_limit
                 BigDecimal.ZERO, // per_transaction_limit
                 null, // last_transaction_at
@@ -112,7 +112,7 @@ public class AccountOpeningService {
         // Create opening case
         AccountOpeningCase openingCase = new AccountOpeningCase(
                 UUID.randomUUID(),
-                account.getId(),
+                account.id(),
                 customerId,
                 determineCaseType(request),
                 AccountOpeningStatus.PENDING,
@@ -133,7 +133,7 @@ public class AccountOpeningService {
 
         // Handle joint account holders
         if (request.jointAccountHolders() != null && !request.jointAccountHolders().isEmpty()) {
-            createJointAccountHolders(account.getId(), customerId, request.jointAccountHolders());
+            createJointAccountHolders(account.id(), customerId, request.jointAccountHolders());
         }
 
         // Determine next steps
@@ -141,14 +141,14 @@ public class AccountOpeningService {
         List<String> requiredDocuments = determineRequiredDocuments(request);
 
         return new AccountOpeningResponse(
-                account.getId(),
+                account.id(),
                 accountNumber,
                 request.accountName(),
                 request.accountType(),
                 request.currency(),
                 request.initialDeposit(),
-                account.getStatus(),
-                account.getOpeningStatus().name(),
+                account.status(),
+                account.openingStatus().name(),
                 "Account opening request submitted successfully",
                 nextSteps,
                 requiredDocuments,
@@ -164,23 +164,23 @@ public class AccountOpeningService {
         AccountOpeningCase openingCase = openingCaseRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("Opening case not found"));
 
-        List<String> nextSteps = determineNextStepsFromStatus(account.getOpeningStatus());
-        List<String> requiredDocuments = determineRequiredDocumentsFromType(account.getType());
+        List<String> nextSteps = determineNextStepsFromStatus(account.openingStatus());
+        List<String> requiredDocuments = determineRequiredDocumentsFromType(account.type());
 
         return new AccountOpeningResponse(
-                account.getId(),
-                account.getAccountNumber(),
-                account.getAccountName(),
-                account.getType(),
-                account.getCurrency(),
-                account.getBalance(),
-                account.getStatus(),
-                account.getOpeningStatus().name(),
-                getStatusMessage(account.getOpeningStatus()),
+                account.id(),
+                account.accountNumber(),
+                account.accountName(),
+                account.type(),
+                account.currency(),
+                account.balance(),
+                account.status(),
+                account.openingStatus().name(),
+                getStatusMessage(account.openingStatus()),
                 nextSteps,
                 requiredDocuments,
-                account.getCreatedAt(),
-                calculateEstimatedCompletionFromStatus(account.getOpeningStatus())
+                account.createdAt(),
+                calculateEstimatedCompletionFromStatus(account.openingStatus())
         );
     }
 
@@ -188,46 +188,46 @@ public class AccountOpeningService {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new IllegalArgumentException("Account not found"));
 
-        if (account.getOpeningStatus() != AccountOpeningStatus.PENDING) {
+        if (account.openingStatus() != AccountOpeningStatus.PENDING) {
             throw new IllegalStateException("Account is not in pending status");
         }
 
         // Update account status
         Account updatedAccount = new Account(
-                account.getId(),
-                account.getCustomerId(),
-                account.getAccountNumber(),
-                account.getAccountName(),
-                account.getType(),
+                account.id(),
+                account.customerId(),
+                account.accountNumber(),
+                account.accountName(),
+                account.type(),
                 AccountStatus.ACTIVE,
-                account.getCurrency(),
-                account.getBalance(),
-                account.getAvailableBalance(),
-                account.getInterestRate(),
-                account.getFeeRate(),
-                account.getDailyTransferLimit(),
-                account.getPerTransactionLimit(),
-                account.getLastTransactionAt(),
-                account.getDescription(),
-                account.isPaperlessStatements(),
-                account.isEmailNotifications(),
-                account.getPreferredLanguage(),
-                account.isKycRequired(),
-                account.getKycLevel(),
-                account.getKycStatus(),
+                account.currency(),
+                account.balance(),
+                account.availableBalance(),
+                account.interestRate(),
+                account.feeRate(),
+                account.dailyTransferLimit(),
+                account.perTransactionLimit(),
+                account.lastTransactionAt(),
+                account.description(),
+                account.paperlessStatements(),
+                account.emailNotifications(),
+                account.preferredLanguage(),
+                account.kycRequired(),
+                account.kycLevel(),
+                account.kycStatus(),
                 AccountOpeningStatus.COMPLETED,
-                account.getOpeningReason(),
-                account.getClosureReason(),
-                account.getClosureRequestedAt(),
-                account.getClosureApprovedAt(),
-                account.getClosureApprovedBy(),
-                account.getMinimumBalance(),
-                account.getMaximumBalance(),
-                account.getMonthlyFee(),
-                account.getOverdraftLimit(),
-                account.getLastInterestCalculation(),
-                account.getNextInterestCalculation(),
-                account.getCreatedAt(),
+                account.openingReason(),
+                account.closureReason(),
+                account.closureRequestedAt(),
+                account.closureApprovedAt(),
+                account.closureApprovedBy(),
+                account.minimumBalance(),
+                account.maximumBalance(),
+                account.monthlyFee(),
+                account.overdraftLimit(),
+                account.lastInterestCalculation(),
+                account.nextInterestCalculation(),
+                account.createdAt(),
                 Instant.now()
         );
 
@@ -238,20 +238,20 @@ public class AccountOpeningService {
                 .orElseThrow(() -> new IllegalArgumentException("Opening case not found"));
 
         AccountOpeningCase updatedCase = new AccountOpeningCase(
-                openingCase.getId(),
-                openingCase.getAccountId(),
-                openingCase.getCustomerId(),
-                openingCase.getCaseType(),
+                openingCase.id(),
+                openingCase.accountId(),
+                openingCase.customerId(),
+                openingCase.caseType(),
                 AccountOpeningStatus.COMPLETED,
-                openingCase.getPriority(),
-                openingCase.getAssignedTo(),
-                openingCase.getKycCaseId(),
-                openingCase.getRequiredDocuments(),
-                openingCase.getSubmittedDocuments(),
-                openingCase.getReviewNotes(),
+                openingCase.priority(),
+                openingCase.assignedTo(),
+                openingCase.kycCaseId(),
+                openingCase.requiredDocuments(),
+                openingCase.submittedDocuments(),
+                openingCase.reviewNotes(),
                 approvalNotes,
-                openingCase.getRejectionReason(),
-                openingCase.getCreatedAt(),
+                openingCase.rejectionReason(),
+                openingCase.createdAt(),
                 Instant.now(),
                 Instant.now()
         );
@@ -267,18 +267,18 @@ public class AccountOpeningService {
         return KycStatus.APPROVED;
     }
 
-    private AccountOpeningCaseType determineCaseType(AccountOpeningRequest request) {
+    private AccountOpeningCase.AccountOpeningCaseType determineCaseType(AccountOpeningRequest request) {
         if (request.jointAccountHolders() != null && !request.jointAccountHolders().isEmpty()) {
-            return AccountOpeningCaseType.JOINT_ACCOUNT;
+            return AccountOpeningCase.AccountOpeningCaseType.JOINT_ACCOUNT;
         }
-        return AccountOpeningCaseType.NEW_ACCOUNT;
+        return AccountOpeningCase.AccountOpeningCaseType.NEW_ACCOUNT;
     }
 
-    private AccountOpeningPriority determinePriority(AccountOpeningRequest request) {
+    private AccountOpeningCase.AccountOpeningPriority determinePriority(AccountOpeningRequest request) {
         if (request.accountType().isBusinessAccount()) {
-            return AccountOpeningPriority.HIGH;
+            return AccountOpeningCase.AccountOpeningPriority.HIGH;
         }
-        return AccountOpeningPriority.NORMAL;
+        return AccountOpeningCase.AccountOpeningPriority.NORMAL;
     }
 
     private List<String> determineRequiredDocuments(AccountOpeningRequest request) {
@@ -401,8 +401,11 @@ public class AccountOpeningService {
                     JointAccountHolder.JointAccountRole.JOINT_OWNER,
                     false,
                     Instant.now(),
-                    null,
-                    "PENDING"
+                    null, // approvedAt
+                    null, // approvedBy
+                    "PENDING",
+                    Instant.now(),
+                    Instant.now()
             );
             jointAccountHolderRepository.save(holder);
         }

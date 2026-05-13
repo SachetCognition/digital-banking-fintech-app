@@ -87,7 +87,7 @@ public class CreditLineController {
     public ResponseEntity<List<Object>> getCreditTransactions(@PathVariable UUID creditLineId) {
         log.info("Getting transactions for credit line: {}", creditLineId);
         
-        List<Object> transactions = (List<Object>) creditLineManagementService.getCreditTransactions(creditLineId);
+        List<Object> transactions = new java.util.ArrayList<>(creditLineManagementService.getCreditTransactions(creditLineId));
         
         return ResponseEntity.ok(transactions);
     }

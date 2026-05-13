@@ -10,6 +10,10 @@ public enum DocumentType {
     TAX_DOCUMENT,
     PROOF_OF_ADDRESS,
     SELFIE,
-    SIGNATURE
+    SIGNATURE,
+    EMIRATES_ID,
+    IQAMA,
+    TRADE_LICENSE,
+    UAE_PASS_VERIFIED
 }
 

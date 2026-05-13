@@ -23,7 +23,7 @@ public class StatementController {
 
     private final StatementService statementService;
 
-    public StatementService(StatementService statementService) {
+    public StatementController(StatementService statementService) {
         this.statementService = statementService;
     }
 

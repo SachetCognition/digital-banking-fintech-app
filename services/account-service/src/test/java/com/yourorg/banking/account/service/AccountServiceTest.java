@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,16 +30,17 @@ class AccountServiceTest {
     void createAccount_savingsType_succeeds() {
         UUID customerId = UUID.randomUUID();
         CreateAccountRequest request = new CreateAccountRequest(
-            customerId, AccountType.SAVINGS, "USD", "My Savings"
+            customerId, "My Savings", AccountType.SAVINGS, "USD", BigDecimal.ZERO, BigDecimal.ZERO
         );
 
+        when(accountRepository.countByCustomerIdAndStatus(customerId, AccountStatus.ACTIVE)).thenReturn(0L);
         when(accountRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         Account account = accountService.createAccount(request);
 
         assertNotNull(account);
-        assertEquals(AccountType.SAVINGS, account.getType());
-        assertEquals(customerId, account.getCustomerId());
+        assertEquals(AccountType.SAVINGS, account.type());
+        assertEquals(customerId, account.customerId());
         verify(accountRepository).save(any(Account.class));
     }
 
@@ -45,29 +48,36 @@ class AccountServiceTest {
     void createAccount_checkingType_succeeds() {
         UUID customerId = UUID.randomUUID();
         CreateAccountRequest request = new CreateAccountRequest(
-            customerId, AccountType.CHECKING, "USD", "My Checking"
+            customerId, "My Checking", AccountType.CHECKING, "USD", BigDecimal.ZERO, BigDecimal.ZERO
         );
 
+        when(accountRepository.countByCustomerIdAndStatus(customerId, AccountStatus.ACTIVE)).thenReturn(0L);
         when(accountRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         Account account = accountService.createAccount(request);
 
         assertNotNull(account);
-        assertEquals(AccountType.CHECKING, account.getType());
+        assertEquals(AccountType.CHECKING, account.type());
     }
 
     @Test
     void getAccountById_returnsAccountWhenExists() {
         UUID accountId = UUID.randomUUID();
-        Account account = new Account();
-        account.setId(accountId);
-        account.setStatus(AccountStatus.ACTIVE);
+        Account account = new Account(
+                accountId, UUID.randomUUID(), "ACC001", "Test", AccountType.CHECKING,
+                AccountStatus.ACTIVE, "USD", BigDecimal.ZERO, BigDecimal.ZERO,
+                BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO,
+                null, null, false, false, "en", false, null, KycStatus.NOT_REQUIRED,
+                AccountOpeningStatus.COMPLETED, null, null, null, null, null,
+                BigDecimal.ZERO, null, BigDecimal.ZERO, BigDecimal.ZERO,
+                null, null, Instant.now(), Instant.now()
+        );
 
         when(accountRepository.findById(accountId)).thenReturn(Optional.of(account));
 
         Optional<Account> result = accountService.getAccountById(accountId);
 
         assertTrue(result.isPresent());
-        assertEquals(accountId, result.get().getId());
+        assertEquals(accountId, result.get().id());
     }
 }

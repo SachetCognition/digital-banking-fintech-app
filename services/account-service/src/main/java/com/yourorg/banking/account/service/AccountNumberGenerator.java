@@ -40,6 +40,10 @@ public class AccountNumberGenerator {
             case JOINT -> "23";
             case TRUST -> "24";
             case ESCROW -> "25";
+            case WADIAH_CURRENT -> "31";
+            case MUDARABAH_SAVINGS -> "32";
+            case WAKALA_INVESTMENT -> "33";
+            case COMMODITY_MURABAHA_DEPOSIT -> "34";
         };
     }
 

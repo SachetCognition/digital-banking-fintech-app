@@ -1,0 +1,634 @@
+Issue Type,Summary,Description,Labels,Priority,Epic Name,Epic Link,Parent
+Epic,WS1 — Islamic Finance Products,Epic for WS1 — Islamic Finance Products. Priority: Critical.,ws1-islamic-finance;middle-east-compliance,Critical,WS1 — Islamic Finance Products,,
+Story,[REQ-IF-001] Murabaha (cost-plus) financing with configurable markup rates,"System shall support Murabaha (cost-plus) financing with configurable markup rates. The bank purchases an asset and resells it to the customer at a disclosed profit margin; payment may be deferred or in installments.
+
+**Acceptance Criteria:** Given a Murabaha financing request with asset cost X and markup rate R%, the system calculates total price = X * (1 + R/100) and generates an installment schedule. The profit amount is disclosed to the customer before contract signing.
+
+**Linked Test Cases:** TC-IF-001, TC-IF-007",ws1-islamic-finance;middle-east-compliance,Critical,,WS1 — Islamic Finance Products,
+Sub-task,[TC-IF-001] Murabaha markup calculation,"**Type:** unit
+
+**Preconditions:** IslamicFinanceCalculationService instantiated. Asset cost = 100,000 AED, markup = 15%.
+
+**Steps:**
+1. Call calculateMurabaha(100000, 15.0, 36)
+2. Verify total price = 115,000
+3. Verify monthly installment
+
+**Expected Result:** Total price = 115,000 AED. Monthly installment = 3,194.44 AED.",ws1-islamic-finance;test-unit,,,,[REQ-IF-001] Murabaha (cost-plus) financing with configurable markup rates
+Sub-task,[TC-IF-007] Islamic loan application E2E with SSB approval,"**Type:** integration
+
+**Preconditions:** KYC customer, Murabaha product, SSB reviewer.
+
+**Steps:**
+1. Submit Murabaha application
+2. Verify PENDING_SSB_APPROVAL
+3. SSB approves
+4. Verify APPROVED
+
+**Expected Result:** Loan approved through SSB workflow with audit trail.",ws1-islamic-finance;test-integration,,,,[REQ-IF-001] Murabaha (cost-plus) financing with configurable markup rates
+Story,[REQ-IF-002] Ijara (leasing) with rental schedule generation,"System shall support Ijara (leasing) with rental schedule generation. The bank purchases and leases an asset to the customer; ownership may transfer at end of lease.
+
+**Acceptance Criteria:** Given an Ijara lease request, the system generates a rental schedule with monthly payments for the lease term.
+
+**Linked Test Cases:** TC-IF-003",ws1-islamic-finance;middle-east-compliance,Critical,,WS1 — Islamic Finance Products,
+Sub-task,[TC-IF-003] Ijara rental schedule generation,"**Type:** unit
+
+**Preconditions:** Asset = 500K AED, 60 months, 6% rate.
+
+**Steps:**
+1. Call calculateIjara(500000, 6.0, 60)
+2. Verify 60 monthly payments
+3. Verify amount
+
+**Expected Result:** 60 monthly payments of 2,500 AED.",ws1-islamic-finance;test-unit,,,,[REQ-IF-002] Ijara (leasing) with rental schedule generation
+Story,[REQ-IF-003] Diminishing Musharaka for home financing with equity split tracking,"System shall support Diminishing Musharaka for home financing with equity split tracking. The bank and customer co-own the property; the customer gradually buys out the bank's share.
+
+**Acceptance Criteria:** Given a Diminishing Musharaka contract with initial equity split, the system tracks equity reduction per payment period and recalculates rental payments.
+
+**Linked Test Cases:** TC-IF-002",ws1-islamic-finance;middle-east-compliance,Critical,,WS1 — Islamic Finance Products,
+Sub-task,[TC-IF-002] Diminishing Musharaka equity reduction over time,"**Type:** unit
+
+**Preconditions:** Property = 1M AED, bank 80%, customer 20%, 20yr term.
+
+**Steps:**
+1. Call calculateMusharaka(1000000, 80.0, 240)
+2. Verify equity after 1, 120, 240 payments
+
+**Expected Result:** Equity reduces linearly. After 240 payments: customer 100%.",ws1-islamic-finance;test-unit,,,,[REQ-IF-003] Diminishing Musharaka for home financing with equity split tracking
+Story,[REQ-IF-004] Mudarabah profit-sharing investment accounts with configurable profit ratios,"System shall support Mudarabah profit-sharing investment accounts with configurable profit ratios between the bank (Mudarib) and the customer (Rabb-ul-Maal).
+
+**Acceptance Criteria:** Given a Mudarabah investment with a profit-sharing ratio, the system distributes realized profits according to the agreed ratio.
+
+**Linked Test Cases:** TC-IF-004, TC-IF-008",ws1-islamic-finance;middle-east-compliance,Critical,,WS1 — Islamic Finance Products,
+Sub-task,[TC-IF-004] Mudarabah profit split by agreed ratio,"**Type:** unit
+
+**Preconditions:** Profit = 30K AED, ratio 60/40.
+
+**Steps:**
+1. Call calculateMudarabahProfit(30000, 60.0)
+2. Verify split
+
+**Expected Result:** Customer: 18K, Bank: 12K.",ws1-islamic-finance;test-unit,,,,[REQ-IF-004] Mudarabah profit-sharing investment accounts with configurable profit ratios
+Sub-task,[TC-IF-008] Profit distribution to Mudarabah savings account,"**Type:** integration
+
+**Preconditions:** Mudarabah account, balance 100K, profit 5K, ratio 70%.
+
+**Steps:**
+1. Trigger profit distribution
+2. Verify credit
+
+**Expected Result:** 3,500 AED credited to customer.",ws1-islamic-finance;test-integration,,,,[REQ-IF-004] Mudarabah profit-sharing investment accounts with configurable profit ratios
+Story,[REQ-IF-005] Replace interest-rate calculations with profit-rate calculations for Islamic products,"System shall replace interest-rate calculations with profit-rate calculations for all Islamic products. No reference to 'interest' shall appear in Islamic product workflows.
+
+**Acceptance Criteria:** Attempting to apply interest to an Islamic product throws a ShariahViolationException.
+
+**Linked Test Cases:** TC-IF-005",ws1-islamic-finance;middle-east-compliance,Critical,,WS1 — Islamic Finance Products,
+Sub-task,[TC-IF-005] Riba transaction rejection — ShariahViolationException,"**Type:** unit
+
+**Preconditions:** Islamic loan product exists.
+
+**Steps:**
+1. Apply COMPOUND_MONTHLY to Islamic product
+
+**Expected Result:** ShariahViolationException thrown.",ws1-islamic-finance;test-unit,,,,[REQ-IF-005] Replace interest-rate calculations with profit-rate calculations for Islamic products
+Story,[REQ-IF-006] Shariah Supervisory Board (SSB) approval workflow for new products,"System shall support SSB approval workflow for new products — including submission, review, approval/rejection, and audit trail.
+
+**Acceptance Criteria:** A new Islamic product cannot be offered to customers until an SSB member approves it through the workflow.
+
+**Linked Test Cases:** TC-IF-007",ws1-islamic-finance;middle-east-compliance,Critical,,WS1 — Islamic Finance Products,
+Sub-task,[TC-IF-007] Islamic loan application E2E with SSB approval,"**Type:** integration
+
+**Preconditions:** KYC customer, Murabaha product, SSB reviewer.
+
+**Steps:**
+1. Submit Murabaha application
+2. Verify PENDING_SSB_APPROVAL
+3. SSB approves
+4. Verify APPROVED
+
+**Expected Result:** Loan approved through SSB workflow with audit trail.",ws1-islamic-finance;test-integration,,,,[REQ-IF-006] Shariah Supervisory Board (SSB) approval workflow for new products
+Story,[REQ-IF-007] Wadiah (safekeeping) current accounts,"System shall support Wadiah (safekeeping) current accounts. Funds are held in trust; the bank may use them with implicit permission but guarantees return on demand.
+
+**Acceptance Criteria:** A Wadiah current account can be opened with zero interest rate.
+
+**Linked Test Cases:** TC-IF-006",ws1-islamic-finance;middle-east-compliance,Critical,,WS1 — Islamic Finance Products,
+Sub-task,[TC-IF-006] Wadiah account creation,"**Type:** unit
+
+**Preconditions:** KYC-verified customer.
+
+**Steps:**
+1. Create WADIAH_CURRENT account
+2. Verify properties
+
+**Expected Result:** Account created, interest=0, allows transactions.",ws1-islamic-finance;test-unit,,,,[REQ-IF-007] Wadiah (safekeeping) current accounts
+Story,[REQ-IF-008] Wakala (agency) investment contracts,"System shall support Wakala (agency) investment contracts. The customer appoints the bank as agent (Wakeel) to invest funds for an agreed fee.
+
+**Acceptance Criteria:** A Wakala investment contract is created with agreed management fee.
+
+**Linked Test Cases:** None yet",ws1-islamic-finance;middle-east-compliance,Critical,,WS1 — Islamic Finance Products,
+Story,[REQ-IF-009] Sukuk (Islamic bonds) in investment service,"System shall support Sukuk (Islamic bonds) in the investment service. Sukuk represent ownership in tangible assets or services.
+
+**Acceptance Criteria:** Sukuk instruments can be listed, purchased, and tracked.
+
+**Linked Test Cases:** None yet",ws1-islamic-finance;middle-east-compliance,Critical,,WS1 — Islamic Finance Products,
+Story,[REQ-IF-010] Takaful (Islamic insurance) product references,"System shall support Takaful (Islamic insurance) product references.
+
+**Acceptance Criteria:** Takaful policy references can be stored with policy number, provider, premium schedule, and claim status.
+
+**Linked Test Cases:** None yet",ws1-islamic-finance;middle-east-compliance,Critical,,WS1 — Islamic Finance Products,
+Epic,WS2 — Middle East Regulatory Compliance,Epic for WS2 — Middle East Regulatory Compliance. Priority: Critical.,ws2-regulatory-compliance;middle-east-compliance,Critical,WS2 — Middle East Regulatory Compliance,,
+Story,[REQ-RC-001] goAML suspicious transaction reports per CBUAE format,"System shall generate goAML suspicious transaction reports per CBUAE format.
+
+**Acceptance Criteria:** The system generates a goAML XML report that passes CBUAE schema validation with all mandatory fields.
+
+**Linked Test Cases:** TC-RC-004, TC-RC-008",ws2-regulatory-compliance;middle-east-compliance,Critical,,WS2 — Middle East Regulatory Compliance,
+Sub-task,[TC-RC-004] goAML report XML schema validation,"**Type:** unit
+
+**Preconditions:** Suspicious transaction with amount 50K AED.
+
+**Steps:**
+1. Generate goAML report
+2. Validate against schema
+
+**Expected Result:** XML passes CBUAE schema validation.",ws2-regulatory-compliance;test-unit,,,,[REQ-RC-001] goAML suspicious transaction reports per CBUAE format
+Sub-task,[TC-RC-008] End-to-end regulatory report submission,"**Type:** integration
+
+**Preconditions:** Suspicious transaction flagged, CBUAE endpoint mocked.
+
+**Steps:**
+1. Flag transaction
+2. Generate report
+3. Submit
+
+**Expected Result:** Report submitted with audit trail.",ws2-regulatory-compliance;test-integration,,,,[REQ-RC-001] goAML suspicious transaction reports per CBUAE format
+Story,[REQ-RC-002] CBUAE prudential returns,"System shall generate CBUAE prudential returns including capital adequacy, liquidity ratios, and large exposure reports.
+
+**Acceptance Criteria:** Reports generated with correct ratios in CBUAE format.
+
+**Linked Test Cases:** TC-RC-005, TC-RC-008",ws2-regulatory-compliance;middle-east-compliance,Critical,,WS2 — Middle East Regulatory Compliance,
+Sub-task,[TC-RC-005] CBUAE prudential return generation,"**Type:** unit
+
+**Preconditions:** Bank financial data available.
+
+**Steps:**
+1. Generate prudential return
+2. Verify ratios
+
+**Expected Result:** Correct capital adequacy ratio in CBUAE format.",ws2-regulatory-compliance;test-unit,,,,[REQ-RC-002] CBUAE prudential returns
+Sub-task,[TC-RC-008] End-to-end regulatory report submission,"**Type:** integration
+
+**Preconditions:** Suspicious transaction flagged, CBUAE endpoint mocked.
+
+**Steps:**
+1. Flag transaction
+2. Generate report
+3. Submit
+
+**Expected Result:** Report submitted with audit trail.",ws2-regulatory-compliance;test-integration,,,,[REQ-RC-002] CBUAE prudential returns
+Story,[REQ-RC-003] MENAFATF compliance frameworks,"System shall support MENAFATF compliance frameworks including risk-based approach assessments.
+
+**Acceptance Criteria:** Risk categories and scoring align with MENAFATF criteria.
+
+**Linked Test Cases:** None yet",ws2-regulatory-compliance;middle-east-compliance,Critical,,WS2 — Middle East Regulatory Compliance,
+Story,[REQ-RC-004] UAE Federal Decree-Law No. 20/2018 AML/CFT reporting,"System shall implement UAE Federal Decree-Law No. 20/2018 AML/CFT reporting.
+
+**Acceptance Criteria:** All mandated reports can be generated.
+
+**Linked Test Cases:** TC-RC-006",ws2-regulatory-compliance;middle-east-compliance,Critical,,WS2 — Middle East Regulatory Compliance,
+Sub-task,"[TC-RC-006] AML threshold uses AED 35,000 not USD 10,000","**Type:** unit
+
+**Preconditions:** UAE jurisdiction configured.
+
+**Steps:**
+1. Process 34,999 AED — no CTR
+2. Process 35,000 AED — CTR triggered
+
+**Expected Result:** CTR at AED 35,000, not USD 10,000.",ws2-regulatory-compliance;test-unit,,,,[REQ-RC-004] UAE Federal Decree-Law No. 20/2018 AML/CFT reporting
+Story,[REQ-RC-005] Zakat at 2.5% on eligible assets with nisab threshold,"System shall calculate Zakat at 2.5% on eligible assets with nisab threshold check.
+
+**Acceptance Criteria:** If assets >= nisab, Zakat = assets * 2.5%. If below nisab, Zakat = 0. Non-zakatable assets excluded.
+
+**Linked Test Cases:** TC-RC-001, TC-RC-002, TC-RC-003",ws2-regulatory-compliance;middle-east-compliance,Critical,,WS2 — Middle East Regulatory Compliance,
+Sub-task,[TC-RC-001] Zakat calculation above nisab — 2.5%,"**Type:** unit
+
+**Preconditions:** Eligible assets = 500K, nisab = 20K.
+
+**Steps:**
+1. Call calculateZakat(500000, 20000)
+
+**Expected Result:** Zakat = 12,500 AED.",ws2-regulatory-compliance;test-unit,,,,[REQ-RC-005] Zakat at 2.5% on eligible assets with nisab threshold
+Sub-task,[TC-RC-002] Zakat below nisab — returns zero,"**Type:** unit
+
+**Preconditions:** Assets = 15K, nisab = 20K.
+
+**Steps:**
+1. Call calculateZakat(15000, 20000)
+
+**Expected Result:** Zakat = 0.",ws2-regulatory-compliance;test-unit,,,,[REQ-RC-005] Zakat at 2.5% on eligible assets with nisab threshold
+Sub-task,[TC-RC-003] Zakat excludes non-zakatable assets,"**Type:** unit
+
+**Preconditions:** Total 600K, non-zakatable 400K, nisab 20K.
+
+**Steps:**
+1. Call calculateZakat with exclusions
+
+**Expected Result:** Eligible = 200K, Zakat = 5,000 AED.",ws2-regulatory-compliance;test-unit,,,,[REQ-RC-005] Zakat at 2.5% on eligible assets with nisab threshold
+Story,[REQ-RC-006] 5% GCC VAT on applicable banking fees,"System shall handle 5% GCC VAT on applicable banking fees.
+
+**Acceptance Criteria:** VAT-exempt transactions correctly identified. VAT invoices generated per UAE FTA requirements.
+
+**Linked Test Cases:** TC-RC-007",ws2-regulatory-compliance;middle-east-compliance,Critical,,WS2 — Middle East Regulatory Compliance,
+Sub-task,[TC-RC-007] VAT calculation on banking fees at 5%,"**Type:** unit
+
+**Preconditions:** Fee = 1,000 AED, VAT 5%.
+
+**Steps:**
+1. Calculate VAT non-exempt
+2. Calculate VAT exempt
+
+**Expected Result:** Non-exempt: 50 AED VAT. Exempt: 0 AED.",ws2-regulatory-compliance;test-unit,,,,[REQ-RC-006] 5% GCC VAT on applicable banking fees
+Story,[REQ-RC-007] SAMA reporting for KSA operations,"System shall support SAMA reporting for KSA operations.
+
+**Acceptance Criteria:** SAMA-format reports can be generated for KSA.
+
+**Linked Test Cases:** None yet",ws2-regulatory-compliance;middle-east-compliance,Critical,,WS2 — Middle East Regulatory Compliance,
+Story,"[REQ-RC-008] AED 35,000 CTR threshold (not USD 10,000)","System shall use AED 35,000 CTR threshold for UAE operations.
+
+**Acceptance Criteria:** CTR triggered at AED 35,000. Threshold configurable per jurisdiction.
+
+**Linked Test Cases:** TC-RC-006",ws2-regulatory-compliance;middle-east-compliance,Critical,,WS2 — Middle East Regulatory Compliance,
+Sub-task,"[TC-RC-006] AML threshold uses AED 35,000 not USD 10,000","**Type:** unit
+
+**Preconditions:** UAE jurisdiction configured.
+
+**Steps:**
+1. Process 34,999 AED — no CTR
+2. Process 35,000 AED — CTR triggered
+
+**Expected Result:** CTR at AED 35,000, not USD 10,000.",ws2-regulatory-compliance;test-unit,,,,"[REQ-RC-008] AED 35,000 CTR threshold (not USD 10,000)"
+Epic,WS3 — KYC / Identity Verification,Epic for WS3 — KYC / Identity Verification. Priority: Critical.,ws3-kyc-identity;middle-east-compliance,Critical,WS3 — KYC / Identity Verification,,
+Story,[REQ-KY-001] Emirates ID format validation and ICP integration,"System shall validate Emirates ID format (784-YYYY-NNNNNNN-C) and integrate with ICP for real-time verification.
+
+**Acceptance Criteria:** Valid Emirates ID passes; invalid formats, expired IDs, and failed checksums are rejected with specific error codes.
+
+**Linked Test Cases:** TC-KY-001, TC-KY-002, TC-KY-003, TC-KY-008",ws3-kyc-identity;middle-east-compliance,Critical,,WS3 — KYC / Identity Verification,
+Sub-task,[TC-KY-001] Emirates ID valid format passes validation,"**Type:** unit
+
+**Preconditions:** EmiratesIdValidationService instantiated.
+
+**Steps:**
+1. Validate 784-1990-1234567-1
+
+**Expected Result:** Validation succeeds.",ws3-kyc-identity;test-unit,,,,[REQ-KY-001] Emirates ID format validation and ICP integration
+Sub-task,[TC-KY-002] Emirates ID expired — rejection,"**Type:** unit
+
+**Preconditions:** Expired Emirates ID.
+
+**Steps:**
+1. Validate with past expiry
+
+**Expected Result:** Rejected with EXPIRED reason.",ws3-kyc-identity;test-unit,,,,[REQ-KY-001] Emirates ID format validation and ICP integration
+Sub-task,[TC-KY-003] Emirates ID invalid checksum — rejection,"**Type:** unit
+
+**Preconditions:** Wrong check digit.
+
+**Steps:**
+1. Validate 784-1990-1234567-9
+
+**Expected Result:** Rejected with INVALID_CHECKSUM.",ws3-kyc-identity;test-unit,,,,[REQ-KY-001] Emirates ID format validation and ICP integration
+Sub-task,[TC-KY-008] Full KYC flow — Emirates ID + UAE Pass (E2E),"**Type:** e2e
+
+**Preconditions:** Customer registered.
+
+**Steps:**
+1. Submit Emirates ID
+2. UAE Pass auth
+3. Verify KYC level
+
+**Expected Result:** KYC level = ENHANCED.",ws3-kyc-identity;test-e2e,,,,[REQ-KY-001] Emirates ID format validation and ICP integration
+Story,[REQ-KY-002] eKYC via UAE Pass (OAuth-based digital identity),"System shall support eKYC via UAE Pass.
+
+**Acceptance Criteria:** Customer can authenticate via UAE Pass OAuth flow with token exchange and identity binding.
+
+**Linked Test Cases:** TC-KY-004, TC-KY-005, TC-KY-008",ws3-kyc-identity;middle-east-compliance,Critical,,WS3 — KYC / Identity Verification,
+Sub-task,[TC-KY-004] UAE Pass OAuth — valid token returns identity,"**Type:** integration
+
+**Preconditions:** Mock OAuth endpoint, valid auth code.
+
+**Steps:**
+1. Exchange token
+2. Parse identity
+
+**Expected Result:** Identity with name, Emirates ID, nationality.",ws3-kyc-identity;test-integration,,,,[REQ-KY-002] eKYC via UAE Pass (OAuth-based digital identity)
+Sub-task,[TC-KY-005] UAE Pass expired token — throws exception,"**Type:** integration
+
+**Preconditions:** Mock endpoint, expired code.
+
+**Steps:**
+1. Exchange expired token
+
+**Expected Result:** Authentication exception thrown.",ws3-kyc-identity;test-integration,,,,[REQ-KY-002] eKYC via UAE Pass (OAuth-based digital identity)
+Sub-task,[TC-KY-008] Full KYC flow — Emirates ID + UAE Pass (E2E),"**Type:** e2e
+
+**Preconditions:** Customer registered.
+
+**Steps:**
+1. Submit Emirates ID
+2. UAE Pass auth
+3. Verify KYC level
+
+**Expected Result:** KYC level = ENHANCED.",ws3-kyc-identity;test-e2e,,,,[REQ-KY-002] eKYC via UAE Pass (OAuth-based digital identity)
+Story,[REQ-KY-003] Iqama (residency permit) for expat customers,"System shall support Iqama for expat customers.
+
+**Acceptance Criteria:** Iqama number and expiry validated and stored as primary identity for non-citizen residents.
+
+**Linked Test Cases:** TC-KY-006",ws3-kyc-identity;middle-east-compliance,Critical,,WS3 — KYC / Identity Verification,
+Sub-task,[TC-KY-006] Iqama document acceptance in KYC workflow,"**Type:** unit
+
+**Preconditions:** Non-citizen customer.
+
+**Steps:**
+1. Submit IQAMA document
+
+**Expected Result:** Document accepted and verified.",ws3-kyc-identity;test-unit,,,,[REQ-KY-003] Iqama (residency permit) for expat customers
+Story,[REQ-KY-004] Trade License verification for business account onboarding,"System shall verify Trade License for business accounts.
+
+**Acceptance Criteria:** License number, issuing authority, activity codes, and expiry date captured and validated.
+
+**Linked Test Cases:** TC-KY-007",ws3-kyc-identity;middle-east-compliance,Critical,,WS3 — KYC / Identity Verification,
+Sub-task,[TC-KY-007] Trade License verification for business accounts,"**Type:** integration
+
+**Preconditions:** Mock verification endpoint.
+
+**Steps:**
+1. Submit TRADE_LICENSE
+2. Verify
+
+**Expected Result:** License verified, details stored.",ws3-kyc-identity;test-integration,,,,[REQ-KY-004] Trade License verification for business account onboarding
+Story,[REQ-KY-005] UBO (Beneficial Ownership) registry integration per CBUAE,"System shall integrate with UBO registry per CBUAE requirements.
+
+**Acceptance Criteria:** UBOs with 25%+ ownership identified and screened.
+
+**Linked Test Cases:** None yet",ws3-kyc-identity;middle-east-compliance,Critical,,WS3 — KYC / Identity Verification,
+Story,[REQ-KY-006] Saudi Absher National ID integration,"System shall support Saudi Absher National ID integration.
+
+**Acceptance Criteria:** Saudi customers can verify identity through Absher.
+
+**Linked Test Cases:** None yet",ws3-kyc-identity;middle-east-compliance,Critical,,WS3 — KYC / Identity Verification,
+Epic,WS4 — Regional Payment Networks,Epic for WS4 — Regional Payment Networks. Priority: High.,ws4-payment-networks;middle-east-compliance,High,WS4 — Regional Payment Networks,,
+Story,[REQ-PN-001] UAEFTS (UAE Funds Transfer System) for RTGS,"System shall integrate with UAEFTS for RTGS transfers in ISO 20022 format.
+
+**Acceptance Criteria:** RTGS transfers submitted in ISO 20022 format with proper acknowledgement handling.
+
+**Linked Test Cases:** TC-PN-006, TC-PN-008",ws4-payment-networks;middle-east-compliance,High,,WS4 — Regional Payment Networks,
+Sub-task,[TC-PN-006] UAEFTS RTGS message format,"**Type:** unit
+
+**Preconditions:** Transfer 1M AED.
+
+**Steps:**
+1. Generate message
+2. Verify ISO 20022
+
+**Expected Result:** pacs.008 format with all fields.",ws4-payment-networks;test-unit,,,,[REQ-PN-001] UAEFTS (UAE Funds Transfer System) for RTGS
+Sub-task,[TC-PN-008] End-to-end domestic transfer via UAEFTS (E2E),"**Type:** e2e
+
+**Preconditions:** Funded account, valid receiver, mock UAEFTS.
+
+**Steps:**
+1. Transfer 500K
+2. Simulate settlement
+
+**Expected Result:** Account debited, status SETTLED.",ws4-payment-networks;test-e2e,,,,[REQ-PN-001] UAEFTS (UAE Funds Transfer System) for RTGS
+Story,[REQ-PN-002] UAEIPS for real-time instant payments,"System shall integrate with UAEIPS for instant payments.
+
+**Acceptance Criteria:** Transfers settle within 10 seconds with IBAN validation.
+
+**Linked Test Cases:** TC-PN-004, TC-PN-005",ws4-payment-networks;middle-east-compliance,High,,WS4 — Regional Payment Networks,
+Sub-task,[TC-PN-004] UAEIPS instant transfer within SLA,"**Type:** integration
+
+**Preconditions:** Mock gateway, valid IBANs.
+
+**Steps:**
+1. Transfer 5K
+2. Measure time
+
+**Expected Result:** Settled within 10s.",ws4-payment-networks;test-integration,,,,[REQ-PN-002] UAEIPS for real-time instant payments
+Sub-task,[TC-PN-005] UAEIPS IBAN format validation,"**Type:** unit
+
+**Preconditions:** IbanValidator instantiated.
+
+**Steps:**
+1. Validate UAE IBAN
+2. Validate invalid
+3. Validate KSA
+
+**Expected Result:** Valid pass, invalid rejected.",ws4-payment-networks;test-unit,,,,[REQ-PN-002] UAEIPS for real-time instant payments
+Story,[REQ-PN-003] WPS (Wage Protection System) with SIF file generation,"System shall support WPS with SIF file generation per MoL format.
+
+**Acceptance Criteria:** SIF files generated with EDR header + SDR records. Batch validation ensures all salaries can be funded.
+
+**Linked Test Cases:** TC-PN-001, TC-PN-002, TC-PN-003",ws4-payment-networks;middle-east-compliance,High,,WS4 — Regional Payment Networks,
+Sub-task,[TC-PN-001] WPS SIF file generation matches MoL format,"**Type:** unit
+
+**Preconditions:** Employer with 3 employees.
+
+**Steps:**
+1. Generate SIF
+2. Verify EDR + 3 SDR records
+
+**Expected Result:** SIF conforms to MoL format.",ws4-payment-networks;test-unit,,,,[REQ-PN-003] WPS (Wage Protection System) with SIF file generation
+Sub-task,[TC-PN-002] WPS batch validation — all salaries validated,"**Type:** unit
+
+**Preconditions:** Sufficient funds, 5 records.
+
+**Steps:**
+1. Validate batch
+
+**Expected Result:** All 5 validated, total matches.",ws4-payment-networks;test-unit,,,,[REQ-PN-003] WPS (Wage Protection System) with SIF file generation
+Sub-task,[TC-PN-003] WPS insufficient funds — batch rejected,"**Type:** unit
+
+**Preconditions:** Balance 10K, batch 50K.
+
+**Steps:**
+1. Process batch
+
+**Expected Result:** INSUFFICIENT_FUNDS rejection.",ws4-payment-networks;test-unit,,,,[REQ-PN-003] WPS (Wage Protection System) with SIF file generation
+Story,[REQ-PN-004] SADAD for Saudi bill payment,"System shall integrate with SADAD for Saudi bill payment.
+
+**Acceptance Criteria:** Bill presentment, payment, and reconciliation supported.
+
+**Linked Test Cases:** TC-PN-007",ws4-payment-networks;middle-east-compliance,High,,WS4 — Regional Payment Networks,
+Sub-task,[TC-PN-007] SADAD bill presentment and payment,"**Type:** integration
+
+**Preconditions:** Mock SADAD, outstanding bill.
+
+**Steps:**
+1. Retrieve bill
+2. Pay
+3. Verify reconciliation
+
+**Expected Result:** Payment processed, reconciliation recorded.",ws4-payment-networks;test-integration,,,,[REQ-PN-004] SADAD for Saudi bill payment
+Story,[REQ-PN-005] SARIE for Saudi real-time payments,"System shall integrate with SARIE for Saudi real-time payments.
+
+**Acceptance Criteria:** Instant domestic transfers within KSA processed in real-time.
+
+**Linked Test Cases:** None yet",ws4-payment-networks;middle-east-compliance,High,,WS4 — Regional Payment Networks,
+Story,[REQ-PN-006] GCC-RTGS and AFAQ cross-border payments,"System shall support GCC-RTGS and AFAQ cross-border payment systems.
+
+**Acceptance Criteria:** Inter-GCC settlements processed with proper routing.
+
+**Linked Test Cases:** None yet",ws4-payment-networks;middle-east-compliance,High,,WS4 — Regional Payment Networks,
+Epic,WS5 — Multi-Currency & Remittance,Epic for WS5 — Multi-Currency & Remittance. Priority: High.,ws5-multi-currency;middle-east-compliance,High,WS5 — Multi-Currency & Remittance,,
+Story,"[REQ-MC-001] Multi-currency wallets (AED, SAR, QAR, BHD, OMR, KWD)","System shall support multi-currency wallets for GCC currencies.
+
+**Acceptance Criteria:** Customer can hold balances in 6 GCC currencies with independent balance and transaction history.
+
+**Linked Test Cases:** TC-MC-001",ws5-multi-currency;middle-east-compliance,High,,WS5 — Multi-Currency & Remittance,
+Sub-task,[TC-MC-001] Multi-currency wallet creation for AED/SAR/QAR/BHD/OMR/KWD,"**Type:** unit
+
+**Preconditions:** Verified customer.
+
+**Steps:**
+1. Create 6 wallets
+2. Verify zero balances
+
+**Expected Result:** 6 wallets created, linked to parent.",ws5-multi-currency;test-unit,,,,"[REQ-MC-001] Multi-currency wallets (AED, SAR, QAR, BHD, OMR, KWD)"
+Story,[REQ-MC-002] CBUAE reference rates for real-time FX,"System shall integrate with CBUAE reference rates for FX.
+
+**Acceptance Criteria:** Rates refreshed at configurable intervals with spread.
+
+**Linked Test Cases:** TC-MC-002, TC-MC-003",ws5-multi-currency;middle-east-compliance,High,,WS5 — Multi-Currency & Remittance,
+Sub-task,[TC-MC-002] Currency conversion with spread,"**Type:** unit
+
+**Preconditions:** AED/SAR mid-rate 1.02, spread 0.5%.
+
+**Steps:**
+1. Convert 10K AED to SAR
+
+**Expected Result:** 10,149 SAR after spread.",ws5-multi-currency;test-unit,,,,[REQ-MC-002] CBUAE reference rates for real-time FX
+Sub-task,[TC-MC-003] CBUAE reference rate lookup,"**Type:** integration
+
+**Preconditions:** Mock CBUAE endpoint.
+
+**Steps:**
+1. Request AED/USD rate
+2. Verify cache
+
+**Expected Result:** Rate with source CBUAE, cached 15min.",ws5-multi-currency;test-integration,,,,[REQ-MC-002] CBUAE reference rates for real-time FX
+Story,"[REQ-MC-003] Dedicated remittance corridors (India, Pakistan, Philippines, Bangladesh)","System shall support dedicated remittance corridors.
+
+**Acceptance Criteria:** Corridor-specific processing, compliance checks, and beneficiary bank validation.
+
+**Linked Test Cases:** TC-MC-006, TC-MC-007",ws5-multi-currency;middle-east-compliance,High,,WS5 — Multi-Currency & Remittance,
+Sub-task,[TC-MC-006] Beneficiary bank validation,"**Type:** unit
+
+**Preconditions:** SWIFT codes available.
+
+**Steps:**
+1. Validate SBININBB
+2. Validate invalid
+
+**Expected Result:** Valid resolves bank name, invalid rejected.",ws5-multi-currency;test-unit,,,,"[REQ-MC-003] Dedicated remittance corridors (India, Pakistan, Philippines, Bangladesh)"
+Sub-task,[TC-MC-007] End-to-end remittance to India corridor (E2E),"**Type:** e2e
+
+**Preconditions:** KYC customer, funded wallet, India corridor.
+
+**Steps:**
+1. Submit 20K AED to India
+2. Verify AML, FX, fees
+
+**Expected Result:** Remittance processed end-to-end.",ws5-multi-currency;test-e2e,,,,"[REQ-MC-003] Dedicated remittance corridors (India, Pakistan, Philippines, Bangladesh)"
+Story,[REQ-MC-004] Corridor-specific fees and AML limits per corridor,"System shall calculate corridor-specific fees and apply AML limits.
+
+**Acceptance Criteria:** Each corridor has defined fees and limits. Excess transfers flagged for enhanced due diligence.
+
+**Linked Test Cases:** TC-MC-004, TC-MC-005, TC-MC-007",ws5-multi-currency;middle-east-compliance,High,,WS5 — Multi-Currency & Remittance,
+Sub-task,[TC-MC-004] India corridor remittance fee calculation,"**Type:** unit
+
+**Preconditions:** India corridor: flat 15 AED, 0.25%, min 15.
+
+**Steps:**
+1. Calculate fee for 5K AED
+
+**Expected Result:** Fee = 15 AED (min applies).",ws5-multi-currency;test-unit,,,,[REQ-MC-004] Corridor-specific fees and AML limits per corridor
+Sub-task,[TC-MC-005] Remittance AML limit enforcement,"**Type:** unit
+
+**Preconditions:** Limit 100K/month, already sent 95K.
+
+**Steps:**
+1. Attempt 10K remittance
+
+**Expected Result:** Rejected — exceeds monthly limit.",ws5-multi-currency;test-unit,,,,[REQ-MC-004] Corridor-specific fees and AML limits per corridor
+Sub-task,[TC-MC-007] End-to-end remittance to India corridor (E2E),"**Type:** e2e
+
+**Preconditions:** KYC customer, funded wallet, India corridor.
+
+**Steps:**
+1. Submit 20K AED to India
+2. Verify AML, FX, fees
+
+**Expected Result:** Remittance processed end-to-end.",ws5-multi-currency;test-e2e,,,,[REQ-MC-004] Corridor-specific fees and AML limits per corridor
+Epic,WS6 — Arabic / RTL Frontend,Epic for WS6 — Arabic / RTL Frontend. Priority: High.,ws6-arabic-rtl;middle-east-compliance,High,WS6 — Arabic / RTL Frontend,,
+Story,[REQ-AR-001] Full RTL (right-to-left) layout for Arabic UI,"System shall support full RTL layout for Arabic UI.
+
+**Acceptance Criteria:** Entire UI renders RTL when Arabic locale is active. No LTR artifacts remain.
+
+**Linked Test Cases:** TC-AR-002",ws6-arabic-rtl;middle-east-compliance,High,,WS6 — Arabic / RTL Frontend,
+Sub-task,[TC-AR-002] RTL layout renders correctly with dir='rtl',"**Type:** e2e
+
+**Preconditions:** App running, Arabic locale.
+
+**Steps:**
+1. Switch to Arabic
+2. Verify dir=rtl
+
+**Expected Result:** Full RTL layout, no LTR artifacts.",ws6-arabic-rtl;test-e2e,,,,[REQ-AR-001] Full RTL (right-to-left) layout for Arabic UI
+Story,[REQ-AR-002] Complete Arabic translations (rename es.json to ar.json),"System shall provide complete Arabic translations.
+
+**Acceptance Criteria:** ar.json contains 100% of keys from en.json. All values are Arabic strings.
+
+**Linked Test Cases:** TC-AR-001",ws6-arabic-rtl;middle-east-compliance,High,,WS6 — Arabic / RTL Frontend,
+Sub-task,[TC-AR-001] i18n key completeness — ar.json has all keys from en.json,"**Type:** unit
+
+**Preconditions:** en.json and ar.json exist.
+
+**Steps:**
+1. Compare key sets
+
+**Expected Result:** 100% key coverage.",ws6-arabic-rtl;test-unit,,,,[REQ-AR-002] Complete Arabic translations (rename es.json to ar.json)
+Story,[REQ-AR-003] Hijri calendar display alongside Gregorian,"System shall support Hijri calendar display.
+
+**Acceptance Criteria:** Date fields show both Hijri and Gregorian when Arabic locale is active.
+
+**Linked Test Cases:** TC-AR-003, TC-AR-005",ws6-arabic-rtl;middle-east-compliance,High,,WS6 — Arabic / RTL Frontend,
+Sub-task,[TC-AR-003] Hijri calendar conversion accuracy,"**Type:** unit
+
+**Preconditions:** HijriDateDisplay available.
+
+**Steps:**
+1. Convert 2026-03-20
+2. Verify Hijri date
+
+**Expected Result:** Correct Hijri date within 1-day tolerance.",ws6-arabic-rtl;test-unit,,,,[REQ-AR-003] Hijri calendar display alongside Gregorian
+Sub-task,[TC-AR-005] Date picker works in Hijri mode,"**Type:** e2e
+
+**Preconditions:** Arabic locale, date picker rendered.
+
+**Steps:**
+1. Open picker
+2. Select date
+
+**Expected Result:** Hijri months shown, both values captured.",ws6-arabic-rtl;test-e2e,,,,[REQ-AR-003] Hijri calendar display alongside Gregorian
+Story,[REQ-AR-004] Arabic-Indic numerals when Arabic locale is active,"System shall format numbers using Arabic-Indic numerals.
+
+**Acceptance Criteria:** Numeric values display using Arabic-Indic numerals via Intl.NumberFormat('ar-AE').
+
+**Linked Test Cases:** TC-AR-004",ws6-arabic-rtl;middle-east-compliance,High,,WS6 — Arabic / RTL Frontend,
+Sub-task,[TC-AR-004] Arabic number formatting via Intl.NumberFormat('ar-AE'),"**Type:** unit
+
+**Preconditions:** arabicFormat utility available.
+
+**Steps:**
+1. Format 12345.67
+
+**Expected Result:** Output uses Arabic-Indic numerals.",ws6-arabic-rtl;test-unit,,,,[REQ-AR-004] Arabic-Indic numerals when Arabic locale is active

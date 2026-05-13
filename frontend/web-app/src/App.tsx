@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
+import { RTLProvider } from './components/RTLProvider'
 import Home from './pages/Home'
 import Transfer from './pages/Transfer'
 import Beneficiaries from './pages/Beneficiaries'
@@ -53,6 +54,7 @@ function AppContent() {
   }, []);
 
   return (
+    <RTLProvider>
     <Layout>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -88,6 +90,7 @@ function AppContent() {
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </Layout>
+    </RTLProvider>
   )
 }
 

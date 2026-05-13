@@ -1,11 +1,10 @@
 package com.yourorg.banking.customer.api;
 
-import com.digitalbank.fintech.customer.api.CustomerController;
-import com.digitalbank.fintech.customer.repo.CustomerRepository;
+import com.yourorg.banking.customer.repo.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.bean.MockBean;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 

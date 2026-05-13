@@ -87,7 +87,7 @@ public record Account(
 
     public Account deactivate() {
         return new Account(
-                id, customerId, accountNumber, accountName, AccountStatus.INACTIVE, status,
+                id, customerId, accountNumber, accountName, type, AccountStatus.INACTIVE,
                 currency, balance, availableBalance, interestRate, feeRate, dailyTransferLimit,
                 perTransactionLimit, lastTransactionAt, description, paperlessStatements,
                 emailNotifications, preferredLanguage, kycRequired, kycLevel, kycStatus,

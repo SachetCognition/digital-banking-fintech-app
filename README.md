@@ -1,34 +1,35 @@
-# Digital Banking Fintech Monorepo
+# Emirates Digital Bank — Digital Banking Platform
 
-This repository contains a modern digital banking fintech application with a microservices backend (Spring Boot, Java 17), a React (TypeScript) frontend, PostgreSQL with Flyway migrations, Redis, Kafka, and comprehensive authentication & authorization system.
+A Shariah-compliant digital banking platform for the Middle East (UAE, KSA, GCC), built on a microservices architecture. Features Islamic finance products, CBUAE/SAMA regulatory compliance, Emirates ID/UAE Pass identity verification, regional payment networks (UAEFTS, UAEIPS, WPS, SADAD), multi-currency wallets, Arabic/RTL support, and full AML/KYC workflows.
 
 ## Tech Stack
-- **Backend**: Spring Boot, Hexagonal Architecture, DDD, Kafka, Redis, Flyway, OpenAPI
-- **Frontend**: React + TypeScript (Vite), React Router, Tailwind CSS
-- **Databases**: PostgreSQL (separate DB per service)
-- **Authentication**: JWT, MFA (TOTP), RBAC, Session Management
+- **Backend**: Spring Boot 3.2, Java 17, Hexagonal Architecture, DDD, Kafka, Redis, OpenAPI
+- **Frontend**: React + TypeScript (Vite), React Router, Tailwind CSS, i18n (English/Arabic)
+- **Databases**: PostgreSQL 15 (separate DB per service)
+- **Identity**: Keycloak 26 (OAuth2/OIDC), Emirates ID, UAE Pass, JWT, MFA (TOTP), RBAC
 - **Infrastructure**: Docker Compose (dev), K8s/Helm (prod-ready later)
+- **Regulatory**: CBUAE, SAMA, goAML, MENAFATF, Zakat, VAT
 
 ## Services
-- **customer-service** (profiles, KYC state machine, devices, authentication) ✅
-- **account-service** (accounts master) ✅
-- **ledger-service** (double-entry ledger) ✅
-- **payments-service** (P2P transfers, saga orchestration) ✅
-- **card-service** (PCI zone) ✅
-- **loan-service** (loans, credit, scoring) ✅
-- **investment-service** (investments, trading, portfolio) ✅
-- **compliance-service** (AML, fraud detection, audit logging) ✅
-- **notifications-service** (push notifications, email, SMS, chat) ✅
-- **admin-service** (admin dashboard, user management, monitoring, configuration, backup) ✅
-- **open-banking-service** (Open Banking APIs, webhooks, rate limiting, SDKs) ✅
-- **security-service** (encryption, security headers, DDoS protection, compliance) ✅
-- **performance-service** (caching, optimization, monitoring, load balancing) ✅
-- **testing-service** (unit tests, integration tests, performance tests, security tests, chaos engineering) ✅
-- **devops-service** (CI/CD pipelines, Kubernetes orchestration, monitoring, infrastructure as code) ✅
-- **business-service** (fee management, interest calculations, tax reporting, loyalty program, referral system) ✅
-- **aml-service** (rules/alerts/cases) - planned
-- **notifications-service** (templates + delivery) - planned
-- **file-service** (documents via S3/MinIO) - planned
+| Service | Port | Description |
+|---------|------|-------------|
+| **customer-service** | 8081 | Profiles, KYC (Emirates ID, UAE Pass, Iqama), devices, authentication |
+| **account-service** | 8082 | Accounts, multi-currency wallets (AED/SAR/QAR/BHD/OMR/KWD), Wadiah/Wakala/Mudarabah accounts, FX rates |
+| **ledger-service** | 8083 | Double-entry ledger |
+| **payments-service** | 8084 | P2P transfers, UAEFTS, UAEIPS, WPS (SIF), SADAD, remittance corridors |
+| **card-service** | 8085 | Virtual card issuance (PCI zone) |
+| **loan-service** | 8086 | Islamic finance (Murabaha, Ijara, Musharaka, Mudarabah), credit scoring |
+| **investment-service** | 8087 | Investments, Sukuk, trading, portfolio |
+| **compliance-service** | 8088 | AML (AED 35K CTR), goAML reports, CBUAE returns, fraud detection |
+| **business-service** | 8089 | Zakat (2.5%), VAT (5% GCC), fee management, loyalty program |
+| **notifications-service** | 8090 | Push notifications, email, SMS, chat |
+| **admin-service** | 8091 | Admin dashboard, user management, monitoring |
+| **open-banking-service** | 8092 | PSD2-compliant APIs, webhooks, SDKs |
+| **security-service** | 8093 | Encryption, security headers, DDoS protection |
+| **performance-service** | 8094 | Caching, optimization, load balancing |
+| **testing-service** | 8095 | Unit/integration/performance/security tests, chaos engineering |
+| **devops-service** | 8096 | CI/CD pipelines, Kubernetes orchestration |
+| **file-service** | 8097 | Document storage (S3/MinIO) |
 
 ## Authentication & Authorization Features
 - **User Registration**: Email verification, strong password policy
@@ -37,6 +38,15 @@ This repository contains a modern digital banking fintech application with a mic
 - **Role-Based Access Control**: Granular permissions system
 - **Session Management**: Timeout, concurrent login control, device tracking
 - **Audit Logging**: Comprehensive authentication event tracking
+
+## Regional Payment Networks (WS4)
+- **UAEFTS**: UAE Funds Transfer System for RTGS
+- **UAEIPS**: Real-time instant payments
+- **WPS**: Wage Protection System with SIF file generation per MoL format
+- **SADAD**: Saudi bill presentment and payment
+- **SARIE**: Saudi real-time payments
+- **GCC-RTGS / AFAQ**: Cross-border GCC payments
+- **IBAN Validation**: UAE/KSA IBAN format validation
 
 ## Payment Features
 - **External Bank Transfers**: Domestic transfers to external banks with routing validation
@@ -48,6 +58,18 @@ This repository contains a modern digital banking fintech application with a mic
 - **P2P Internal Transfers**: Fast internal transfers with saga orchestration
 - **Beneficiaries & Bill Pay**: Manage saved payees and quick payments
 
+## Multi-Currency & Remittance (WS5)
+- **Multi-Currency Wallets**: AED, SAR, QAR, BHD, OMR, KWD, USD, EUR, GBP
+- **CBUAE Reference Rates**: Real-time FX rate integration
+- **Remittance Corridors**: India, Pakistan, Philippines, Bangladesh with corridor-specific fees
+- **AML Limits**: Per-corridor AML limit enforcement
+
+## Arabic Language & RTL Support (WS6)
+- **RTL Layout**: Full right-to-left layout for Arabic UI
+- **Arabic Translations**: Complete ar.json locale file
+- **Hijri Calendar**: Gregorian-to-Hijri conversion using `Intl.DateTimeFormat('ar-SA-u-ca-islamic')`
+- **Arabic-Indic Numerals**: Number formatting via `Intl.NumberFormat('ar-AE')`
+
 ## Card Management Features
 - **Virtual Cards**: Instant card issuance with secure card number generation
 - **Card Controls**: Spending limits, merchant blocks, ATM withdrawal controls
@@ -55,12 +77,24 @@ This repository contains a modern digital banking fintech application with a mic
 - **Card Replacement**: Lost/stolen card handling with tracking
 - **PIN Management**: Secure PIN change functionality with attempt tracking
 
+## Islamic Finance Products (WS1)
+- **Murabaha**: Cost-plus financing with configurable markup rates
+- **Ijara**: Lease financing with rental schedule generation
+- **Diminishing Musharaka**: Partnership home financing with equity split tracking
+- **Mudarabah**: Profit-sharing investment accounts with configurable ratios
+- **Wadiah**: Safekeeping current accounts
+- **Wakala**: Agency-based investment contracts
+- **Sukuk**: Islamic bonds in the investment service
+- **Takaful**: Islamic insurance product references
+- **SSB Approval Workflow**: Shariah Supervisory Board approval for new products
+- **ShariahViolationException**: Riba transaction rejection
+
 ## Loan & Credit Features
 - **Loan Applications**: Complete loan request workflow with automated approval
 - **Credit Scoring**: Advanced risk assessment with multiple scoring models
 - **Loan Management**: Comprehensive repayment tracking and payment processing
 - **Credit Limits**: Dynamic credit line management with utilization monitoring
-- **Interest Calculations**: Multiple calculation methods with daily/monthly accrual
+- **Profit Rate Calculations**: Islamic profit-rate calculations replacing interest-based methods
 
 ## Investment Features
 - **Investment Accounts**: Multiple account types with risk tolerance and objectives
@@ -69,12 +103,24 @@ This repository contains a modern digital banking fintech application with a mic
 - **Market Data**: Real-time pricing with historical data and technical indicators
 - **Performance Analytics**: Comprehensive reporting with risk metrics and benchmarks
 
-## Compliance & Risk Management Features
-- **AML Monitoring**: Real-time suspicious activity detection with rule-based analysis
+## Middle East Regulatory Compliance (WS2)
+- **goAML Reporting**: CBUAE suspicious transaction reports in XML format
+- **CBUAE Prudential Returns**: Automated regulatory return generation
+- **MENAFATF Compliance**: Middle East FATF framework support
+- **AML/CFT**: UAE Federal Decree-Law No. 20/2018 reporting, AED 35,000 CTR threshold
+- **Zakat Calculation**: 2.5% on eligible assets with nisab threshold, Hijri year period
+- **GCC VAT**: 5% VAT on applicable banking fees with exempt transaction detection
+- **SAMA Reporting**: Saudi Central Bank report generation for KSA operations
 - **Transaction Monitoring**: Comprehensive fraud detection with risk scoring
-- **Regulatory Reporting**: Automated SAR, CTR, and BSA report generation
 - **Audit Logging**: Complete audit trails for all system activities
-- **Data Retention**: Automated data lifecycle management with retention policies
+
+## KYC / Identity Verification (WS3)
+- **Emirates ID**: Format validation (784-YYYY-NNNNNNN-C), checksum verification, expiry check
+- **UAE Pass**: OAuth-based digital identity integration (eKYC)
+- **Iqama**: Residency permit validation for expat customers
+- **Trade License**: Business account onboarding verification
+- **UBO Registry**: Beneficial Ownership verification per CBUAE
+- **Saudi Absher**: National ID integration for KSA
 
 ## Customer Experience Features
 - **Mobile App**: React Native mobile application with full banking functionality
@@ -127,29 +173,84 @@ This repository contains a modern digital banking fintech application with a mic
 
 ## Business Features
 - **Fee Management**: Transaction fees, ATM fees, overdraft fees, monthly maintenance fees
-- **Interest Calculations**: Daily interest calculation, compounding, tiered rates
-- **Tax Reporting**: 1099-INT, 1099-DIV, 1099-B, 1099-MISC document generation
+- **Zakat & Tax**: Zakat calculation (2.5% on eligible assets), 5% GCC VAT on applicable fees
+- **Tax Reporting**: Tax document generation for regulatory compliance
 - **Loyalty Program**: Points earning, redemption, tier levels, rewards
 - **Referral System**: Referral codes, bonus payments, customer acquisition
 
-Getting started (Dev)
-1) Start infrastructure (Postgres, Redis, Kafka):
-   - `docker compose -f docker/compose/docker-compose.yml up -d`
-2) Run services:
-   - From `services/customer-service`: `./mvnw spring-boot:run` (or via IDE)
-3) Frontend:
-   - From `frontend/web-app`: `npm install && npm run dev`
-Notes
-- Postgres hosts a separate database per service (created by init script). Flyway runs in each service to manage schema.
-- Kafka is a single-node KRaft broker suitable for local development.
-- Keycloak, MinIO, and more infra can be added incrementally.
+## Getting Started (Dev)
 
-  Directory layout
-- `services/` - Spring Boot microservices
-- `frontend/` - React web app
-- `docker/compose/` - Dev infra via Docker Compose
-- `platform/` - Shared libs/tooling (future)
-- `docs/` - Diagrams, OpenAPI specs, ADRs
+### Prerequisites
+- Docker Desktop
+- Java 17+
+- Maven 3.9+
+- Node.js 20+
+
+### 1. Start Infrastructure
+```bash
+# Start PostgreSQL 15, Redis 7, Kafka 3.7, Keycloak 26
+docker compose -f docker/compose/docker-compose.yml -f docker/compose/docker-compose.override.yml up -d
+```
+
+### 2. Run Backend Services
+```bash
+# customer-service (port 8081)
+SPRING_FLYWAY_ENABLED=false SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop \
+  mvn -f services/customer-service/pom.xml spring-boot:run
+
+# account-service (port 8082)
+SPRING_FLYWAY_ENABLED=false SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop \
+  mvn -f services/account-service/pom.xml spring-boot:run
+
+# loan-service (port 8086)
+SPRING_FLYWAY_ENABLED=false SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop \
+  mvn -f services/loan-service/pom.xml spring-boot:run
+
+# compliance-service (port 8088)
+SPRING_FLYWAY_ENABLED=false SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop \
+  mvn -f services/compliance-service/pom.xml spring-boot:run
+```
+
+### 3. Run Frontend
+```bash
+cd frontend/web-app
+npm install
+npm run dev
+# Open http://localhost:5173
+```
+
+### 4. Login
+- Click **"Continue with Demo Account"** on the login page for instant access
+- Or use Keycloak credentials: `alice / Password1!` or `bob / Password1!`
+
+### Notes
+- PostgreSQL hosts a separate database per service (created by init script)
+- Kafka is a single-node KRaft broker suitable for local development
+- Keycloak realm `dbf` is pre-configured with OAuth2 clients and test users
+- Flyway is disabled for local dev (`SPRING_FLYWAY_ENABLED=false`) — Hibernate auto-DDL is used instead
+
+## Directory Layout
+```
+services/               Spring Boot microservices (17 services)
+frontend/web-app/       React + TypeScript web app
+mobile-app/             React Native mobile app
+docker/compose/         Dev infra (Docker Compose + Keycloak realm)
+docs/                   URS, Test Spec, OpenAPI specs, ADRs
+scripts/                JIRA import, load testing, smoke tests
+platform/               Shared libs/tooling (future)
+```
+
+## Documentation
+- `docs/middle-east-urs.html` — User Requirement Specification (38 requirements, 6 workstreams)
+- `docs/middle-east-test-spec.html` — Test Case Specification (46 test cases)
+- `scripts/jira_import.py` — JIRA import script (93 tickets: 6 Epics, 38 Stories, 46 Sub-tasks)
+
+## Load Testing
+```bash
+# Run 500 concurrent OAuth2 login attempts against Keycloak
+python3 scripts/load-test.py
+```
+Results: **500/500 successful (100% success rate)**, 16.1 RPS
 
 License
 - MIT (update as needed)
@@ -159,33 +260,38 @@ License
 ```mermaid
 flowchart LR
     subgraph Client
-      Web[React (TS)] -- OIDC/OAuth2 --> Keycloak
-      Web --> GW[Gateway (future)]
+      Web[React TS + Arabic/RTL] -- OIDC/OAuth2 --> KC[Keycloak 26]
+      Mobile[React Native] --> GW[API Gateway]
     end
 
-    Web -->|REST| Cust[customer-service]
-    Web --> Acct[account-service]
-    Web --> Ledg[ledger-service]
+    Web -->|REST| Cust[customer-service<br/>KYC: Emirates ID, UAE Pass]
+    Web --> Acct[account-service<br/>Multi-Currency, Wadiah, Wakala]
+    Web --> Loan[loan-service<br/>Murabaha, Ijara, Musharaka]
+    Web --> Pay[payments-service<br/>UAEFTS, UAEIPS, WPS, SADAD]
+    Web --> Comp[compliance-service<br/>goAML, CBUAE, AED 35K CTR]
+    Web --> Biz[business-service<br/>Zakat 2.5%, VAT 5%]
 
     subgraph Infra
-      PG[(Postgres per service)]
-      R[(Redis)]
-      K[(Kafka)]
+      PG[(PostgreSQL 15)]
+      R[(Redis 7)]
+      K[(Kafka 3.7)]
     end
 
-    Cust <--> PG
-    Acct <--> PG
-    Ledg <--> PG
-    Cust <--> K
-    Acct <--> K
-    Ledg <--> K
+    Cust & Acct & Loan & Pay & Comp & Biz <--> PG
+    Cust & Acct & Loan & Pay <--> K
+    Cust & Acct <--> R
 ```
-Services and default ports (dev)
-- customer-service: http://localhost:8081
-- account-service: http://localhost:8082
-- ledger-service: http://localhost:8083
-- payments-service: http://localhost:8084
-- frontend (Vite): http://localhost:5173
+
+### Services and Default Ports (Dev)
+| Service | Port | Service | Port |
+|---------|------|---------|------|
+| customer-service | 8081 | compliance-service | 8088 |
+| account-service | 8082 | business-service | 8089 |
+| ledger-service | 8083 | Keycloak | 9080 |
+| payments-service | 8084 | PostgreSQL | 5432 |
+| loan-service | 8086 | Redis | 6379 |
+| investment-service | 8087 | Kafka | 9092 |
+| Frontend (Vite) | 5173 | | |
 
 OpenAPI UIs (when services are running)
 - customer-service: http://localhost:8081/swagger-ui.html
@@ -195,59 +301,31 @@ OpenAPI UIs (when services are running)
 
 # Local Development
 
-Prerequisites
-- Docker Desktop
-- Java 17+
-- Maven 3.9+
-- Node.js 20+
-
-Start infrastructure
-```bash
-docker compose -f docker/compose/docker-compose.yml up -d
-```
-This brings up Postgres (with per-service DBs), Redis, Kafka, and Keycloak.
-Databases are created by `docker/compose/initdb/01-init.sql`.
+See [Getting Started](#getting-started-dev) above for setup instructions.
 
 Keycloak (OIDC)
 - URL: http://localhost:9080
 - Admin: admin / admin
 - Realm: `dbf`
-- Client: `dbf-web` (public)
+- Client: `dbf-web` (public, direct access grants enabled)
 - Test users:
   - alice / Password1! (ROLE USER)
   - bob / Password1! (ROLE ADMIN)
-
-Run services
-```bash
-# customer-service
-mvn -f services/customer-service/pom.xml spring-boot:run
-
-# account-service (optional)
-mvn -f services/account-service/pom.xml spring-boot:run
-
-# ledger-service (optional)
-mvn -f services/ledger-service/pom.xml spring-boot:run
-
-# payments-service
-mvn -f services/payments-service/pom.xml spring-boot:run
-
-# api-gateway
-mvn -f services/api-gateway/pom.xml spring-boot:run
-```
-
-Run frontend
-```bash
-cd frontend/web-app
-npm install
-npm run dev
-# open http://localhost:5173
-```
+  - loadtest / Test1234! (load testing)
 
 Quick verification
-- Visit http://localhost:8080/actuator/health → `{ "status": "UP" }` (via gateway)
-- Visit http://localhost:8081/api/v1/customers/health → `{ "status": "ok" }` (direct)
-- Visit http://localhost:8084/api/v1/transfers/health → `{ "status": "ok" }` (payments service)
-- Frontend home prompts Login (Keycloak); after login, it should display: Gateway → customer-service health: ok
+```bash
+# Backend health checks
+curl http://localhost:8081/actuator/health   # customer-service
+curl http://localhost:8082/actuator/health   # account-service
+
+# Keycloak token (OAuth2 password grant)
+curl -X POST http://localhost:9080/realms/dbf/protocol/openid-connect/token \
+  -d 'grant_type=password&client_id=dbf-web&username=alice&password=Password1!'
+
+# Frontend
+open http://localhost:5173
+```
 
 # API Surface (MVP excerpts)
 
@@ -592,12 +670,13 @@ JWT/OAuth2 Resource Servers
 
 # Frontend
 
-- Vite + React + TypeScript under `frontend/web-app/`.
-- OIDC integration using `react-oidc-context` in `src/auth/AuthProvider.tsx`.
-- Protected routes via `src/Protected.tsx`.
-- Axios instance with token injection in `src/api/http.ts`.
-- API base URL points to API Gateway: `http://localhost:8080`.
-- UI library (MUI or Tailwind) to be added.
+- Vite + React + TypeScript under `frontend/web-app/`
+- **Emirates Digital Bank theme**: Dark navy (#0a1628) + gold (#d4af37), UAE branding
+- Demo auth mode: localStorage-based authentication (no Keycloak required for UI walkthrough)
+- i18n: English (`en.json`) and Arabic (`ar.json`) with RTL layout support
+- Hijri calendar display and Arabic-Indic numeral formatting
+- 30+ pages: Dashboard, Profile, KYC, Transfers, International, Bill Pay, Beneficiaries, Loans, Investments, Cards, Compliance, Security, Admin, and more
+- Exchange rates: AED ↔ USD, EUR, GBP, SAR, INR, PKR
 
 # CI/CD
 
@@ -613,16 +692,20 @@ GitHub Actions workflows
 - CORS errors in browser: confirm `CorsConfig` and that frontend runs at `http://localhost:5173`.
 - Port conflicts: adjust `server.port` in each service `application.yml`.
 
-# Roadmap (Short-term)
+# Workstream Implementation Status
 
-- Add Keycloak to Compose and implement OIDC login in frontend
-- Implement `account-service` create/list APIs
-- Implement `ledger-service` postings, balances, statements
-- Introduce shared Spring Boot starter for logging/tracing/error handling/idempotency/outbox
-- Add CI workflows (build/test, Docker images)
-- Add API Gateway (Spring Cloud Gateway) configuration
+| Workstream | Status | Services |
+|-----------|--------|----------|
+| WS1 — Islamic Finance Products | Complete | loan-service, account-service, investment-service |
+| WS2 — Regulatory Compliance | Complete | compliance-service, business-service |
+| WS3 — KYC/Identity Verification | Complete | customer-service |
+| WS4 — Regional Payment Networks | Complete | payments-service |
+| WS5 — Multi-Currency & Remittance | Complete | account-service, payments-service |
+| WS6 — Arabic/RTL Frontend | Complete | frontend/web-app |
 
 # Contributing
 
 - Use feature branches and PRs. Keep migrations idempotent and review carefully.
-- Code style: Java 17, Spring Boot 3, ESLint/Prettier for frontend.
+- Code style: Java 17, Spring Boot 3, JUnit 5 + Mockito, ESLint/Prettier for frontend.
+- Run `mvn test` in each service before submitting PRs.
+- Frontend tests: `npm test` in `frontend/web-app/`.

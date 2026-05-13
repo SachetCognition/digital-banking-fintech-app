@@ -4,14 +4,17 @@ import java.time.Instant;
 import java.util.UUID;
 
 public record JointAccountHolder(
+    UUID id,
+    UUID accountId,
     UUID customerId,
-    String fullName,
-    String email,
     JointAccountRole role,
     boolean isPrimary,
     Instant addedAt,
     Instant approvedAt,
-    String status
+    UUID approvedBy,
+    String status,
+    Instant createdAt,
+    Instant updatedAt
 ) {
     public enum JointAccountRole {
         PRIMARY_OWNER,
@@ -20,4 +23,3 @@ public record JointAccountHolder(
         BENEFICIARY
     }
 }
-

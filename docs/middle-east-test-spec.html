@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Case Specification — Emirates Digital Bank: Middle East Region Compliance</title>
+<style>
+  @page { margin: 2cm; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #1a1a2e; line-height: 1.6; background: #f8f9fa; }
+  .container { max-width: 1100px; margin: 0 auto; background: #fff; padding: 48px 56px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  h1 { font-size: 28px; color: #0d4a2e; border-bottom: 3px solid #c5a13d; padding-bottom: 12px; margin-bottom: 8px; }
+  h2 { font-size: 22px; color: #0d4a2e; margin-top: 36px; margin-bottom: 12px; border-left: 4px solid #c5a13d; padding-left: 14px; }
+  h3 { font-size: 17px; color: #1a3c5e; margin-top: 24px; margin-bottom: 8px; }
+  p, li { font-size: 14px; }
+  p { margin-bottom: 10px; }
+  ul, ol { margin-left: 24px; margin-bottom: 12px; }
+  li { margin-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 12.5px; }
+  th, td { border: 1px solid #d0d5dd; padding: 7px 10px; text-align: left; vertical-align: top; }
+  th { background: #0d4a2e; color: #fff; font-weight: 600; }
+  tr:nth-child(even) { background: #f4f6f8; }
+  .tc-id { font-family: 'Courier New', monospace; font-weight: 700; color: #0d4a2e; background: #e8f0eb; padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
+  .req-id { font-family: 'Courier New', monospace; font-size: 12px; color: #555; white-space: nowrap; }
+  .badge { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 3px; font-weight: 600; text-transform: uppercase; }
+  .badge-unit { background: #dbeafe; color: #1e40af; }
+  .badge-integration { background: #fef3cd; color: #92400e; }
+  .badge-e2e { background: #fde8e8; color: #b91c1c; }
+  .badge-critical { background: #fde8e8; color: #b91c1c; }
+  .badge-high { background: #fef3cd; color: #b45309; }
+  .doc-meta { display: grid; grid-template-columns: 160px 1fr; gap: 4px 16px; margin-bottom: 24px; font-size: 14px; }
+  .doc-meta dt { font-weight: 600; color: #555; }
+  .doc-meta dd { color: #1a1a2e; }
+  .header-bar { background: linear-gradient(135deg, #0d4a2e 0%, #1a6b42 100%); color: #fff; padding: 32px 56px; margin: -48px -56px 32px; }
+  .header-bar h1 { color: #fff; border-bottom-color: #c5a13d; }
+  .header-bar .subtitle { color: #c5a13d; font-size: 16px; margin-top: 4px; }
+  .toc { background: #f0f4f1; border: 1px solid #d0d5dd; border-radius: 6px; padding: 20px 28px; margin: 20px 0 32px; }
+  .toc h3 { margin-top: 0; }
+  .toc ol { margin-bottom: 0; }
+  .toc a { text-decoration: none; color: #0d4a2e; }
+  .toc a:hover { text-decoration: underline; }
+  footer { text-align: center; font-size: 12px; color: #888; margin-top: 40px; padding-top: 16px; border-top: 1px solid #eee; }
+  @media print {
+    body { background: #fff; }
+    .container { box-shadow: none; padding: 0; }
+    .header-bar { margin: 0 0 24px; padding: 24px; }
+    table { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header-bar">
+  <h1>Test Case Specification</h1>
+  <div class="subtitle">Emirates Digital Bank — Middle East Region Compliance</div>
+</div>
+
+<dl class="doc-meta">
+  <dt>Document Title:</dt>
+  <dd>Test Case Specification — Emirates Digital Bank: Middle East Region Compliance</dd>
+  <dt>Version:</dt>
+  <dd>1.0</dd>
+  <dt>Date:</dt>
+  <dd>2026-05-13</dd>
+  <dt>Project:</dt>
+  <dd>Emirates Digital Bank — Middle East Banking Compliance</dd>
+  <dt>Author:</dt>
+  <dd>Digital Banking Engineering Team</dd>
+  <dt>Status:</dt>
+  <dd>Draft for Review</dd>
+  <dt>Classification:</dt>
+  <dd>Internal — Confidential</dd>
+</dl>
+
+<div class="toc">
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#sec-ws1">WS1 — Islamic Finance Test Cases</a></li>
+    <li><a href="#sec-ws2">WS2 — Regulatory Compliance Test Cases</a></li>
+    <li><a href="#sec-ws3">WS3 — KYC / Identity Test Cases</a></li>
+    <li><a href="#sec-ws4">WS4 — Payment Networks Test Cases</a></li>
+    <li><a href="#sec-ws5">WS5 — Multi-Currency &amp; Remittance Test Cases</a></li>
+    <li><a href="#sec-ws6">WS6 — Arabic / RTL Test Cases</a></li>
+    <li><a href="#sec-exec-matrix">Test Execution Matrix</a></li>
+    <li><a href="#sec-trace">Traceability</a></li>
+  </ol>
+</div>
+
+<!-- ============================== WS1 ============================== -->
+<h2 id="sec-ws1">1. WS1 — Islamic Finance Test Cases <span class="badge badge-critical">Critical</span></h2>
+<p>Target services: <strong>loan-service</strong>, <strong>account-service</strong>, <strong>investment-service</strong></p>
+
+<table>
+  <thead>
+    <tr><th style="width:100px">Test ID</th><th style="width:100px">Traces To</th><th>Description</th><th style="width:60px">Type</th><th style="width:60px">Priority</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="tc-id">TC-IF-001</span></td><td><span class="req-id">REQ-IF-001</span></td><td>Murabaha markup calculation</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-IF-002</span></td><td><span class="req-id">REQ-IF-003</span></td><td>Diminishing Musharaka equity reduction over time</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-IF-003</span></td><td><span class="req-id">REQ-IF-002</span></td><td>Ijara rental schedule generation</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-IF-004</span></td><td><span class="req-id">REQ-IF-004</span></td><td>Mudarabah profit split by agreed ratio</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-IF-005</span></td><td><span class="req-id">REQ-IF-005</span></td><td>Riba transaction rejection — ShariahViolationException</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-IF-006</span></td><td><span class="req-id">REQ-IF-007</span></td><td>Wadiah account creation</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-IF-007</span></td><td><span class="req-id">REQ-IF-006</span></td><td>Islamic loan application end-to-end with SSB approval</td><td><span class="badge badge-integration">Integration</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-IF-008</span></td><td><span class="req-id">REQ-IF-004</span></td><td>Profit distribution to Mudarabah savings account</td><td><span class="badge badge-integration">Integration</span></td><td>Critical</td></tr>
+  </tbody>
+</table>
+
+<h3>TC-IF-001: Murabaha Markup Calculation</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>IslamicFinanceCalculationService is instantiated. Asset cost = 100,000 AED, markup rate = 15%.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>calculateMurabaha(100000, 15.0, 36)</code> with a 36-month term.</li><li>Verify the returned total price.</li><li>Verify the monthly installment amount.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Total price = 115,000 AED. Profit amount = 15,000 AED. Monthly installment = 115,000 / 36 = 3,194.44 AED (rounded to 2 decimal places). No field references "interest".</td></tr>
+</table>
+
+<h3>TC-IF-002: Diminishing Musharaka Equity Reduction Over Time</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Property value = 1,000,000 AED. Bank equity = 80%, customer equity = 20%. Term = 20 years. Monthly buyout.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>calculateMusharaka(1000000, 80.0, 240)</code>.</li><li>Verify equity split after 1 payment.</li><li>Verify equity split after 120 payments (midpoint).</li><li>Verify equity split after 240 payments (completion).</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>After 1 payment: bank equity decreases by 1/240 of original 80%. After 120 payments: bank equity = 40%, customer = 60%. After 240 payments: bank equity = 0%, customer = 100%.</td></tr>
+</table>
+
+<h3>TC-IF-003: Ijara Rental Schedule Generation</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Asset value = 500,000 AED. Lease term = 60 months. Annual rental rate = 6%.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>calculateIjara(500000, 6.0, 60)</code>.</li><li>Verify the rental schedule has 60 entries.</li><li>Verify each monthly rental amount.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>60 monthly rental payments generated. Monthly rental = (500,000 * 6%) / 12 = 2,500 AED. Total rental over term = 150,000 AED.</td></tr>
+</table>
+
+<h3>TC-IF-004: Mudarabah Profit Split by Agreed Ratio</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Investment amount = 200,000 AED. Profit = 30,000 AED. Agreed ratio: customer 60%, bank 40%.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>calculateMudarabahProfit(30000, 60.0)</code>.</li><li>Verify customer share and bank share.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Customer profit = 18,000 AED (60%). Bank profit = 12,000 AED (40%). Total = 30,000 AED.</td></tr>
+</table>
+
+<h3>TC-IF-005: Riba Transaction Rejection</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>An Islamic loan product (type = MURABAHA) exists.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Attempt to apply conventional interest calculation method (COMPOUND_MONTHLY) to the Islamic loan.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>System throws <code>ShariahViolationException</code> with message indicating interest-based calculations are prohibited for Islamic products.</td></tr>
+</table>
+
+<h3>TC-IF-006: Wadiah Account Creation</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Customer is KYC-verified. Account type = WADIAH_CURRENT.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Create a Wadiah current account for the customer.</li><li>Verify account properties.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Account is created with type WADIAH_CURRENT, interest rate = 0.00, fee rate = 0.00, allows transactions = true.</td></tr>
+</table>
+
+<h3>TC-IF-007: Islamic Loan Application E2E with SSB Approval</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Customer is KYC-verified. Murabaha product type configured. SSB reviewer exists.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Submit a Murabaha loan application.</li><li>Verify application status is PENDING_SSB_APPROVAL.</li><li>SSB reviewer approves the application.</li><li>Verify status transitions to APPROVED.</li><li>Verify audit trail contains SSB approval event.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Loan application moves through SSB approval workflow. Final status = APPROVED. Audit trail records submitter, reviewer, decision, and timestamp.</td></tr>
+</table>
+
+<h3>TC-IF-008: Profit Distribution to Mudarabah Savings Account</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Mudarabah savings account exists with balance = 100,000 AED. Profit pool = 5,000 AED. Customer ratio = 70%.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Trigger profit distribution cycle.</li><li>Verify customer account credited with 70% of profit.</li><li>Verify distribution record is created.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Customer account credited with 3,500 AED. Distribution record shows source, amount, ratio, and date.</td></tr>
+</table>
+
+<!-- ============================== WS2 ============================== -->
+<h2 id="sec-ws2">2. WS2 — Regulatory Compliance Test Cases <span class="badge badge-critical">Critical</span></h2>
+<p>Target services: <strong>compliance-service</strong>, <strong>business-service</strong></p>
+
+<table>
+  <thead>
+    <tr><th style="width:100px">Test ID</th><th style="width:100px">Traces To</th><th>Description</th><th style="width:60px">Type</th><th style="width:60px">Priority</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="tc-id">TC-RC-001</span></td><td><span class="req-id">REQ-RC-005</span></td><td>Zakat calculation above nisab threshold — 2.5%</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-RC-002</span></td><td><span class="req-id">REQ-RC-005</span></td><td>Zakat below nisab — returns zero</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-RC-003</span></td><td><span class="req-id">REQ-RC-005</span></td><td>Zakat excludes non-zakatable assets</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-RC-004</span></td><td><span class="req-id">REQ-RC-001</span></td><td>goAML report XML schema validation</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-RC-005</span></td><td><span class="req-id">REQ-RC-002</span></td><td>CBUAE prudential return generation</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-RC-006</span></td><td><span class="req-id">REQ-RC-008</span></td><td>AML threshold uses AED 35,000 not USD 10,000</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-RC-007</span></td><td><span class="req-id">REQ-RC-006</span></td><td>VAT calculation on banking fees at 5%</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-RC-008</span></td><td><span class="req-id">REQ-RC-001, REQ-RC-002</span></td><td>End-to-end regulatory report submission</td><td><span class="badge badge-integration">Integration</span></td><td>Critical</td></tr>
+  </tbody>
+</table>
+
+<h3>TC-RC-001: Zakat Calculation Above Nisab Threshold</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Eligible assets = 500,000 AED. Nisab threshold = 20,000 AED (configurable, based on gold price).</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>calculateZakat(500000, 20000)</code>.</li><li>Verify Zakat amount.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Zakat = 500,000 * 2.5% = 12,500 AED.</td></tr>
+</table>
+
+<h3>TC-RC-002: Zakat Below Nisab — Returns Zero</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Eligible assets = 15,000 AED. Nisab threshold = 20,000 AED.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>calculateZakat(15000, 20000)</code>.</li><li>Verify Zakat amount.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Zakat = 0 AED (assets below nisab threshold).</td></tr>
+</table>
+
+<h3>TC-RC-003: Zakat Excludes Non-Zakatable Assets</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Total assets = 600,000 AED. Non-zakatable assets (primary residence, personal vehicle) = 400,000 AED. Nisab = 20,000 AED.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>calculateZakat(600000, 400000, 20000)</code> with non-zakatable exclusion.</li><li>Verify eligible amount and Zakat.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Eligible assets = 200,000 AED. Zakat = 200,000 * 2.5% = 5,000 AED.</td></tr>
+</table>
+
+<h3>TC-RC-004: goAML Report XML Schema Validation</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>A suspicious transaction with amount = 50,000 AED, customer ID, and transaction details.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Generate goAML report for the suspicious transaction.</li><li>Validate output against CBUAE goAML XML schema.</li><li>Verify all mandatory elements are present.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>XML output passes schema validation. Contains: reporting entity, subject details, transaction amounts, suspicion indicators, and report metadata.</td></tr>
+</table>
+
+<h3>TC-RC-005: CBUAE Prudential Return Generation</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Bank financial data available: total assets, risk-weighted assets, capital, liabilities.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Generate CBUAE prudential return report.</li><li>Verify capital adequacy ratio calculation.</li><li>Verify report format.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Report generated with correct capital adequacy ratio (Tier1 + Tier2 capital / risk-weighted assets). Format conforms to CBUAE requirements.</td></tr>
+</table>
+
+<h3>TC-RC-006: AML Threshold Uses AED 35,000</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Transaction monitoring service configured for UAE jurisdiction.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Process a transaction of 34,999 AED — verify no CTR triggered.</li><li>Process a transaction of 35,000 AED — verify CTR triggered.</li><li>Verify the threshold is not USD 10,000.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>CTR triggered at AED 35,000. Transaction of 34,999 AED does not trigger CTR. The USD 10,000 BSA threshold is not used for UAE operations.</td></tr>
+</table>
+
+<h3>TC-RC-007: VAT Calculation on Banking Fees at 5%</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Banking fee = 1,000 AED. VAT rate = 5%. Transaction is not VAT-exempt.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>calculateVat(1000, false)</code>.</li><li>Verify VAT amount and total.</li><li>Call <code>calculateVat(1000, true)</code> for an exempt transaction.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Non-exempt: VAT = 50 AED, total = 1,050 AED. Exempt: VAT = 0 AED, total = 1,000 AED.</td></tr>
+</table>
+
+<h3>TC-RC-008: End-to-End Regulatory Report Submission</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Suspicious transaction flagged by monitoring. CBUAE reporting endpoint configured (mock).</td></tr>
+  <tr><th>Steps</th><td><ol><li>Monitoring flags transaction as suspicious.</li><li>System generates goAML report.</li><li>Report is validated and submitted to CBUAE endpoint.</li><li>Verify submission status and audit trail.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Report generated, validated, and submitted successfully. Audit trail records generation time, validation result, submission time, and response status.</td></tr>
+</table>
+
+<!-- ============================== WS3 ============================== -->
+<h2 id="sec-ws3">3. WS3 — KYC / Identity Test Cases <span class="badge badge-critical">Critical</span></h2>
+<p>Target service: <strong>customer-service</strong></p>
+
+<table>
+  <thead>
+    <tr><th style="width:100px">Test ID</th><th style="width:100px">Traces To</th><th>Description</th><th style="width:60px">Type</th><th style="width:60px">Priority</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="tc-id">TC-KY-001</span></td><td><span class="req-id">REQ-KY-001</span></td><td>Emirates ID valid format passes validation</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-KY-002</span></td><td><span class="req-id">REQ-KY-001</span></td><td>Emirates ID expired — rejection</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-KY-003</span></td><td><span class="req-id">REQ-KY-001</span></td><td>Emirates ID invalid checksum — rejection</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-KY-004</span></td><td><span class="req-id">REQ-KY-002</span></td><td>UAE Pass OAuth — valid token returns identity</td><td><span class="badge badge-integration">Integration</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-KY-005</span></td><td><span class="req-id">REQ-KY-002</span></td><td>UAE Pass expired token — throws exception</td><td><span class="badge badge-integration">Integration</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-KY-006</span></td><td><span class="req-id">REQ-KY-003</span></td><td>Iqama document acceptance in KYC workflow</td><td><span class="badge badge-unit">Unit</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-KY-007</span></td><td><span class="req-id">REQ-KY-004</span></td><td>Trade License verification for business accounts</td><td><span class="badge badge-integration">Integration</span></td><td>Critical</td></tr>
+    <tr><td><span class="tc-id">TC-KY-008</span></td><td><span class="req-id">REQ-KY-001, REQ-KY-002</span></td><td>Full KYC flow: Emirates ID + UAE Pass</td><td><span class="badge badge-e2e">E2E</span></td><td>Critical</td></tr>
+  </tbody>
+</table>
+
+<h3>TC-KY-001: Emirates ID Valid Format Passes Validation</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>EmiratesIdValidationService is instantiated.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>validate("784-1990-1234567-1")</code> with a valid, non-expired Emirates ID and correct checksum.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Validation returns success. No exception thrown.</td></tr>
+</table>
+
+<h3>TC-KY-002: Emirates ID Expired — Rejection</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>EmiratesIdValidationService is instantiated. Emirates ID expiry date is in the past.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>validate("784-1990-1234567-1", expiryDate=2020-01-01)</code>.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Validation throws exception or returns failure with reason "EXPIRED".</td></tr>
+</table>
+
+<h3>TC-KY-003: Emirates ID Invalid Checksum — Rejection</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>EmiratesIdValidationService is instantiated.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>validate("784-1990-1234567-9")</code> with an incorrect check digit.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Validation throws exception or returns failure with reason "INVALID_CHECKSUM".</td></tr>
+</table>
+
+<h3>TC-KY-004: UAE Pass OAuth — Valid Token Returns Identity</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>UaePassIntegrationService configured with mock OAuth endpoint. Valid authorization code available.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>exchangeToken(validAuthCode)</code>.</li><li>Parse the identity assertion.</li><li>Verify customer details (name, Emirates ID, nationality).</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Token exchange succeeds. Identity assertion contains full name, Emirates ID number, nationality, and date of birth.</td></tr>
+</table>
+
+<h3>TC-KY-005: UAE Pass Expired Token — Throws Exception</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>UaePassIntegrationService configured with mock OAuth endpoint.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>exchangeToken(expiredAuthCode)</code>.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>System throws an authentication exception indicating the token/code has expired.</td></tr>
+</table>
+
+<h3>TC-KY-006: Iqama Document Acceptance in KYC Workflow</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>KycService is instantiated. Customer is a non-citizen resident.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Submit KYC with document type = IQAMA and valid Iqama number.</li><li>Verify document is accepted.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>IQAMA is accepted as a valid identity document for expat KYC. Document status = VERIFIED.</td></tr>
+</table>
+
+<h3>TC-KY-007: Trade License Verification for Business Accounts</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>KycService configured for business onboarding. Mock Trade License verification endpoint.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Submit business KYC with document type = TRADE_LICENSE.</li><li>System verifies license number, issuing authority, and expiry.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Trade License is verified. Business account onboarding proceeds. License details (number, authority, activity codes, expiry) are stored.</td></tr>
+</table>
+
+<h3>TC-KY-008: Full KYC Flow — Emirates ID + UAE Pass (E2E)</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Customer registration complete. Emirates ID and UAE Pass available.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Customer registers with basic details.</li><li>Emirates ID is submitted and validated (format + checksum).</li><li>UAE Pass authentication is initiated and completed.</li><li>KYC level is elevated to ENHANCED.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Customer KYC level = ENHANCED. Both Emirates ID and UAE Pass verification records are stored. Customer profile linked to verified identity.</td></tr>
+</table>
+
+<!-- ============================== WS4 ============================== -->
+<h2 id="sec-ws4">4. WS4 — Payment Networks Test Cases <span class="badge badge-high">High</span></h2>
+<p>Target service: <strong>payments-service</strong></p>
+
+<table>
+  <thead>
+    <tr><th style="width:100px">Test ID</th><th style="width:100px">Traces To</th><th>Description</th><th style="width:60px">Type</th><th style="width:60px">Priority</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="tc-id">TC-PN-001</span></td><td><span class="req-id">REQ-PN-003</span></td><td>WPS SIF file generation matches MoL format</td><td><span class="badge badge-unit">Unit</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-PN-002</span></td><td><span class="req-id">REQ-PN-003</span></td><td>WPS batch validation — all salaries validated</td><td><span class="badge badge-unit">Unit</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-PN-003</span></td><td><span class="req-id">REQ-PN-003</span></td><td>WPS insufficient funds — batch rejected</td><td><span class="badge badge-unit">Unit</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-PN-004</span></td><td><span class="req-id">REQ-PN-002</span></td><td>UAEIPS instant transfer completes within SLA</td><td><span class="badge badge-integration">Integration</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-PN-005</span></td><td><span class="req-id">REQ-PN-002</span></td><td>UAEIPS IBAN format validation</td><td><span class="badge badge-unit">Unit</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-PN-006</span></td><td><span class="req-id">REQ-PN-001</span></td><td>UAEFTS RTGS message format</td><td><span class="badge badge-unit">Unit</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-PN-007</span></td><td><span class="req-id">REQ-PN-004</span></td><td>SADAD bill presentment and payment</td><td><span class="badge badge-integration">Integration</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-PN-008</span></td><td><span class="req-id">REQ-PN-001</span></td><td>End-to-end domestic transfer via UAEFTS</td><td><span class="badge badge-e2e">E2E</span></td><td>High</td></tr>
+  </tbody>
+</table>
+
+<h3>TC-PN-001: WPS SIF File Generation Matches MoL Format</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>WpsService instantiated. Employer with 3 employees, salary data available.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>generateSifFile(employerId, salaryRecords)</code>.</li><li>Parse the generated SIF content.</li><li>Verify header record (EDR — Employer Data Record).</li><li>Verify employee records (SDR — Salary Data Records).</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>SIF file contains 1 EDR header + 3 SDR records. Fields conform to MoL format: fixed-length, pipe-delimited, with correct field positions for employer ID, employee ID, salary, and bank routing.</td></tr>
+</table>
+
+<h3>TC-PN-002: WPS Batch Validation — All Salaries Validated</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Employer account has sufficient funds. 5 employee salary records.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>validateBatch(batchId)</code>.</li><li>Verify all 5 records pass validation.</li><li>Verify total amount matches sum of salaries.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Batch validation succeeds. All 5 records validated. Total batch amount = sum of individual salaries. Status = VALIDATED.</td></tr>
+</table>
+
+<h3>TC-PN-003: WPS Insufficient Funds — Batch Rejected</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Employer account balance = 10,000 AED. Total salary batch = 50,000 AED.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Call <code>processBatch(batchId)</code>.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Batch is rejected with status INSUFFICIENT_FUNDS. No individual salary transfers are executed. Error details include required vs. available balance.</td></tr>
+</table>
+
+<h3>TC-PN-004: UAEIPS Instant Transfer Within SLA</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>UaeipsService configured with mock instant payment gateway. Sender and receiver IBANs valid.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Initiate instant transfer of 5,000 AED.</li><li>Measure settlement time.</li><li>Verify transfer status.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Transfer settles within 10-second SLA. Status = SETTLED. Both sender and receiver balances updated.</td></tr>
+</table>
+
+<h3>TC-PN-005: UAEIPS IBAN Format Validation</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>IbanValidator instantiated.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Validate valid UAE IBAN: <code>AE070331234567890123456</code>.</li><li>Validate invalid UAE IBAN (wrong length).</li><li>Validate valid KSA IBAN: <code>SA0380000000608010167519</code>.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Valid UAE IBAN passes. Invalid IBAN rejected with specific error. Valid KSA IBAN passes for KSA context.</td></tr>
+</table>
+
+<h3>TC-PN-006: UAEFTS RTGS Message Format</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>UaeftsService instantiated. Transfer of 1,000,000 AED between two banks.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Generate UAEFTS RTGS message for the transfer.</li><li>Verify ISO 20022 message structure.</li><li>Verify mandatory fields: sender BIC, receiver BIC, amount, currency, value date.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Message conforms to ISO 20022 pacs.008 format. All mandatory fields present and correctly formatted. Currency = AED.</td></tr>
+</table>
+
+<h3>TC-PN-007: SADAD Bill Presentment and Payment</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>SadadService configured with mock SADAD gateway. Customer has outstanding utility bill.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Retrieve bill presentment for customer.</li><li>Verify bill details (biller, amount, due date).</li><li>Process payment for the bill.</li><li>Verify payment confirmation and reconciliation record.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Bill retrieved with correct details. Payment processed successfully. Reconciliation record created with payment reference, amount, and timestamp.</td></tr>
+</table>
+
+<h3>TC-PN-008: End-to-End Domestic Transfer via UAEFTS</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Sender account with sufficient funds. Valid receiver IBAN at another bank. UAEFTS mock gateway configured.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Initiate RTGS transfer of 500,000 AED.</li><li>Verify UAEFTS message generated and submitted.</li><li>Simulate settlement confirmation from CBUAE.</li><li>Verify sender debit and transaction record.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Transfer message submitted to UAEFTS. Settlement confirmation received. Sender account debited. Transaction record with status SETTLED and CBUAE reference number.</td></tr>
+</table>
+
+<!-- ============================== WS5 ============================== -->
+<h2 id="sec-ws5">5. WS5 — Multi-Currency &amp; Remittance Test Cases <span class="badge badge-high">High</span></h2>
+<p>Target services: <strong>account-service</strong>, <strong>payments-service</strong></p>
+
+<table>
+  <thead>
+    <tr><th style="width:100px">Test ID</th><th style="width:100px">Traces To</th><th>Description</th><th style="width:60px">Type</th><th style="width:60px">Priority</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="tc-id">TC-MC-001</span></td><td><span class="req-id">REQ-MC-001</span></td><td>Multi-currency wallet creation for AED/SAR/QAR/BHD/OMR/KWD</td><td><span class="badge badge-unit">Unit</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-MC-002</span></td><td><span class="req-id">REQ-MC-002</span></td><td>Currency conversion with spread</td><td><span class="badge badge-unit">Unit</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-MC-003</span></td><td><span class="req-id">REQ-MC-002</span></td><td>CBUAE reference rate lookup</td><td><span class="badge badge-integration">Integration</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-MC-004</span></td><td><span class="req-id">REQ-MC-004</span></td><td>India corridor remittance fee calculation</td><td><span class="badge badge-unit">Unit</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-MC-005</span></td><td><span class="req-id">REQ-MC-004</span></td><td>Remittance AML limit enforcement</td><td><span class="badge badge-unit">Unit</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-MC-006</span></td><td><span class="req-id">REQ-MC-003</span></td><td>Beneficiary bank validation</td><td><span class="badge badge-unit">Unit</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-MC-007</span></td><td><span class="req-id">REQ-MC-003, REQ-MC-004</span></td><td>End-to-end remittance to India corridor</td><td><span class="badge badge-e2e">E2E</span></td><td>High</td></tr>
+  </tbody>
+</table>
+
+<h3>TC-MC-001: Multi-Currency Wallet Creation</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Customer with verified KYC. MultiCurrencyWalletService instantiated.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Create wallets for AED, SAR, QAR, BHD, OMR, KWD.</li><li>Verify each wallet is created with zero balance.</li><li>Verify wallets are linked to the customer's primary account.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>6 currency wallets created. Each has currency code, zero balance, and a link to the parent account. All GCC currencies supported.</td></tr>
+</table>
+
+<h3>TC-MC-002: Currency Conversion With Spread</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>FX rate: AED/SAR mid-rate = 1.02. Spread = 0.5%.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Convert 10,000 AED to SAR.</li><li>Verify the applied rate includes spread.</li><li>Verify the converted amount.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Applied rate = 1.02 * (1 - 0.005) = 1.0149 (sell rate). Converted amount = 10,000 * 1.0149 = 10,149 SAR. Spread revenue = 51 SAR equivalent.</td></tr>
+</table>
+
+<h3>TC-MC-003: CBUAE Reference Rate Lookup</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>FxRateService configured with mock CBUAE rate endpoint.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Request rate for AED/USD.</li><li>Verify rate is returned within cache TTL.</li><li>Verify rate refresh after TTL expiry.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Rate returned with timestamp. Cached for configured interval (15 min). Refreshed after expiry. Rate includes source = "CBUAE".</td></tr>
+</table>
+
+<h3>TC-MC-004: India Corridor Remittance Fee Calculation</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>RemittanceService instantiated. India corridor configured: flat fee = 15 AED, percentage = 0.25%, min fee = 15 AED.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Calculate fee for remittance of 5,000 AED to India.</li><li>Verify fee breakdown.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Percentage fee = 5,000 * 0.25% = 12.50 AED. Since 12.50 < 15, minimum fee applies. Total fee = 15 AED.</td></tr>
+</table>
+
+<h3>TC-MC-005: Remittance AML Limit Enforcement</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>India corridor AML limit = 100,000 AED per month. Customer has already remitted 95,000 AED this month.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Attempt to remit 10,000 AED to India.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Remittance rejected or flagged for enhanced due diligence. Remaining monthly limit = 5,000 AED. Error indicates corridor limit exceeded.</td></tr>
+</table>
+
+<h3>TC-MC-006: Beneficiary Bank Validation</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Beneficiary bank SWIFT code and country code available.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Validate beneficiary with valid Indian bank SWIFT code (e.g., SBININBB).</li><li>Validate with invalid SWIFT code.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Valid SWIFT code passes validation with bank name resolved. Invalid SWIFT code returns validation error.</td></tr>
+</table>
+
+<h3>TC-MC-007: End-to-End Remittance to India Corridor</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Customer with KYC, funded AED wallet. India corridor configured. Mock correspondent bank.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Submit remittance: 20,000 AED to India, beneficiary details provided.</li><li>Verify AML checks pass.</li><li>Verify FX conversion (AED to INR).</li><li>Verify fee deduction.</li><li>Verify transaction submitted to corridor.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Remittance processed end-to-end. AED deducted (amount + fee). INR amount credited to beneficiary. AML checks passed. Transaction record with corridor, FX rate, fees, and status.</td></tr>
+</table>
+
+<!-- ============================== WS6 ============================== -->
+<h2 id="sec-ws6">6. WS6 — Arabic / RTL Test Cases <span class="badge badge-high">High</span></h2>
+<p>Target: <strong>frontend/web-app</strong></p>
+
+<table>
+  <thead>
+    <tr><th style="width:100px">Test ID</th><th style="width:100px">Traces To</th><th>Description</th><th style="width:60px">Type</th><th style="width:60px">Priority</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="tc-id">TC-AR-001</span></td><td><span class="req-id">REQ-AR-002</span></td><td>i18n key completeness — ar.json has all keys from en.json</td><td><span class="badge badge-unit">Unit</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-AR-002</span></td><td><span class="req-id">REQ-AR-001</span></td><td>RTL layout renders correctly with dir="rtl"</td><td><span class="badge badge-e2e">E2E</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-AR-003</span></td><td><span class="req-id">REQ-AR-003</span></td><td>Hijri calendar Gregorian-to-Hijri conversion accuracy</td><td><span class="badge badge-unit">Unit</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-AR-004</span></td><td><span class="req-id">REQ-AR-004</span></td><td>Arabic number formatting via Intl.NumberFormat('ar-AE')</td><td><span class="badge badge-unit">Unit</span></td><td>High</td></tr>
+    <tr><td><span class="tc-id">TC-AR-005</span></td><td><span class="req-id">REQ-AR-003</span></td><td>Date picker works in Hijri mode</td><td><span class="badge badge-e2e">E2E</span></td><td>High</td></tr>
+  </tbody>
+</table>
+
+<h3>TC-AR-001: i18n Key Completeness</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>en.json and ar.json exist in i18n/locales/.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Parse all keys from en.json (nested, flattened).</li><li>Parse all keys from ar.json.</li><li>Compare key sets.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>ar.json contains 100% of the keys in en.json. No missing keys. All values are non-empty Arabic strings (not English fallbacks).</td></tr>
+</table>
+
+<h3>TC-AR-002: RTL Layout Renders Correctly</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Application running with Arabic locale selected.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Switch locale to Arabic.</li><li>Verify <code>html</code> or wrapper element has <code>dir="rtl"</code>.</li><li>Visual inspection of navigation (right-aligned), text alignment, and form layout.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Entire UI renders RTL. Navigation is right-aligned. Form labels right-aligned. No LTR layout artifacts.</td></tr>
+</table>
+
+<h3>TC-AR-003: Hijri Calendar Conversion Accuracy</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>HijriDateDisplay component or utility available.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Convert known Gregorian date (2026-03-20) to Hijri.</li><li>Verify the Hijri date matches expected value.</li><li>Test boundary dates (Islamic new year, Ramadan start).</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Conversion uses <code>Intl.DateTimeFormat('ar-SA-u-ca-islamic')</code>. Output matches known Hijri dates within 1-day tolerance. Format includes day, month name, and year in Arabic.</td></tr>
+</table>
+
+<h3>TC-AR-004: Arabic Number Formatting</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>arabicFormat utility available.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Format number 12345.67 with locale 'ar-AE'.</li><li>Verify Arabic-Indic numerals are used.</li><li>Verify currency formatting (AED).</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Number displays as ١٢٬٣٤٥٫٦٧. Currency format: ١٢٬٣٤٥٫٦٧ د.إ (or equivalent Intl output). Decimal and grouping separators are correct for ar-AE.</td></tr>
+</table>
+
+<h3>TC-AR-005: Date Picker Works in Hijri Mode</h3>
+<table>
+  <tr><th style="width:140px">Preconditions</th><td>Application running with Arabic locale. Date picker component rendered.</td></tr>
+  <tr><th>Steps</th><td><ol><li>Open date picker in Arabic locale.</li><li>Verify Hijri month names are displayed.</li><li>Select a date and verify both Hijri and Gregorian values are captured.</li></ol></td></tr>
+  <tr><th>Expected Result</th><td>Date picker shows Hijri months (Muharram, Safar, ...). Selected date produces both Hijri display value and Gregorian ISO value for storage.</td></tr>
+</table>
+
+<!-- ============================== TEST EXECUTION MATRIX ============================== -->
+<h2 id="sec-exec-matrix">7. Test Execution Matrix</h2>
+<p>Tests are executed in three CI phases. Each phase gates the next — failures halt progression.</p>
+
+<table>
+  <thead>
+    <tr><th>CI Phase</th><th>Type</th><th>Test IDs</th><th>Execution Environment</th><th>Est. Duration</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Phase 1: Unit Tests</strong></td>
+      <td><span class="badge badge-unit">Unit</span></td>
+      <td>TC-IF-001 to TC-IF-006, TC-RC-001 to TC-RC-007, TC-KY-001 to TC-KY-003, TC-KY-006, TC-PN-001 to TC-PN-003, TC-PN-005, TC-PN-006, TC-MC-001, TC-MC-002, TC-MC-004 to TC-MC-006, TC-AR-001, TC-AR-003, TC-AR-004</td>
+      <td>JVM / Node.js — no external services</td>
+      <td>~3 min</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 2: Integration Tests</strong></td>
+      <td><span class="badge badge-integration">Integration</span></td>
+      <td>TC-IF-007, TC-IF-008, TC-RC-008, TC-KY-004, TC-KY-005, TC-KY-007, TC-PN-004, TC-PN-007, TC-MC-003</td>
+      <td>TestContainers (PostgreSQL, Redis, Kafka) + Mock external APIs</td>
+      <td>~8 min</td>
+    </tr>
+    <tr>
+      <td><strong>Phase 3: E2E Tests</strong></td>
+      <td><span class="badge badge-e2e">E2E</span></td>
+      <td>TC-KY-008, TC-PN-008, TC-MC-007, TC-AR-002, TC-AR-005</td>
+      <td>Full stack deployment (docker-compose) + Browser (Playwright/Cypress)</td>
+      <td>~15 min</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ============================== TRACEABILITY ============================== -->
+<h2 id="sec-trace">8. Traceability</h2>
+<p>Each test case maps back to one or more URS requirements. This matrix ensures full coverage.</p>
+
+<table>
+  <thead>
+    <tr><th>Requirement</th><th>Test Cases</th><th>Coverage</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="req-id">REQ-IF-001</span> Murabaha</td><td>TC-IF-001, TC-IF-007</td><td>Unit + Integration</td></tr>
+    <tr><td><span class="req-id">REQ-IF-002</span> Ijara</td><td>TC-IF-003</td><td>Unit</td></tr>
+    <tr><td><span class="req-id">REQ-IF-003</span> Diminishing Musharaka</td><td>TC-IF-002</td><td>Unit</td></tr>
+    <tr><td><span class="req-id">REQ-IF-004</span> Mudarabah</td><td>TC-IF-004, TC-IF-008</td><td>Unit + Integration</td></tr>
+    <tr><td><span class="req-id">REQ-IF-005</span> Profit-rate calculations</td><td>TC-IF-005</td><td>Unit</td></tr>
+    <tr><td><span class="req-id">REQ-IF-006</span> SSB approval</td><td>TC-IF-007</td><td>Integration</td></tr>
+    <tr><td><span class="req-id">REQ-IF-007</span> Wadiah accounts</td><td>TC-IF-006</td><td>Unit</td></tr>
+    <tr><td><span class="req-id">REQ-IF-008</span> Wakala contracts</td><td>—</td><td>Future coverage</td></tr>
+    <tr><td><span class="req-id">REQ-IF-009</span> Sukuk</td><td>—</td><td>Future coverage</td></tr>
+    <tr><td><span class="req-id">REQ-IF-010</span> Takaful</td><td>—</td><td>Future coverage</td></tr>
+    <tr><td><span class="req-id">REQ-RC-001</span> goAML reports</td><td>TC-RC-004, TC-RC-008</td><td>Unit + Integration</td></tr>
+    <tr><td><span class="req-id">REQ-RC-002</span> CBUAE returns</td><td>TC-RC-005, TC-RC-008</td><td>Unit + Integration</td></tr>
+    <tr><td><span class="req-id">REQ-RC-003</span> MENAFATF</td><td>—</td><td>Future coverage</td></tr>
+    <tr><td><span class="req-id">REQ-RC-004</span> UAE AML/CFT</td><td>TC-RC-006</td><td>Unit</td></tr>
+    <tr><td><span class="req-id">REQ-RC-005</span> Zakat</td><td>TC-RC-001, TC-RC-002, TC-RC-003</td><td>Unit (3 scenarios)</td></tr>
+    <tr><td><span class="req-id">REQ-RC-006</span> VAT</td><td>TC-RC-007</td><td>Unit</td></tr>
+    <tr><td><span class="req-id">REQ-RC-007</span> SAMA reporting</td><td>—</td><td>Future coverage</td></tr>
+    <tr><td><span class="req-id">REQ-RC-008</span> AED threshold</td><td>TC-RC-006</td><td>Unit</td></tr>
+    <tr><td><span class="req-id">REQ-KY-001</span> Emirates ID</td><td>TC-KY-001, TC-KY-002, TC-KY-003, TC-KY-008</td><td>Unit (3) + E2E</td></tr>
+    <tr><td><span class="req-id">REQ-KY-002</span> UAE Pass</td><td>TC-KY-004, TC-KY-005, TC-KY-008</td><td>Integration (2) + E2E</td></tr>
+    <tr><td><span class="req-id">REQ-KY-003</span> Iqama</td><td>TC-KY-006</td><td>Unit</td></tr>
+    <tr><td><span class="req-id">REQ-KY-004</span> Trade License</td><td>TC-KY-007</td><td>Integration</td></tr>
+    <tr><td><span class="req-id">REQ-KY-005</span> UBO registry</td><td>—</td><td>Future coverage</td></tr>
+    <tr><td><span class="req-id">REQ-KY-006</span> Absher</td><td>—</td><td>Future coverage</td></tr>
+    <tr><td><span class="req-id">REQ-PN-001</span> UAEFTS</td><td>TC-PN-006, TC-PN-008</td><td>Unit + E2E</td></tr>
+    <tr><td><span class="req-id">REQ-PN-002</span> UAEIPS</td><td>TC-PN-004, TC-PN-005</td><td>Unit + Integration</td></tr>
+    <tr><td><span class="req-id">REQ-PN-003</span> WPS</td><td>TC-PN-001, TC-PN-002, TC-PN-003</td><td>Unit (3)</td></tr>
+    <tr><td><span class="req-id">REQ-PN-004</span> SADAD</td><td>TC-PN-007</td><td>Integration</td></tr>
+    <tr><td><span class="req-id">REQ-PN-005</span> SARIE</td><td>—</td><td>Future coverage</td></tr>
+    <tr><td><span class="req-id">REQ-PN-006</span> GCC-RTGS/AFAQ</td><td>—</td><td>Future coverage</td></tr>
+    <tr><td><span class="req-id">REQ-MC-001</span> Multi-currency wallets</td><td>TC-MC-001</td><td>Unit</td></tr>
+    <tr><td><span class="req-id">REQ-MC-002</span> CBUAE FX rates</td><td>TC-MC-002, TC-MC-003</td><td>Unit + Integration</td></tr>
+    <tr><td><span class="req-id">REQ-MC-003</span> Remittance corridors</td><td>TC-MC-006, TC-MC-007</td><td>Unit + E2E</td></tr>
+    <tr><td><span class="req-id">REQ-MC-004</span> Corridor fees</td><td>TC-MC-004, TC-MC-005, TC-MC-007</td><td>Unit (2) + E2E</td></tr>
+    <tr><td><span class="req-id">REQ-AR-001</span> RTL layout</td><td>TC-AR-002</td><td>E2E</td></tr>
+    <tr><td><span class="req-id">REQ-AR-002</span> Arabic translations</td><td>TC-AR-001</td><td>Unit</td></tr>
+    <tr><td><span class="req-id">REQ-AR-003</span> Hijri calendar</td><td>TC-AR-003, TC-AR-005</td><td>Unit + E2E</td></tr>
+    <tr><td><span class="req-id">REQ-AR-004</span> Arabic numerals</td><td>TC-AR-004</td><td>Unit</td></tr>
+  </tbody>
+</table>
+
+<footer>
+  <p>Emirates Digital Bank — Test Case Specification v1.0 | 2026-05-13 | Digital Banking Engineering Team</p>
+  <p>Classification: Internal — Confidential</p>
+</footer>
+
+</div>
+</body>
+</html>

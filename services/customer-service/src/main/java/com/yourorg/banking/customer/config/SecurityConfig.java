@@ -1,4 +1,4 @@
-package com.digitalbank.fintech.customer.config;
+package com.yourorg.banking.customer.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +17,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/actuator/**",
                     "/api/v1/customers/health",
+                    "/api/v1/auth/**",
                     "/v3/api-docs/**",
                     "/swagger-ui.html",
                     "/swagger-ui/**"
